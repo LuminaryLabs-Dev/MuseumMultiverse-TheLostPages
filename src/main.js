@@ -14,11 +14,23 @@ import { resolvePublicOrigin } from './lib/origin.js';
 import { renderDebugExperienceShell } from './ar/runtime/debug-shell.js';
 import { renderImmersiveExperience, renderImmersiveGate } from './ar/runtime/immersive-shell.js';
 import { enhanceBookScene } from './app/launcher/bookScene.js';
+import { enhanceLauncherMotion } from './app/launcher/launcherMotion.js';
 
 const app = document.querySelector('#app');
 const origin = resolvePublicOrigin();
 let activeRuntime = null;
 let bookCleanup = null;
+let launcherCleanup = null;
+
+function cleanupCurrentSurface() {
+  activeRuntime?.renderer?.dispose?.();
+  activeRuntime?.stop?.();
+  activeRuntime = null;
+  bookCleanup?.();
+  bookCleanup = null;
+  launcherCleanup?.();
+  launcherCleanup = null;
+}
 
 function installStaticAssetVariables() {
   const assets = {
@@ -38,11 +50,7 @@ function navigate(to) {
     return;
   }
 
-  activeRuntime?.renderer?.dispose?.();
-  activeRuntime?.stop?.();
-  activeRuntime = null;
-  bookCleanup?.();
-  bookCleanup = null;
+  cleanupCurrentSurface();
   history.pushState({}, '', targetPath);
   render();
 }
@@ -112,6 +120,7 @@ async function renderImmersiveRoute(experience) {
 }
 
 async function render() {
+  cleanupCurrentSurface();
   const route = routeFromLocation();
 
   if (route.type === 'book') {
@@ -135,6 +144,7 @@ async function render() {
   setTitle(cover.title);
   app.innerHTML = renderLauncherMarkup(origin);
   await renderLauncherQrCodes(app, origin);
+  launcherCleanup = enhanceLauncherMotion(app);
 }
 
 window.addEventListener('popstate', render);
