@@ -2,18 +2,42 @@
 
 Status: active
 
-## Run Loop
+## Required Run Loop
 
 1. Read `agent/start-here.md`.
 2. Read `agent/pointer.md`.
-3. Read the workflow named in the pointer.
-4. Read the prompt named in the pointer.
-5. Execute one bounded batch only.
-6. Validate the result with the closest available check.
-7. Update `output.md` with the shortest useful deploy message.
-8. Update `agent/run-log.md`.
-9. Update `agent/pointer.md` to the next best prompt.
-10. Push to `main`.
+3. Read this file.
+4. Read `agent/goal.md`.
+5. Read `agent/dependencies.md`.
+6. Read `agent/feedback/active-feedback.md`.
+7. Read the workflow named in the pointer.
+8. Read the prompt named in the pointer.
+9. Inspect only the source files needed for the selected prompt.
+10. Execute one bounded batch.
+11. Validate with the closest available check.
+12. Update `output.md` with the shortest useful deploy message.
+13. Update `agent/run-log.md`.
+14. Update `agent/feedback/processed-feedback.md` if feedback was addressed.
+15. Update `agent/memory.md` if a durable rule was learned.
+16. Update `agent/change-log.md` if agent system files changed.
+17. Update `agent/pointer.md` to the next best prompt.
+18. Push to `main`.
+
+## Self Learning Loop
+
+Feedback becomes active feedback.
+
+Active feedback becomes a prompt or a bounded edit.
+
+Run results become run log entries.
+
+Durable lessons become memory.
+
+Agent system changes become change log entries.
+
+The next task becomes the pointer.
+
+The public summary becomes output.md.
 
 ## Pointer Rules
 
