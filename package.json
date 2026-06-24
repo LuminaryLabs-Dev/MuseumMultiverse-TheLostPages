@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/export-static-routes.mjs",
     "build:luminary": "VITE_BASE_PATH=/apps/lost-pages/ VITE_PUBLIC_ORIGIN=https://luminarylabs.dev/apps/lost-pages vite build && node scripts/export-static-routes.mjs",
     "deploy:luminary": "npm run build:luminary && node scripts/deploy-to-website.mjs",
     "preview": "vite preview"
