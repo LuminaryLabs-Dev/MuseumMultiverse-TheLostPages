@@ -19,3 +19,5 @@ Status: active
 - Update `output.md` with each repo change.
 - Validate before claiming a site or AR issue is fixed.
 - Phone routes require static route export from the build.
+- Launcher visuals should stay clean, comic-book-like, readable, and less PDF-heavy.
+- Motion should feel subtle and reactive; avoid spectacle that distracts from AR route selection.
