@@ -21,7 +21,15 @@ Status: active
 15. Update `agent/memory.md` if a durable rule was learned.
 16. Update `agent/change-log.md` if agent system files changed.
 17. Update `agent/pointer.md` to the next best prompt.
-18. Push to `main`.
+18. Push the whole batch.
+
+## Push Discipline
+
+Do not create several public deploy messages for one agent run.
+
+For multi-file work, batch changes first and publish once.
+
+`output.md` should be updated last so the deploy chat describes the whole batch, not each intermediate file edit.
 
 ## Self Learning Loop
 
@@ -53,6 +61,6 @@ If the prompt is obsolete, mark it skipped in the run log and point to the next 
 
 `output-rules.md` describes the deploy chat style.
 
-`output.md` is the current deploy chat message.
+`output.md` is the current deploy chat message source.
 
-Keep `output.md` short and user-facing.
+Keep `output.md` short, user-facing, and updated once per completed batch.
