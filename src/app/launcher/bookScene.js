@@ -6,6 +6,128 @@ import { createBookSpreads } from './pageTextures.js';
 const ASSET_BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const MODEL_URL = `${ASSET_BASE}/assets/models/composition-notebook.glb`;
 
+const PAPER_VERTEX_SHADER = `
+  varying vec2 vUv;
+  varying vec3 vViewNormal;
+  varying float vPaperRipple;
+
+  uniform float paperWarpStrength;
+
+  float hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+  }
+
+  float noise2(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+
+    return mix(
+      mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x),
+      mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x),
+      u.y
+    );
+  }
+
+  void main() {
+    vUv = uv;
+
+    float pulpWarp = noise2(uv * vec2(10.0, 18.0)) - 0.5;
+    float crossWarp = noise2(uv * vec2(34.0, 11.0) + 5.0) - 0.5;
+    float ripple = (pulpWarp * 0.72 + crossWarp * 0.28) * paperWarpStrength;
+    vec3 displaced = position + normal * ripple;
+
+    vec4 mvPosition = modelViewMatrix * vec4(displaced, 1.0);
+    vViewNormal = normalize(normalMatrix * normal);
+    vPaperRipple = ripple;
+    gl_Position = projectionMatrix * mvPosition;
+  }
+`;
+
+const PAPER_FRAGMENT_SHADER = `
+  precision highp float;
+
+  uniform sampler2D pageMap;
+  uniform vec3 paperWarmth;
+  uniform vec3 paperShadow;
+  uniform float paperGrainStrength;
+  uniform float paperEdgeStrength;
+
+  varying vec2 vUv;
+  varying vec3 vViewNormal;
+  varying float vPaperRipple;
+
+  float hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+  }
+
+  float noise2(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+
+    return mix(
+      mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x),
+      mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x),
+      u.y
+    );
+  }
+
+  float fbm(vec2 p) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    for (int i = 0; i < 4; i += 1) {
+      value += noise2(p) * amplitude;
+      p *= 2.04;
+      amplitude *= 0.5;
+    }
+    return value;
+  }
+
+  void main() {
+    vec4 sampledPage = texture2D(pageMap, vUv);
+    vec3 color = sampledPage.rgb;
+
+    float horizontalFiber = fbm(vUv * vec2(180.0, 38.0));
+    float verticalFiber = fbm(vUv * vec2(44.0, 220.0) + 17.0);
+    float pulpCloud = fbm(vUv * vec2(12.0, 16.0) + 4.0);
+    float fineLine = sin((vUv.y + horizontalFiber * 0.018) * 980.0) * 0.5 + 0.5;
+
+    float leftEdge = vUv.x;
+    float rightEdge = 1.0 - vUv.x;
+    float topEdge = 1.0 - vUv.y;
+    float bottomEdge = vUv.y;
+    float edgeDistance = min(min(leftEdge, rightEdge), min(topEdge, bottomEdge));
+    float edgeShade = 1.0 - smoothstep(0.0, 0.072, edgeDistance);
+    float thumbWear = smoothstep(0.0, 0.32, vUv.y) * (1.0 - smoothstep(0.66, 1.0, vUv.y));
+    float outerWear = max(
+      1.0 - smoothstep(0.0, 0.105, leftEdge),
+      1.0 - smoothstep(0.0, 0.105, rightEdge)
+    ) * thumbWear;
+
+    vec3 normal = normalize(vViewNormal);
+    vec3 lightDirection = normalize(vec3(-0.34, 0.72, 0.58));
+    float lambert = dot(normal, lightDirection) * 0.5 + 0.5;
+    float foldShade = 1.0 - smoothstep(0.0, 0.42, abs(vUv.x - 0.5));
+    float paperShade = 0.86 + lambert * 0.22 - edgeShade * paperEdgeStrength - foldShade * 0.035;
+
+    vec3 paperTint = mix(paperWarmth, paperShadow, edgeShade * 0.3 + (1.0 - lambert) * 0.18);
+    color = mix(paperTint, color, 0.88);
+
+    float grain = (horizontalFiber - 0.5) * 0.13 + (verticalFiber - 0.5) * 0.08 + (pulpCloud - 0.5) * 0.09;
+    color += grain * paperGrainStrength;
+    color += (fineLine - 0.5) * 0.012;
+    color -= outerWear * 0.035;
+    color *= paperShade + vPaperRipple * 1.4;
+
+    gl_FragColor = vec4(clamp(color, 0.0, 1.0), sampledPage.a);
+  }
+`;
+
 function fitModelToView(object) {
   const box = new THREE.Box3().setFromObject(object);
   const size = new THREE.Vector3();
@@ -50,37 +172,22 @@ function isRightPage(child) {
 }
 
 function createProjectedPageMaterial(texture) {
-  const material = new THREE.MeshToonMaterial({
-    color: '#ffffff',
-    map: texture,
+  const material = new THREE.ShaderMaterial({
+    name: 'ProjectedLostPagePaperShader',
+    uniforms: {
+      pageMap: { value: texture },
+      paperWarmth: { value: new THREE.Color('#f8ebcb') },
+      paperShadow: { value: new THREE.Color('#c8a66d') },
+      paperGrainStrength: { value: 0.36 },
+      paperEdgeStrength: { value: 0.2 },
+      paperWarpStrength: { value: 0.012 }
+    },
+    vertexShader: PAPER_VERTEX_SHADER,
+    fragmentShader: PAPER_FRAGMENT_SHADER,
     side: THREE.DoubleSide
   });
-  material.onBeforeCompile = (shader) => {
-    shader.uniforms.paperWarmth = { value: new THREE.Color('#f3dfad') };
-    shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <common>',
-      '#include <common>\nuniform vec3 paperWarmth;'
-    );
-    shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <map_fragment>',
-      `
-        #ifdef USE_MAP
-          vec4 sampledDiffuseColor = texture2D( map, vMapUv );
-          diffuseColor *= sampledDiffuseColor;
-        #endif
-        diffuseColor.rgb = mix(paperWarmth, diffuseColor.rgb, 0.92);
-      `
-    );
-    shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <dithering_fragment>',
-      `
-        float paperBand = floor(gl_FragCoord.y * 0.04) * 0.0025;
-        gl_FragColor.rgb *= 0.96 + paperBand;
-        #include <dithering_fragment>
-      `
-    );
-  };
-  material.name = 'ProjectedLostPageMaterial';
+
+  material.toneMapped = false;
   return material;
 }
 
@@ -88,6 +195,7 @@ function setPageTexture(mesh, texture) {
   if (!mesh?.material) return;
   if (mesh.material.uniforms?.pageMap) {
     mesh.material.uniforms.pageMap.value = texture;
+    mesh.material.needsUpdate = true;
     return;
   }
   mesh.material.map = texture;
@@ -96,8 +204,8 @@ function setPageTexture(mesh, texture) {
 
 function makeFallbackPagePlane(texture, x) {
   const mesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(2.55, 3.55, 12, 12),
-    new THREE.MeshBasicMaterial({ map: texture, color: '#ffffff', side: THREE.DoubleSide })
+    new THREE.PlaneGeometry(2.55, 3.55, 36, 36),
+    createProjectedPageMaterial(texture)
   );
   mesh.position.set(x, 0.03, 0.66);
   mesh.rotation.set(-0.82, 0, x < 0 ? 0.045 : -0.045);
@@ -107,7 +215,7 @@ function makeFallbackPagePlane(texture, x) {
 function createFallbackNotebook() {
   const group = new THREE.Group();
   const coverMaterial = new THREE.MeshToonMaterial({ color: '#6c4d28' });
-  const pageMaterial = new THREE.MeshToonMaterial({ color: '#e8d09b' });
+  const pageMaterial = new THREE.MeshToonMaterial({ color: '#ddc28c' });
   const cover = new THREE.Mesh(new THREE.BoxGeometry(5.9, 0.16, 4.2), coverMaterial);
   const left = new THREE.Mesh(new THREE.BoxGeometry(2.72, 0.05, 3.78), pageMaterial);
   const right = left.clone();
@@ -189,8 +297,8 @@ export function createBookScene(root, { origin }) {
     setPageTexture(rightPageSurface, spread.rightTexture);
     setPageTexture(animatedPageSurface, spread.rightTexture);
     animatedTextureKey = '';
-    if (fallbackLeftPage) fallbackLeftPage.material.map = spread.leftTexture;
-    if (fallbackRightPage) fallbackRightPage.material.map = spread.rightTexture;
+    setPageTexture(fallbackLeftPage, spread.leftTexture);
+    setPageTexture(fallbackRightPage, spread.rightTexture);
   }
 
   function setAnimatedPageTexture(texture, key, force = false) {
@@ -420,6 +528,7 @@ export function createBookScene(root, { origin }) {
       spreads.forEach((spread) => {
         spread.leftTexture.dispose();
         spread.rightTexture.dispose();
+        spread.turnTexture.dispose();
       });
     }
   };

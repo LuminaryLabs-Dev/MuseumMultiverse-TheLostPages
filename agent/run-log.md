@@ -19,6 +19,8 @@ Completed:
 - Recorded workflow feedback about batching changes and making deploy output smarter.
 - Added `scripts/render-output-message.mjs` as the first smart output renderer.
 - Tightened workflow memory so `output.md` is updated once per completed batch.
+- Added the supporting content documentation scaffold under `docs/`.
+- Ran a user-directed paper page visual pass: launcher page cards now use square corners and layered paper texture; book/print page canvas textures now include procedural grain and square borders; WebGL book page surfaces now use a GLSL paper shader.
 
 Next:
 
@@ -28,3 +30,5 @@ Next:
 Notes:
 
 - The requested hidden agent path could not be written by the current connector, so this repo uses `agent/` for the same operating model.
+- The paper page visual pass was code-reviewed through the connector, but npm build and browser/device QA were not run in this environment.
+- The active pointer remains on AR route QA because this visual pass did not complete `prompts/004-ar-route-check.md`.

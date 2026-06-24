@@ -5,6 +5,14 @@ import { getPageUrl } from '../../data/pages.js';
 const WIDTH = 1024;
 const HEIGHT = 1440;
 
+function createSeededRandom(seed) {
+  let state = seed >>> 0;
+  return () => {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 4294967296;
+  };
+}
+
 function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 4) {
   const words = String(text ?? '').split(/\s+/).filter(Boolean);
   let line = '';
@@ -33,24 +41,71 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 4) {
   return y;
 }
 
-function drawNotebookRules(ctx, side) {
+function drawPaperPulp(ctx, side) {
+  const rand = createSeededRandom(side === 'left' ? 8101 : 8102);
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'multiply';
+
+  for (let i = 0; i < 1200; i += 1) {
+    const x = rand() * WIDTH;
+    const y = rand() * HEIGHT;
+    const alpha = 0.018 + rand() * 0.035;
+    const size = 0.7 + rand() * 2.4;
+    ctx.fillStyle = `rgba(93, 69, 38, ${alpha})`;
+    ctx.fillRect(x, y, size, size * (0.45 + rand() * 0.55));
+  }
+
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 420; i += 1) {
+    const x = rand() * WIDTH;
+    const y = rand() * HEIGHT;
+    const length = 18 + rand() * 94;
+    const drift = (rand() - 0.5) * 8;
+    const alpha = 0.018 + rand() * 0.052;
+    ctx.strokeStyle = `rgba(73, 56, 34, ${alpha})`;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + length, y + drift);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawPaperBase(ctx, side) {
   const spineX = side === 'left' ? WIDTH - 88 : 88;
-  const marginX = side === 'left' ? WIDTH - 190 : 164;
   const gradient = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
-  gradient.addColorStop(0, '#fff7d4');
-  gradient.addColorStop(0.58, '#f4e2b8');
-  gradient.addColorStop(1, '#dfc386');
+  gradient.addColorStop(0, '#fff8df');
+  gradient.addColorStop(0.48, '#f6e8c5');
+  gradient.addColorStop(1, '#e7cf9b');
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  const spineGradient = ctx.createLinearGradient(spineX - 110, 0, spineX + 110, 0);
+  drawPaperPulp(ctx, side);
+
+  const vignette = ctx.createRadialGradient(WIDTH * 0.54, HEIGHT * 0.46, HEIGHT * 0.16, WIDTH * 0.5, HEIGHT * 0.5, HEIGHT * 0.82);
+  vignette.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+  vignette.addColorStop(0.68, 'rgba(255, 255, 255, 0)');
+  vignette.addColorStop(1, 'rgba(82, 56, 30, 0.18)');
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  const spineGradient = ctx.createLinearGradient(spineX - 118, 0, spineX + 118, 0);
   spineGradient.addColorStop(0, 'rgba(80, 45, 22, 0)');
-  spineGradient.addColorStop(0.5, 'rgba(87, 53, 29, 0.16)');
+  spineGradient.addColorStop(0.5, 'rgba(87, 53, 29, 0.18)');
   spineGradient.addColorStop(1, 'rgba(80, 45, 22, 0)');
   ctx.fillStyle = spineGradient;
-  ctx.fillRect(spineX - 110, 0, 220, HEIGHT);
+  ctx.fillRect(spineX - 118, 0, 236, HEIGHT);
+}
 
-  ctx.strokeStyle = 'rgba(62, 86, 126, 0.22)';
+function drawNotebookRules(ctx, side) {
+  const spineX = side === 'left' ? WIDTH - 88 : 88;
+  const marginX = side === 'left' ? WIDTH - 190 : 164;
+
+  drawPaperBase(ctx, side);
+
+  ctx.strokeStyle = 'rgba(54, 82, 126, 0.18)';
   ctx.lineWidth = 2;
   for (let y = 122; y < HEIGHT - 80; y += 58) {
     ctx.beginPath();
@@ -59,25 +114,29 @@ function drawNotebookRules(ctx, side) {
     ctx.stroke();
   }
 
-  ctx.strokeStyle = 'rgba(154, 65, 48, 0.36)';
+  ctx.strokeStyle = 'rgba(154, 65, 48, 0.3)';
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(marginX, 72);
   ctx.lineTo(marginX, HEIGHT - 72);
   ctx.stroke();
 
-  ctx.strokeStyle = 'rgba(96, 55, 26, 0.2)';
+  ctx.strokeStyle = 'rgba(96, 55, 26, 0.18)';
   ctx.lineWidth = 12;
   ctx.beginPath();
   ctx.moveTo(spineX, 74);
   ctx.lineTo(spineX, HEIGHT - 72);
   ctx.stroke();
 
-  ctx.globalAlpha = 0.18;
-  ctx.strokeStyle = '#7a582c';
-  ctx.lineWidth = 22;
-  ctx.strokeRect(18, 18, WIDTH - 36, HEIGHT - 36);
-  ctx.globalAlpha = 1;
+  ctx.save();
+  ctx.globalAlpha = 0.16;
+  ctx.strokeStyle = '#6f532d';
+  ctx.lineWidth = 18;
+  ctx.strokeRect(9, 9, WIDTH - 18, HEIGHT - 18);
+  ctx.globalAlpha = 0.34;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(24, 24, WIDTH - 48, HEIGHT - 48);
+  ctx.restore();
 }
 
 function drawSketchMarks(ctx, accent, side, pageNumber) {
@@ -110,8 +169,11 @@ function drawQr(ctx, url, x, y, size) {
   const cells = qr.modules.size;
   const cell = size / cells;
 
-  ctx.fillStyle = '#f8edcf';
+  ctx.fillStyle = '#fff8df';
   ctx.fillRect(x, y, size, size);
+  ctx.strokeStyle = 'rgba(35, 25, 16, 0.72)';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(x, y, size, size);
   ctx.fillStyle = '#1f1a14';
 
   for (let row = 0; row < cells; row += 1) {
@@ -238,6 +300,8 @@ function pageToCanvas(page, origin, side = 'left') {
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 8;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
   if (side === 'left') {
     texture.center.set(0.5, 0.5);
     texture.rotation = Math.PI;
@@ -256,6 +320,8 @@ function createTurnTexture() {
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 8;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
   texture.needsUpdate = true;
   return texture;
 }

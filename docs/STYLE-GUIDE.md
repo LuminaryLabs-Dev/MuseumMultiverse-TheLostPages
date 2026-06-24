@@ -15,6 +15,9 @@ Lost Pages should feel like a haunted comic-book museum magazine, not a flat PDF
 - Avoid heavy sepia as the default tone.
 - Avoid dense texture behind body copy.
 - Preserve readability before atmosphere.
+- Page surfaces should read as paper: squared corners, subtle fiber texture, and edge shading.
+- Book/print WebGL page surfaces should use GLSL shading for paper grain, lighting, and rectangular paper edges.
+- Do not round page cards or paper sheets unless a later design intentionally changes the magazine page metaphor.
 
 ## Motion rules
 
