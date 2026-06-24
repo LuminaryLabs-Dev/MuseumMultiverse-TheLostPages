@@ -1,0 +1,201 @@
+name: Deploy Lost Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: lost-pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Lost Pages
+    runs-on: ubuntu-latest
+
+    outputs:
+      changes: ${{ steps.changes.outputs.summary }}
+      files: ${{ steps.changes.outputs.files }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Configure GitHub Pages build paths
+        run: |
+          set -euo pipefail
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          OWNER_LC="$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
+          {
+            echo "VITE_BASE_PATH=/$REPO_NAME/"
+            echo "VITE_PUBLIC_ORIGIN=https://$OWNER_LC.github.io/$REPO_NAME"
+          } >> "$GITHUB_ENV"
+
+      - name: Build site
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          test -d dist
+          touch dist/.nojekyll
+
+      - name: Summarize changes
+        id: changes
+        run: |
+          set -euo pipefail
+
+          BEFORE="${{ github.event.before || '' }}"
+          AFTER="${{ github.sha }}"
+
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            if git rev-parse "$AFTER~10" >/dev/null 2>&1; then
+              RANGE="$AFTER~10..$AFTER"
+            else
+              RANGE="$AFTER"
+            fi
+          else
+            RANGE="$BEFORE..$AFTER"
+          fi
+
+          COMMITS="$(git log --pretty=format:'- %s (%h)' "$RANGE" || true)"
+          FILES="$(git diff --name-only "$RANGE" | sed 's/^/- /' | head -40 || true)"
+
+          if [ -z "$COMMITS" ]; then
+            COMMITS="- Manual deploy / no commit range found"
+          fi
+
+          if [ -z "$FILES" ]; then
+            FILES="- No changed files detected"
+          fi
+
+          {
+            echo "summary<<EOF"
+            echo "$COMMITS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "files<<EOF"
+            echo "$FILES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  notify:
+    name: Notify Discord
+    needs:
+      - build
+      - deploy
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Discord message
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+          CHANGES: ${{ needs.build.outputs.changes }}
+          FILES: ${{ needs.build.outputs.files }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.error
+          import urllib.request
+
+          webhook = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
+          if not webhook:
+              print("No DISCORD_WEBHOOK_URL secret set; skipping Discord notification.")
+              raise SystemExit(0)
+
+          page_url = os.environ.get("PAGE_URL") or "No Pages URL returned"
+          build_result = os.environ.get("BUILD_RESULT", "unknown")
+          deploy_result = os.environ.get("DEPLOY_RESULT", "unknown")
+          changes = os.environ.get("CHANGES", "").strip() or "- No commit summary found"
+          files = os.environ.get("FILES", "").strip() or "- No changed files found"
+          repo = os.environ.get("REPO", "unknown repo")
+          sha = os.environ.get("SHA", "")[:7]
+          actor = os.environ.get("ACTOR", "unknown")
+          run_url = os.environ.get("RUN_URL", "")
+
+          ok = build_result == "success" and deploy_result == "success"
+          title = "✅ Lost Pages deployed" if ok else "❌ Lost Pages deploy failed"
+
+          lines = [
+              title,
+              "",
+              f"**Repo:** `{repo}`",
+              f"**By:** `{actor}`",
+              f"**Commit:** `{sha}`",
+              f"**Live link:** {page_url}",
+              f"**Run:** {run_url}",
+              "",
+              "**What changed:**",
+              changes,
+              "",
+              "**Files touched:**",
+              files,
+          ]
+          content = "\n".join(lines)
+
+          payload = {
+              "content": content[:1900],
+              "allowed_mentions": {"parse": []},
+          }
+
+          request = urllib.request.Request(
+              webhook,
+              data=json.dumps(payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"},
+              method="POST",
+          )
+
+          try:
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  print(f"Discord response: {response.status}")
+          except urllib.error.HTTPError as exc:
+              body = exc.read().decode("utf-8", errors="replace")
+              raise SystemExit(f"Discord webhook failed: HTTP {exc.code}: {body}") from exc
+          PY
