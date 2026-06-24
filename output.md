@@ -1,3 +1,3 @@
 ✅ Lost Pages updated
 
-Cleaned the launcher into a lighter comic-book spread with subtle motion.
+Recorded book tone feedback for the next visual pass.
