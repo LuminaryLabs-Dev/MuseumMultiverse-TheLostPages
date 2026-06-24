@@ -134,15 +134,6 @@ jobs:
       - name: Send Discord message
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
-          BUILD_RESULT: ${{ needs.build.result }}
-          DEPLOY_RESULT: ${{ needs.deploy.result }}
-          CHANGES: ${{ needs.build.outputs.changes }}
-          FILES: ${{ needs.build.outputs.files }}
-          REPO: ${{ github.repository }}
-          SHA: ${{ github.sha }}
-          ACTOR: ${{ github.actor }}
-          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           python3 - <<'PY'
           import json
@@ -157,54 +148,20 @@ jobs:
               print("No DISCORD_WEBHOOK_URL secret set; skipping Discord notification.")
               raise SystemExit(0)
 
-          page_url = os.environ.get("PAGE_URL") or "No Pages URL returned"
-          build_result = os.environ.get("BUILD_RESULT", "unknown")
-          deploy_result = os.environ.get("DEPLOY_RESULT", "unknown")
-          changes = os.environ.get("CHANGES", "").strip() or "- No commit summary found"
-          files = os.environ.get("FILES", "").strip() or "- No changed files found"
-          repo = os.environ.get("REPO", "unknown repo")
-          sha = os.environ.get("SHA", "")[:7]
-          actor = os.environ.get("ACTOR", "unknown")
-          run_url = os.environ.get("RUN_URL", "")
-
-          ok = build_result == "success" and deploy_result == "success"
-          title = "✅ Lost Pages deployed" if ok else "❌ Lost Pages deploy failed"
-
           output_path = Path("output.md")
           if output_path.exists():
-              output_body = output_path.read_text(encoding="utf-8").strip()
-              if not output_body:
-                  output_body = "output.md exists, but it is empty."
+              content = output_path.read_text(encoding="utf-8").strip()
+              if not content:
+                  content = "output.md exists, but it is empty."
           else:
-              output_body = "\n".join([
-                  "output.md was not found, so this message used the automatic fallback.",
-                  "",
-                  "**What changed:**",
-                  changes,
-                  "",
-                  "**Files touched:**",
-                  files,
-              ])
+              content = "output.md was not found. Add output.md to control the Discord deploy message."
 
           max_output_chars = 6500
-          if len(output_body) > max_output_chars:
-              output_body = (
-                  output_body[:max_output_chars].rstrip()
+          if len(content) > max_output_chars:
+              content = (
+                  content[:max_output_chars].rstrip()
                   + "\n\n…output.md truncated for Discord. See the repo file for the full message."
               )
-
-          header = [
-              title,
-              "",
-              f"**Repo:** `{repo}`",
-              f"**By:** `{actor}`",
-              f"**Commit:** `{sha}`",
-              f"**Live link:** {page_url}",
-              f"**Run:** {run_url}",
-              "",
-              "**Deploy output:**",
-          ]
-          content = "\n".join(header) + "\n" + output_body
 
           headers = {
               "Content-Type": "application/json",
