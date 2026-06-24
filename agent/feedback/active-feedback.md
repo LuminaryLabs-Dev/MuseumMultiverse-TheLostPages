@@ -17,6 +17,7 @@ Status: active
 - New feedback: the overall book/launcher direction should avoid the heavy sepia tone. Do not change visuals from this note alone; treat it as feedback for the next visual pass.
 - New feedback: future agent runs must follow the workflow more reliably and avoid creating multiple deploy chat messages for one batch.
 - New feedback: output should become a smart message source with fields that can be rendered into a dynamic deploy chat message.
+- New feedback: page surfaces should look like squared paper, not rounded cards; use paper texture, shading, and GLSL shading for the WebGL book/print pages.
 
 ## Handling Rule
 
