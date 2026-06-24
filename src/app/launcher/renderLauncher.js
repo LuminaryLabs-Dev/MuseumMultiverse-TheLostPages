@@ -10,7 +10,7 @@ function chunkPages(items, size = 2) {
   return chunks;
 }
 
-function renderPageCard(page) {
+function renderPageCard(page, origin) {
   return `
     <article class="clean-comic-card" data-comic-card style="--accent:${page.accent};--glow:${page.glow};--deep:${page.deep}">
       <div class="clean-comic-card__topline">
@@ -31,15 +31,11 @@ function renderPageCard(page) {
       <div class="clean-comic-card__footer">
         <a class="clean-comic-card__button" href="${withBasePath(`/ar/${page.slug}`)}" data-nav>Open AR</a>
         <div class="clean-comic-card__qr" data-launcher-qr="${page.slug}">
-          <small>${getPageUrl(page, originFallback()) || 'Set public origin for QR output.'}</small>
+          <small>${getPageUrl(page, origin) || 'Set public origin for QR output.'}</small>
         </div>
       </div>
     </article>
   `;
-}
-
-function originFallback() {
-  return '';
 }
 
 export function renderLauncherMarkup(origin = '') {
@@ -66,7 +62,7 @@ export function renderLauncherMarkup(origin = '') {
           <section class="clean-comic-spread" data-comic-spread style="--spread-index:${index}">
             <div class="clean-comic-spread__label">Spread ${String(index + 1).padStart(2, '0')}</div>
             <div class="clean-comic-spread__pages">
-              ${spread.map((page) => renderPageCard({ ...page, origin })).join('')}
+              ${spread.map((page) => renderPageCard(page, origin)).join('')}
             </div>
           </section>
         `).join('')}
