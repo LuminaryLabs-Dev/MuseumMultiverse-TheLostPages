@@ -12,10 +12,13 @@ Completed:
 - Added feedback intake files.
 - Added project docs under `docs/`.
 - Updated the build so static AR routes are exported for phone use.
+- Cleaned the launcher into simpler comic-book spreads.
+- Added light pointer and visibility animation for the launcher.
+- Added `agent/master-intention-plan.md` and `agent/cleanup-plan.md` for future visual passes.
 
 Next:
 
-- Run `prompts/003-lost-pages-site-audit.md`.
+- Run `prompts/004-ar-route-check.md`.
 
 Notes:
 

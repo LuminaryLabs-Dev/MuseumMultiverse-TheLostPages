@@ -2,44 +2,69 @@ import { pages, getPageUrl } from '../../data/pages.js';
 import { renderQrCode } from '../../lib/qr.js';
 import { withBasePath } from '../routes/basePath.js';
 
-export function renderLauncherMarkup(origin = '') {
+function chunkPages(items, size = 2) {
+  const chunks = [];
+  for (let index = 0; index < items.length; index += size) {
+    chunks.push(items.slice(index, index + size));
+  }
+  return chunks;
+}
+
+function renderPageCard(page, origin) {
   return `
-    <section class="comic-launcher" aria-label="Museum Multiverse Lost Pages page viewer">
-      <nav class="comic-launcher__rail" aria-label="Launcher controls">
-        <strong>Lost Pages</strong>
-        <span>PDF-style page viewer</span>
-        <a href="${withBasePath('/book')}" data-nav>Book view</a>
-      </nav>
+    <article class="clean-comic-card" data-comic-card style="--accent:${page.accent};--glow:${page.glow};--deep:${page.deep}">
+      <div class="clean-comic-card__topline">
+        <span>Page ${page.number}</span>
+        <span>${page.collectible}</span>
+      </div>
 
-      <div class="comic-launcher__scroll">
-        ${pages.map((page) => `
-          <article class="comic-page-shell" style="--accent:${page.accent};--glow:${page.glow}">
-            <div class="comic-page">
-              <div class="comic-page__folio">${page.number}</div>
-              <div class="comic-page__mast">
-                <span>Museum Multiverse: Lost Pages</span>
-                <h2>${page.title}</h2>
-              </div>
+      <div class="clean-comic-card__copy">
+        <h2>${page.title}</h2>
+        <p>${page.description}</p>
+      </div>
 
-              <div class="comic-panel comic-panel--hero">
-                <div class="comic-panel__burst">${page.collectible}</div>
-                <p>${page.description}</p>
-              </div>
+      <div class="clean-comic-card__mission">
+        <strong>${page.qrTitle}</strong>
+        <span>${page.prompt}</span>
+      </div>
 
-              <div class="comic-panel comic-panel--mission">
-                <h3>${page.qrTitle}</h3>
-                <p>${page.prompt}</p>
-                <a href="${withBasePath(`/ar/${page.slug}`)}" data-nav>Open AR page</a>
-              </div>
+      <div class="clean-comic-card__footer">
+        <a class="clean-comic-card__button" href="${withBasePath(`/ar/${page.slug}`)}" data-nav>Open AR</a>
+        <div class="clean-comic-card__qr" data-launcher-qr="${page.slug}">
+          <small>${getPageUrl(page, origin) || 'Set public origin for QR output.'}</small>
+        </div>
+      </div>
+    </article>
+  `;
+}
 
-              <div class="comic-page__scan">
-                <div class="comic-page__qr" data-launcher-qr="${page.slug}">
-                  <small>${getPageUrl(page, origin) || 'Set VITE_PUBLIC_ORIGIN for QR output.'}</small>
-                </div>
-                <p>${page.pitch}</p>
-              </div>
+export function renderLauncherMarkup(origin = '') {
+  const spreads = chunkPages(pages);
+
+  return `
+    <section class="clean-comic-launcher" data-comic-stage aria-label="Museum Multiverse Lost Pages launcher">
+      <div class="clean-comic-launcher__glow" aria-hidden="true"></div>
+
+      <header class="clean-comic-hero" data-comic-card>
+        <div>
+          <p class="clean-comic-hero__eyebrow">Museum Multiverse</p>
+          <h1>Lost Pages</h1>
+          <p class="clean-comic-hero__copy">Eight compact AR pages. Scan one, open the route, wake the museum.</p>
+        </div>
+        <nav class="clean-comic-hero__actions" aria-label="Launcher controls">
+          <a href="${withBasePath('/book')}" data-nav>Book view</a>
+          <a href="${withBasePath('/print')}" data-nav>Print view</a>
+        </nav>
+      </header>
+
+      <div class="clean-comic-book" aria-label="Lost Pages comic book spreads">
+        ${spreads.map((spread, index) => `
+          <section class="clean-comic-spread" data-comic-spread style="--spread-index:${index}">
+            <div class="clean-comic-spread__label">Spread ${String(index + 1).padStart(2, '0')}</div>
+            <div class="clean-comic-spread__pages">
+              ${spread.map((page) => renderPageCard(page, origin)).join('')}
             </div>
-          </article>
+          </section>
         `).join('')}
       </div>
     </section>

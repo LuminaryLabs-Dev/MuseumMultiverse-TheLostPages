@@ -1,3 +1,3 @@
 ✅ Lost Pages updated
 
-Added long-term docs, feedback tracking, and static phone AR routes.
+Cleaned the launcher into a lighter comic-book spread with subtle motion.

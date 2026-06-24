@@ -3,19 +3,19 @@
 Status: active
 
 Current workflow:
-`workflows/site-update-workflow.md`
+`workflows/ar-qa-workflow.md`
 
 Current prompt:
-`prompts/003-lost-pages-site-audit.md`
-
-Next prompt if complete:
 `prompts/004-ar-route-check.md`
 
+Next prompt if complete:
+`prompts/005-qr-print-readiness.md`
+
 Reason:
-The output system and agent workflow structure are now in place. The next best run should inspect the live Lost Pages site and identify the highest-value site issue.
+The launcher cleanup pass is complete. The next best run should check AR route behavior and confirm the phone-openable route assumptions.
 
 Last completed:
-`prompts/002-output-rules-template.md`
+`launcher-clean-comic-book-pass`
 
 Pointer rule:
 After each successful run, update this file to the next best prompt. Do not blindly increment if a more urgent task appears.
