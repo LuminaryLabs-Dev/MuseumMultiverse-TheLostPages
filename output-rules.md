@@ -2,22 +2,24 @@
 
 Status: active
 
-Template:
+## Template
 
-Use the current contents of output.md as the deploy chat message.
+Use the current contents of `output.md` as the deploy chat message.
 
-Variables that may be supported later:
-
-- output = contents of output.md
-- title = first line of output.md
-- summary = short summary line from output.md
-- changed_files = changed files from the current push
-- live_url = live deployed page URL
-
-Rules:
+## Style
 
 - Keep messages very short.
+- Prefer two lines.
 - Do not include repo metadata unless requested.
 - Do not include old history.
 - Only describe the latest push.
-- Update output.md on every agent-made change.
+- Mention static phone routes only when the change affects phone access.
+- Update `output.md` on every agent-made change.
+
+## Example
+
+```text
+✅ Lost Pages updated
+
+Static AR routes now export for phone use.
+```
