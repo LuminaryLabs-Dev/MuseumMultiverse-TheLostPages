@@ -16,9 +16,13 @@ Completed:
 - Added light pointer and visibility animation for the launcher.
 - Added `agent/master-intention-plan.md` and `agent/cleanup-plan.md` for future visual passes.
 - Recorded feedback that the overall book/launcher direction should avoid a heavy sepia tone. No visual change was made for that feedback in this run.
+- Recorded workflow feedback about batching changes and making deploy output smarter.
+- Added `scripts/render-output-message.mjs` as the first smart output renderer.
+- Tightened workflow memory so `output.md` is updated once per completed batch.
 
 Next:
 
+- Wire the deploy workflow to call the smart output renderer if the workflow file can be safely updated.
 - Run `prompts/004-ar-route-check.md`.
 
 Notes:
