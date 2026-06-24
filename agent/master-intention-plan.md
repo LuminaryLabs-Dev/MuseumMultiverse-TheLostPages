@@ -23,6 +23,7 @@ The launcher should help a phone user quickly understand the project, pick a pag
 - Two-page spread rhythm on desktop.
 - Single readable cards on phone.
 - Warm paper, strong ink, subtle glow.
+- Avoid a heavy sepia wash in the overall book/launcher tone.
 - Light reactive animation from pointer movement and scroll visibility.
 
 ## Agent Rule
