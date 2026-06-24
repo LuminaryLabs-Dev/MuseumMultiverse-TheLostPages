@@ -1,3 +1,5 @@
+import './cleanLauncher.css';
+
 export function enhanceLauncherMotion(root) {
   if (!root || typeof window === 'undefined') {
     return () => {};
