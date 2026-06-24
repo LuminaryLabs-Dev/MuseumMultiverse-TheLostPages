@@ -8,5 +8,7 @@ Status: active
 004-ar-route-check.md = pending
 005-qr-print-readiness.md = pending
 006-content-polish-pass.md = pending
+007-eight-page-structure-plan.md = pending
+008-nexusrealtime-integration-audit.md = pending
 
 The pointer chooses the next best task.

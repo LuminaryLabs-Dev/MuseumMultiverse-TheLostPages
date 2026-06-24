@@ -26,6 +26,8 @@ const routes = [
   'launcher',
   'book',
   'print',
+  'ar',
+  'phone',
   ...experiences.map((experience) => `ar/${experience.slug}`),
   ...experiences.map((experience) => `debug/ar/${experience.slug}`)
 ];

@@ -1,3 +1,3 @@
 ✅ Lost Pages updated
 
-Added run pointers and short deploy message rules.
+Added long-term docs, feedback tracking, and static phone AR routes.
