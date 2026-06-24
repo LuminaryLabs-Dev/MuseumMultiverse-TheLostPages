@@ -14,9 +14,10 @@ Status: active
 - Read `agent/feedback/active-feedback.md` before editing.
 - Keep deploy chat messages short.
 - Use `output-rules.md` for message style.
-- Use `output.md` for the current message.
+- Use `output.md` for the current message source.
 - Do not include repo metadata unless requested.
-- Update `output.md` with each repo change.
+- Update `output.md` with each completed batch.
+- Update `output.md` last so the message describes the whole batch.
 - Validate before claiming a site or AR issue is fixed.
 - Phone routes require static route export from the build.
 - Launcher visuals should stay clean, comic-book-like, readable, and less PDF-heavy.
