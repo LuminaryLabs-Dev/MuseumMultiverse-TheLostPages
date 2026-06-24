@@ -1,3 +1,3 @@
-✅ Lost Pages updated
+✅ Lost Pages paper pass
 
-Recorded workflow feedback and started smart deploy output support.
+Squared page cards and added paper texture plus GLSL page shading for the book/print view.
