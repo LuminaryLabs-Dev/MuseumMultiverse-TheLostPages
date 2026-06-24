@@ -11,7 +11,10 @@ Changed:
 - Added feedback intake structure.
 - Added project docs for the repo.
 - Added static route export for phone-openable AR routes.
+- Added `agent/master-intention-plan.md`.
+- Added `agent/cleanup-plan.md`.
+- Advanced the pointer to AR route QA after the launcher cleanup pass.
 
 Reason:
 
-Lost Pages needs durable project memory, feedback handling, and a repeatable agent workflow.
+Lost Pages needs durable project memory, feedback handling, a repeatable agent workflow, and a cleaner visual direction for future launcher work.
