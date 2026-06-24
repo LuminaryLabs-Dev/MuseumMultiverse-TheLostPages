@@ -16,10 +16,12 @@ This folder is the non-agent product and creative documentation scaffold for Mus
 5. `docs/EXPERIENCE-MODEL.md`
 6. `docs/GAME-MODEL.md`
 7. `docs/ASSET-PIPELINE.md`
-8. `docs/AGENT-BUILD-MANUAL.md`
-9. The target `docs/pages/PageXX-*/` folder
-10. `agent/start-here.md`
-11. `agent/pointer.md`
+8. `docs/TRACEABILITY-MATRIX.md`
+9. `docs/PAGE-DOC-STANDARD.md`
+10. `docs/AGENT-BUILD-MANUAL.md`
+11. The target `docs/pages/PageXX-*/README.md`
+12. `agent/start-here.md`
+13. `agent/pointer.md`
 
 ## Top-level documentation tree
 
@@ -36,35 +38,47 @@ docs/
 ├── TECHNICAL-BUILD-MAP.md
 ├── QA-ACCEPTANCE.md
 ├── AGENT-BUILD-MANUAL.md
+├── TRACEABILITY-MATRIX.md
+├── PAGE-DOC-STANDARD.md
 ├── supporting-content/
 │   └── README.md
 └── pages/
     ├── README.md
     ├── Page01-SleepingGallery/
+    │   └── README.md
     ├── Page02-FrameThatBreathes/
+    │   └── README.md
     ├── Page03-LostChildsSketchbook/
+    │   └── README.md
     ├── Page04-CuratorsWarning/
+    │   └── README.md
     ├── Page05-TinyPlatformerDiorama/
+    │   └── README.md
     ├── Page06-InBetweenExhibit/
+    │   └── README.md
     ├── Page07-MonsterBehindCanvas/
+    │   └── README.md
     └── Page08-SecretPortalRoom/
+        └── README.md
 ```
 
-## Per-page documentation tree
+## Page packet standard
 
-Each page folder should contain the same design spine:
+Each page README is the canonical content packet for that page. It includes:
 
 ```text
-PageXX-PageName/
-├── README.md
-├── DNA.md
-├── DESIGN.md
-├── EXPERIENCE.md
-├── STRUCTURE.md
-├── GAME.md
-├── PROJECTED-ASSETS.md
-└── FULL-OUTLINE.md
+PageXX-PageName/README.md
+├── DNA
+├── design doc
+├── projected assets
+├── full outline
+├── experience structure
+├── game outline
+├── implementation map
+└── acceptance checklist
 ```
+
+A later content pass may split page packets into separate files such as `DNA.md`, `DESIGN.md`, `EXPERIENCE.md`, `STRUCTURE.md`, `GAME.md`, `PROJECTED-ASSETS.md`, and `FULL-OUTLINE.md` if that becomes easier for agent orchestration.
 
 ## Build rule
 
