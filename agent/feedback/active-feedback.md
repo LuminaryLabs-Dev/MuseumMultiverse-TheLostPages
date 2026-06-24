@@ -12,6 +12,8 @@ Status: active
 - Add prototype and overall workflows.
 - Add a feedback folder for durable user direction.
 - Make the Pages workflow export static routes so AR routes can open directly on a phone.
+- The launcher felt too overdone and PDF-like; clean it up into a simpler comic-book look.
+- Add light reactive animations with JavaScript while keeping motion subtle.
 
 ## Handling Rule
 
