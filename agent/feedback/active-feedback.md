@@ -14,6 +14,7 @@ Status: active
 - Make the Pages workflow export static routes so AR routes can open directly on a phone.
 - The launcher felt too overdone and PDF-like; clean it up into a simpler comic-book look.
 - Add light reactive animations with JavaScript while keeping motion subtle.
+- New feedback: the overall book/launcher direction should avoid the heavy sepia tone. Do not change visuals from this note alone; treat it as feedback for the next visual pass.
 
 ## Handling Rule
 
