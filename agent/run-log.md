@@ -15,6 +15,7 @@ Completed:
 - Cleaned the launcher into simpler comic-book spreads.
 - Added light pointer and visibility animation for the launcher.
 - Added `agent/master-intention-plan.md` and `agent/cleanup-plan.md` for future visual passes.
+- Recorded feedback that the overall book/launcher direction should avoid a heavy sepia tone. No visual change was made for that feedback in this run.
 
 Next:
 
