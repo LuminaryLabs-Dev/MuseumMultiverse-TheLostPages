@@ -30,17 +30,17 @@ export function enhanceLauncherMotion(root) {
 
   function applyPointer() {
     frame = 0;
-    const mx = Math.max(0, Math.min(1, pointerX));
-    const my = Math.max(0, Math.min(1, pointerY));
-    stage.style.setProperty('--mx', mx.toFixed(3));
-    stage.style.setProperty('--my', my.toFixed(3));
+    const clampedX = Math.max(0, Math.min(1, pointerX));
+    const clampedY = Math.max(0, Math.min(1, pointerY));
+    const viewportX = clampedX * window.innerWidth;
+    const viewportY = clampedY * window.innerHeight;
 
     cards.forEach((card) => {
       const rect = card.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
-      const dx = ((pointerX * window.innerWidth) - cx) / Math.max(rect.width, 1);
-      const dy = ((pointerY * window.innerHeight) - cy) / Math.max(rect.height, 1);
+      const dx = (viewportX - cx) / Math.max(rect.width, 1);
+      const dy = (viewportY - cy) / Math.max(rect.height, 1);
       card.style.setProperty('--tilt-x', Math.max(-1, Math.min(1, -dy)).toFixed(3));
       card.style.setProperty('--tilt-y', Math.max(-1, Math.min(1, dx)).toFixed(3));
     });
@@ -55,6 +55,7 @@ export function enhanceLauncherMotion(root) {
   spreads.forEach((spread) => observer.observe(spread));
   window.addEventListener('pointermove', setPointer, { passive: true });
   window.addEventListener('scroll', applyPointer, { passive: true });
+  window.addEventListener('resize', applyPointer, { passive: true });
   applyPointer();
 
   return () => {
@@ -64,6 +65,7 @@ export function enhanceLauncherMotion(root) {
     observer.disconnect();
     window.removeEventListener('pointermove', setPointer);
     window.removeEventListener('scroll', applyPointer);
+    window.removeEventListener('resize', applyPointer);
     cards.forEach((card) => {
       card.style.removeProperty('--tilt-x');
       card.style.removeProperty('--tilt-y');
