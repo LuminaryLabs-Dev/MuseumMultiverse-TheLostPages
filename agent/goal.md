@@ -17,6 +17,7 @@ The repo must support:
 - AR routes for mobile launch
 - short deploy chat messages
 - durable agent handoff state
+- state alignment and inference turns
 
 ## Eight Page Structure
 
@@ -36,11 +37,17 @@ Each page should map to one slug in the AR experience registry.
 Expected route families:
 
 - `/launcher/` for the phone-friendly entry screen.
-- `/book/` for the full composition view.
-- `/print/` for print review.
+- `/print/` for the primary print review / presentation surface.
+- `/book/` currently exists as a composition-book/reference route, but active feedback says it is pending demotion, hiding, redirect, removal, or retention only as debug/experimental/legacy.
 - `/ar/<slug>/` for QR-launched AR.
 - `/debug/ar/<slug>/` for desktop debug.
 
+Do not treat `/book/` demotion/removal as implemented until route/source changes and validation evidence exist.
+
+## State Intelligence Goal
+
+The repo should support a reusable State Intelligence Sync turn that reads agent state, reads non-agent docs, detects drift, infers durable future rules, and updates only docs/agent knowledge unless implementation is explicitly requested.
+
 ## Long Term Rule
 
-Lost Pages owns the magazine, copy, routes, QR structure, page data, and experience manifests. Reusable runtime behavior belongs in NexusRealtime.
+Lost Pages owns the magazine, copy, routes, QR structure, page data, print presentation, and experience manifests. Reusable runtime behavior belongs in NexusRealtime.
