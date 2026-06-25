@@ -59,10 +59,15 @@ Completed:
 - Preserved subtle physical tilt/parallax motion for launcher and print surfaces.
 - Added tabletop-style background, grounded paper shadows, and first-pass opening/settling transition for the print view.
 - Updated technical/style docs, feedback log, state intelligence ledger, and deploy output for the print-first source pass.
+- Added a cached Three.js paper background for launcher and print.
+- Added precomputed multi-octave paper maps for albedo, normal, and height/depth.
+- Changed the main background and hero surfaces away from the prior stripe treatment.
+- Kept text, QR, and controls in DOM while the paper surface renders behind them as a flat 2.5D layer.
+- Added non-striped CSS fallback styling for constrained browsers.
 
 Validation:
 
-- Open PR search returned no open PRs before the print-first source batch.
+- Open PR search returned no open PRs before these source batches.
 - Source files were inspected after update through the GitHub connector.
 - Build and browser preview were not run from this connector environment.
 
@@ -72,12 +77,14 @@ Post-change audit:
 - Improved: `/book/` is still available as a direct legacy route but no longer promoted equally.
 - Improved: cursor glow was removed from launcher markup/CSS and motion no longer updates glow-position variables.
 - Improved: tabletop background, grounded page shadows, and a first-pass opening/settling transition are in source.
-- Still needs review: visual density, actual tabletop feel, QR readability, and animation timing must be judged in preview.
+- Improved: a cached WebGL paper background now supplies multi-octave noise and normal/depth shading without visible stripe layers.
+- Still needs review: visual density, paper feel, QR readability, animation timing, and fallback behavior must be judged in preview.
 - Still needs decision: final `/book/` route treatment remains unresolved.
 
 Next:
 
-- Run build and browser checks for `/launcher/`, `/print/`, `/book/`, one `/ar/<slug>/`, and one `/debug/ar/<slug>/`.
-- If validation passes, move implemented print-first/tabletop/no-glow feedback to `processed-feedback.md` with evidence.
-- Decide whether `/book/` stays legacy/debug, redirects to `/print/`, or is removed from public/static paths.
+- Run build and browser checks for `/launcher/`, `/print/`, `/book/`, one route page, and one debug route.
+- Confirm the cached paper shader renders on representative desktop/mobile browsers and fallback styling is acceptable.
+- If validation passes, move implemented print-first/tabletop/no-glow/paper-shader feedback to `processed-feedback.md` with evidence.
+- Decide whether `/book` stays legacy/debug, redirects to `/print`, or is retired from public/static paths.
 - Run `agent/prompts/004-ar-route-check.md` after print navigation is validated.
