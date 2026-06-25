@@ -1,48 +1,44 @@
 .clean-comic-launcher {
-  --mx: 0.5;
-  --my: 0.5;
   min-height: 100svh;
   width: 100%;
   overflow-x: hidden;
   color: var(--paper);
   background:
-    radial-gradient(circle at calc(var(--mx) * 100%) calc(var(--my) * 100%), rgba(255, 220, 141, 0.14), transparent 24rem),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 100%),
-    linear-gradient(180deg, #151310 0%, #090908 58%, #040403 100%);
-  background-size: auto, 44px 44px, auto;
+    radial-gradient(ellipse at 16% 8%, rgba(255, 246, 221, 0.18), transparent 24rem),
+    radial-gradient(ellipse at 80% 18%, rgba(112, 72, 38, 0.18), transparent 28rem),
+    repeating-linear-gradient(92deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 13px),
+    linear-gradient(145deg, #342516 0%, #21170f 45%, #120c08 100%);
   padding: clamp(16px, 3vw, 34px);
 }
 
-.clean-comic-launcher__glow {
-  position: fixed;
-  inset: auto 0 0;
-  height: 38svh;
-  background: radial-gradient(ellipse at center, rgba(210, 162, 86, 0.16), transparent 64%);
-  pointer-events: none;
-}
-
 .clean-comic-hero {
+  --tilt-x: 0;
+  --tilt-y: 0;
   position: relative;
   z-index: 1;
   width: min(1120px, 100%);
   margin: 0 auto clamp(18px, 4vw, 34px);
   padding: clamp(18px, 3vw, 34px);
-  border: 1px solid rgba(247, 239, 222, 0.2);
+  border: 1px solid rgba(247, 239, 222, 0.24);
   border-radius: 0;
   background:
-    radial-gradient(circle at 88% 16%, rgba(255, 215, 128, 0.12), transparent 18rem),
+    linear-gradient(90deg, rgba(247, 239, 222, 0.08), transparent 34%),
     repeating-linear-gradient(116deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 12px),
-    linear-gradient(135deg, rgba(247, 239, 222, 0.1), rgba(247, 239, 222, 0.03));
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+    linear-gradient(135deg, rgba(247, 239, 222, 0.12), rgba(247, 239, 222, 0.035));
+  box-shadow:
+    0 2px 0 rgba(255, 244, 215, 0.1) inset,
+    0 22px 44px rgba(9, 6, 4, 0.3),
+    0 58px 120px rgba(0, 0, 0, 0.32);
   display: flex;
   justify-content: space-between;
   align-items: end;
   gap: 20px;
   transform:
     perspective(1000px)
-    rotateX(calc(var(--tilt-x, 0) * 1.1deg))
-    rotateY(calc(var(--tilt-y, 0) * 1.1deg));
-  transition: transform 180ms ease, border-color 180ms ease;
+    rotateX(calc(var(--tilt-x, 0) * 0.8deg))
+    rotateY(calc(var(--tilt-y, 0) * 0.8deg))
+    translate3d(0, 0, 0);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .clean-comic-hero__eyebrow {
@@ -51,7 +47,7 @@
   font-weight: 900;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(247, 239, 222, 0.62);
+  color: rgba(247, 239, 222, 0.64);
 }
 
 .clean-comic-hero h1 {
@@ -65,7 +61,7 @@
 .clean-comic-hero__copy {
   max-width: 54ch;
   margin: 14px 0 0;
-  color: rgba(247, 239, 222, 0.75);
+  color: rgba(247, 239, 222, 0.76);
   line-height: 1.5;
 }
 
@@ -77,7 +73,8 @@
 }
 
 .clean-comic-hero__actions a,
-.clean-comic-card__button {
+.clean-comic-card__button,
+.print-page-sheet__button {
   min-height: 42px;
   display: inline-grid;
   place-items: center;
@@ -89,17 +86,30 @@
   font-size: 0.84rem;
   font-weight: 900;
   white-space: nowrap;
-  transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+  transition: transform 180ms ease, background 180ms ease, color 180ms ease, border-color 180ms ease;
 }
 
 .clean-comic-hero__actions a:hover,
-.clean-comic-card__button:hover {
+.clean-comic-card__button:hover,
+.print-page-sheet__button:hover {
   transform: translateY(-2px);
   background: var(--paper);
   color: var(--ink);
 }
 
-.clean-comic-book {
+.clean-comic-hero__primary-action {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  border-color: rgba(247, 239, 222, 0.72) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
+.clean-comic-hero__legacy-action {
+  opacity: 0.62;
+}
+
+.clean-comic-book,
+.print-tabletop__layout {
   position: relative;
   z-index: 1;
   width: min(1120px, 100%);
@@ -108,42 +118,53 @@
   gap: clamp(18px, 4vw, 34px);
 }
 
-.clean-comic-spread {
+.clean-comic-spread,
+.print-tabletop__spread,
+.print-tabletop__cover-sheet {
   position: relative;
   opacity: 0.72;
   transform: translateY(18px) scale(0.985);
   transition: opacity 360ms ease, transform 360ms ease;
 }
 
-.clean-comic-spread[data-visible] {
+.clean-comic-spread[data-visible],
+.print-tabletop__spread[data-visible],
+.print-tabletop__cover-sheet[data-visible] {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
 
-.clean-comic-spread__label {
+.clean-comic-spread__label,
+.print-tabletop__spread-label {
   margin: 0 0 8px 10px;
   font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(247, 239, 222, 0.44);
+  color: rgba(247, 239, 222, 0.48);
 }
 
-.clean-comic-spread__pages {
+.clean-comic-spread__pages,
+.print-tabletop__pages {
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(12px, 2vw, 18px);
   padding: clamp(12px, 2vw, 18px);
-  border: 1px solid rgba(247, 239, 222, 0.13);
+  border: 1px solid rgba(247, 239, 222, 0.16);
   border-radius: 0;
   background:
-    linear-gradient(90deg, transparent 0 calc(50% - 1px), rgba(247, 239, 222, 0.16) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
-    linear-gradient(135deg, rgba(247, 239, 222, 0.08), rgba(247, 239, 222, 0.02));
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.32);
+    linear-gradient(90deg, transparent 0 calc(50% - 1px), rgba(247, 239, 222, 0.2) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(180deg, rgba(247, 239, 222, 0.11), rgba(247, 239, 222, 0.04));
+  box-shadow:
+    0 2px 0 rgba(255, 246, 222, 0.08) inset,
+    0 18px 40px rgba(6, 4, 2, 0.34),
+    0 68px 130px rgba(0, 0, 0, 0.34);
 }
 
-.clean-comic-card {
+.clean-comic-card,
+.print-page-sheet,
+.print-tabletop__cover-copy {
   --tilt-x: 0;
   --tilt-y: 0;
   position: relative;
@@ -157,22 +178,26 @@
   padding: clamp(18px, 3vw, 30px);
   color: #17110d;
   background:
-    radial-gradient(circle at calc(var(--mx) * 100%) calc(var(--my) * 100%), color-mix(in srgb, var(--glow) 24%, transparent), transparent 15rem),
-    linear-gradient(90deg, rgba(120, 50, 35, 0.2) 0 2px, transparent 2px 100%),
+    linear-gradient(90deg, rgba(120, 50, 35, 0.18) 0 2px, transparent 2px 100%),
     repeating-linear-gradient(0deg, transparent 0 29px, rgba(34, 22, 14, 0.08) 30px 31px),
     repeating-linear-gradient(112deg, rgba(83, 58, 32, 0.035) 0 1px, transparent 1px 9px),
     linear-gradient(180deg, #fff7dc 0%, #f3dfb2 62%, #e7cf98 100%);
   box-shadow:
-    0 5px 0 rgba(22, 16, 11, 0.9),
-    0 22px 52px rgba(0, 0, 0, 0.26);
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 6px 0 rgba(22, 16, 11, 0.82),
+    0 24px 54px rgba(0, 0, 0, 0.3),
+    0 70px 130px rgba(0, 0, 0, 0.18);
   transform:
     perspective(1200px)
-    rotateX(calc(var(--tilt-x) * 1.6deg))
-    rotateY(calc(var(--tilt-y) * 1.6deg));
+    rotateX(calc(var(--tilt-x) * 1.05deg))
+    rotateY(calc(var(--tilt-y) * 1.05deg))
+    translate3d(0, 0, 0);
   transition: transform 160ms ease, box-shadow 180ms ease;
 }
 
-.clean-comic-card::before {
+.clean-comic-card::before,
+.print-page-sheet::before,
+.print-tabletop__cover-copy::before {
   content: '';
   position: absolute;
   inset: 12px;
@@ -181,34 +206,45 @@
   pointer-events: none;
 }
 
-.clean-comic-card::after {
+.clean-comic-card::after,
+.print-page-sheet::after,
+.print-tabletop__cover-copy::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(110deg, transparent 0 44%, rgba(255, 255, 255, 0.18) 48%, transparent 56% 100%),
+    linear-gradient(110deg, transparent 0 44%, rgba(255, 255, 255, 0.15) 48%, transparent 56% 100%),
     repeating-linear-gradient(96deg, rgba(58, 43, 25, 0.035) 0 1px, transparent 1px 8px),
-    radial-gradient(circle at 12% 12%, rgba(255, 255, 255, 0.18), transparent 16rem);
+    radial-gradient(circle at 12% 12%, rgba(255, 255, 255, 0.14), transparent 16rem);
   opacity: 0.56;
   mix-blend-mode: multiply;
   pointer-events: none;
 }
 
-.clean-comic-card:hover {
+.clean-comic-card:hover,
+.print-page-sheet:hover {
   box-shadow:
-    0 5px 0 rgba(22, 16, 11, 0.9),
-    0 28px 72px rgba(0, 0, 0, 0.34);
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 6px 0 rgba(22, 16, 11, 0.82),
+    0 28px 72px rgba(0, 0, 0, 0.36),
+    0 82px 150px rgba(0, 0, 0, 0.2);
 }
 
 .clean-comic-card__topline,
 .clean-comic-card__copy,
 .clean-comic-card__mission,
-.clean-comic-card__footer {
+.clean-comic-card__footer,
+.print-page-sheet__topline,
+.print-page-sheet__body,
+.print-page-sheet__mission,
+.print-page-sheet__footer,
+.print-tabletop__cover-copy > * {
   position: relative;
   z-index: 1;
 }
 
-.clean-comic-card__topline {
+.clean-comic-card__topline,
+.print-page-sheet__topline {
   display: flex;
   justify-content: space-between;
   gap: 12px;
@@ -218,7 +254,9 @@
   text-transform: uppercase;
 }
 
-.clean-comic-card__copy h2 {
+.clean-comic-card__copy h2,
+.print-page-sheet__body h2,
+.print-tabletop__cover-copy h2 {
   max-width: 9ch;
   margin: 0;
   font-family: 'Cormorant Garamond', serif;
@@ -227,14 +265,31 @@
   letter-spacing: -0.04em;
 }
 
-.clean-comic-card__copy p {
+.print-tabletop__cover-copy h2 {
+  max-width: 11ch;
+  font-size: clamp(3rem, 8vw, 7rem);
+}
+
+.clean-comic-card__copy p,
+.print-page-sheet__body p,
+.print-tabletop__cover-copy p {
   max-width: 44ch;
   margin: 18px 0 0;
   font-size: clamp(0.95rem, 1.6vw, 1.16rem);
   line-height: 1.45;
 }
 
-.clean-comic-card__mission {
+.print-page-sheet__eyebrow {
+  margin: 0 0 12px !important;
+  font-size: 0.76rem !important;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--deep) 72%, #17110d);
+}
+
+.clean-comic-card__mission,
+.print-page-sheet__mission {
   border: 2px solid rgba(23, 17, 13, 0.72);
   border-radius: 0;
   padding: 14px;
@@ -245,29 +300,35 @@
   gap: 5px;
 }
 
-.clean-comic-card__mission strong {
+.clean-comic-card__mission strong,
+.print-page-sheet__mission strong {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(1.25rem, 2vw, 1.7rem);
   line-height: 1;
 }
 
-.clean-comic-card__mission span {
+.clean-comic-card__mission span,
+.print-page-sheet__mission span {
   line-height: 1.35;
 }
 
-.clean-comic-card__footer {
+.clean-comic-card__footer,
+.print-page-sheet__footer {
   display: grid;
   grid-template-columns: 1fr minmax(92px, 116px);
   align-items: end;
   gap: 12px;
 }
 
-.clean-comic-card__button {
+.clean-comic-card__button,
+.print-page-sheet__button {
   width: fit-content;
   color: #fff2cc;
+  background: rgba(22, 16, 11, 0.86);
 }
 
-.clean-comic-card__qr {
+.clean-comic-card__qr,
+.print-page-sheet__qr {
   aspect-ratio: 1;
   border: 2px solid #17110d;
   border-radius: 0;
@@ -278,11 +339,112 @@
   overflow: hidden;
 }
 
-.clean-comic-card__qr small {
+.clean-comic-card__qr small,
+.print-page-sheet__qr small {
   color: var(--ink);
   font-size: 0.56rem;
   overflow-wrap: anywhere;
   text-align: center;
+}
+
+.print-tabletop {
+  isolation: isolate;
+}
+
+.print-tabletop__hero {
+  margin-bottom: clamp(26px, 5vw, 54px);
+}
+
+.print-tabletop__opening {
+  position: relative;
+  z-index: 0;
+  width: min(960px, calc(100% - 24px));
+  height: clamp(78px, 14vw, 160px);
+  margin: 0 auto -24px;
+  perspective: 1200px;
+  pointer-events: none;
+}
+
+.print-tabletop__cover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  border: 1px solid rgba(247, 239, 222, 0.18);
+  background:
+    repeating-linear-gradient(114deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 10px),
+    linear-gradient(135deg, #4b351e, #1b1109);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
+  animation: printCoverOpen 980ms cubic-bezier(0.22, 0.84, 0.16, 1) both;
+}
+
+.print-tabletop__cover--left {
+  left: 0;
+  transform-origin: right center;
+}
+
+.print-tabletop__cover--right {
+  right: 0;
+  transform-origin: left center;
+}
+
+.print-tabletop__layout {
+  animation: printSpreadSettle 780ms 180ms cubic-bezier(0.2, 0.86, 0.18, 1) both;
+}
+
+.print-tabletop__cover-sheet {
+  min-height: clamp(360px, 42vw, 520px);
+}
+
+.print-tabletop__cover-copy {
+  min-height: inherit;
+  align-content: end;
+}
+
+.print-tabletop__cover-copy span {
+  display: inline-block;
+  margin-top: 18px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.print-page-sheet__rule {
+  position: absolute;
+  inset: 0 auto 0 18px;
+  width: 2px;
+  background: rgba(126, 42, 35, 0.22);
+  z-index: 0;
+}
+
+@keyframes printCoverOpen {
+  0% {
+    opacity: 0.92;
+    transform: rotateY(0deg) translateY(10px);
+  }
+  100% {
+    opacity: 0;
+    transform: rotateY(var(--open-angle, 72deg)) translateY(34px);
+  }
+}
+
+.print-tabletop__cover--left {
+  --open-angle: -72deg;
+}
+
+.print-tabletop__cover--right {
+  --open-angle: 72deg;
+}
+
+@keyframes printSpreadSettle {
+  0% {
+    opacity: 0;
+    transform: translateY(42px) rotateX(8deg) scale(0.965);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+  }
 }
 
 @media (max-width: 760px) {
@@ -299,12 +461,18 @@
     justify-content: start;
   }
 
-  .clean-comic-spread__pages {
+  .clean-comic-spread__pages,
+  .print-tabletop__pages {
     grid-template-columns: 1fr;
   }
 
-  .clean-comic-card {
+  .clean-comic-card,
+  .print-page-sheet {
     min-height: 500px;
+  }
+
+  .print-tabletop__opening {
+    margin-bottom: -12px;
   }
 }
 
@@ -312,9 +480,16 @@
   .clean-comic-hero,
   .clean-comic-spread,
   .clean-comic-card,
+  .print-tabletop__spread,
+  .print-tabletop__cover-sheet,
+  .print-page-sheet,
+  .print-tabletop__layout,
+  .print-tabletop__cover,
   .clean-comic-hero__actions a,
-  .clean-comic-card__button {
+  .clean-comic-card__button,
+  .print-page-sheet__button {
     transition: none;
+    animation: none;
     transform: none;
   }
 }
