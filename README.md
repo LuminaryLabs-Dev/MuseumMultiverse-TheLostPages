@@ -4,12 +4,12 @@ An AR companion magazine for Museum Multiverse.
 
 ## What is in the repo
 
-- `src/` contains the browser app, page data, routes, and AR integration.
+- `src/` contains the browser app, page data, routes, and route surfaces.
 - `print/magazine-pages/` contains the copy source for each printed page.
-- `/ar/:slug` routes launch page-specific immersive AR experiences.
+- `/ar/:slug` routes launch page-specific experiences.
 - `/debug/ar/:slug` and `/ar/:slug?debug=1` keep the desktop debug surface.
-- `/print` is the primary print review/presentation route for active product direction.
-- `/book` currently renders a composition-book/reference route, but active feedback says it is pending demotion, hiding, redirect, removal, or retention only as debug/experimental/legacy.
+- `/print` is now the primary tabletop print review/presentation route.
+- `/book` still renders the legacy composition-book/reference route, but it is de-emphasized in public navigation.
 - `docs/` contains project docs.
 - `agent/` contains long-running repo-local operating state.
 
@@ -39,7 +39,7 @@ npm run build
 
 The build runs Vite and exports static route copies into `dist/` so direct phone routes can open on GitHub Pages.
 
-## Static phone routes
+## Static routes
 
 ```text
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/
@@ -53,9 +53,9 @@ Static route export is handled by `scripts/export-static-routes.mjs`.
 
 ## Current non-AR review direction
 
-Active feedback says the main print view should become the primary review/presentation surface. The print view should feel like a physical tabletop surface with grounded paper shadows, subtle physical reactivity, and no pointer-following glow effect.
+The main print view is now the primary review/presentation surface. It should read as a physical tabletop surface with grounded paper shadows, squared paper pages, subtle physical reactivity, and no pointer-following glow effect.
 
-The existing `/book` route should not be treated as the preferred product surface unless a later decision intentionally retains it.
+The existing `/book` route is available as a legacy composition-book reference, not the preferred public review path. A later pass should decide whether it stays legacy/debug, redirects to `/print`, or is removed from public/static paths.
 
 ## Deploy
 
@@ -96,6 +96,5 @@ agent/prompts/state-intelligence-sync.md
 ## Notes
 
 - QR codes must point at a LAN/public HTTPS origin.
-- Normal QR scans show one `Start AR` gate, then full-screen AR.
 - Device-specific AR mode selection lives in `NexusRealtime`; Lost Pages owns copy, routes, QR, and experience manifests.
 - Feedback-only turns should update feedback docs and should not change app code unless implementation is explicitly requested.
