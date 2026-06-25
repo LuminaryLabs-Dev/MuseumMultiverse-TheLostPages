@@ -63,6 +63,8 @@ export function renderPrintMarkup(origin = '') {
 
   return `
     <section class="print-tabletop clean-comic-launcher" data-comic-stage data-print-stage aria-label="Museum Multiverse Lost Pages print review surface">
+      <div class="clean-comic-launcher__paper-viewport" data-paper-viewport aria-hidden="true"></div>
+
       <header class="print-tabletop__hero clean-comic-hero" data-comic-card>
         <div>
           <p class="clean-comic-hero__eyebrow">Primary print review surface</p>
