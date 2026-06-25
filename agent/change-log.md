@@ -31,7 +31,9 @@ Changed:
 - Updated durable memory with state-sync and print-first rules.
 - Added `docs/STATE-ALIGNMENT-MAP.md`.
 - Aligned docs with active print-first and tabletop feedback without changing app/source implementation.
+- Added `agent/prompts/autonomous-bounded-turn.md`.
+- Updated `agent/start-here.md`, `agent/workflow.md`, and `agent/state-intelligence-ledger.md` to recognize Autonomous Bounded Turns as the top-level generic mode selector.
 
 Reason:
 
-Lost Pages needs a repeatable turn type that can read repo state, report drift, infer durable future rules, and align docs before implementation work begins.
+Lost Pages needs repeatable turn types that can read repo state, report drift, infer durable future rules, align docs, select one bounded objective, and stop without accumulating unrelated follow-up work.
