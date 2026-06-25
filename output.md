@@ -1,3 +1,3 @@
-✅ Lost Pages scheduled turns
+✅ Lost Pages print view
 
-Upgraded the autonomous prompt with larger coherent batches and post-change audits.
+Made the print route a tabletop review surface with paper shadows and subtle physical motion.
