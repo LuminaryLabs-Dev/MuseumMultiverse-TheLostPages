@@ -14,20 +14,23 @@ Last updated: 2026-06-25
 - The State Intelligence Sync workflow exists to align knowledge before implementation turns.
 - The Autonomous Bounded Turn prompt exists as the top-level generic mode selector for one on-demand bounded turn.
 - Scheduled Autonomous Upgrade Turns now use the same autonomous prompt, a main-only push rule, a scheduled-turn lock, implementation pressure, maximum useful upgrade behavior, and post-change audits.
+- `/print/` now has a distinct route type and renders the primary tabletop print review/presentation surface.
+- `/book/` remains directly available as a legacy composition-book route and is de-emphasized in launcher/print navigation.
+- The pointer-following glow effect has been removed from the launcher/print motion path; pointer motion now only drives subtle paper/card tilt.
 
 ## Current Active Feedback
 
 - Keep deploy chat messages short.
 - Use pointer and workflow files before editing.
 - Feedback intake should update feedback docs on `main` only and must not change app code unless implementation is explicitly requested.
-- Main print view should become the primary review/presentation surface.
-- The dedicated 3D book view should be removed, hidden, redirected, or demoted unless deliberately retained as legacy/debug/experimental.
+- Main print view should remain the primary review/presentation surface.
+- The dedicated 3D book view still needs a final route decision: keep as legacy/debug, redirect, or remove later.
 - Page surfaces should look like squared paper with texture, shading, and paper-like edges.
 - Main print view should feel like paper on a tabletop or physical surface.
-- Add grounded drop shadows under the page layout.
+- Use grounded drop shadows under the page layout.
 - Use subtle physical orientation/parallax rather than cursor glow.
-- Remove pointer-following glow effects.
-- Background still feels too dense and digital; future direction should use a physical book-opening transition into the page layout.
+- Do not reintroduce pointer-following glow effects.
+- First-pass physical opening/settling transition exists; polish is pending browser review.
 
 ## Available Reusable Turn Prompts
 
@@ -67,37 +70,48 @@ Scheduled turns should:
 - audit the changed area immediately after implementation
 - record concrete next-turn guidance
 
+## Recently Implemented Direction
+
+The 2026-06-25 print-first tabletop implementation pass applied:
+
+1. `/print/` route split from `/book/` in `src/app/routes/router.js`.
+2. `/print/` rendering through `renderPrintMarkup()` and `renderPrintQrCodes()` in `src/main.js`.
+3. Standalone DOM-based tabletop print markup in `src/app/launcher/renderPrint.js`.
+4. Launcher CTA priority changed so Print view is primary and Book is legacy.
+5. Pointer glow markup removed from launcher markup.
+6. Dense pointer/glow styling replaced with tabletop/paper/shadow styling in `cleanLauncher.css`.
+7. Motion changed to physical tilt/parallax only in `launcherMotion.js`.
+8. First-pass CSS/DOM opening-and-settling transition added for print view.
+
 ## Pending Implementation Directions
 
-These are not implemented by this ledger. They should guide future bounded implementation turns.
+These remain active after the source pass:
 
-1. Make `/print/` the primary non-AR presentation/review route.
-2. Decide whether `/book/` is removed, redirected, hidden, or retained as experimental/debug/legacy.
-3. Replace dense digital/grid background treatment with a tabletop-like surface.
-4. Add grounded shadows under the page layout.
-5. Replace pointer glow with subtle physical parallax/orientation or paper-lift response.
-6. Plan a physical book-opening transition into the main page layout.
-7. After implementation, move resolved feedback to `processed-feedback.md` with evidence.
+1. Validate `/launcher/`, `/print/`, and `/book/` in a browser preview.
+2. Run `npm run build` and record the result.
+3. Decide whether `/book/` should remain legacy/debug, redirect to `/print/`, or be removed from public/static paths.
+4. Polish the physical opening transition after visual review.
+5. Run AR route QA after print navigation stabilizes.
+6. Run QR/print readiness after route QA and print-view validation.
+7. Move resolved feedback to `processed-feedback.md` only after validation evidence exists.
 
 ## Highest-Priority Scheduled Implementation Theme
 
 When no blocker exists and docs remain aligned, the next scheduled implementation should likely select:
 
 ```text
-Mode 4 — Implementation
-Objective: Make `/print/` feel like the primary tabletop review surface.
+Mode 5 — QA / Validation
+Objective: Validate the print-first tabletop route batch.
 ```
 
-A coherent first implementation batch may include:
+A coherent validation batch may include:
 
-- remove pointer-following glow
-- replace dense digital/grid background with tabletop-like surface
-- add grounded shadows under the page layout
-- add subtle physical parallax/orientation or paper-lift response
-- de-emphasize `/book/` in public navigation if source makes this clear
-- preserve `/book/` as redirect/debug/legacy only if route treatment is unambiguous
-- update docs/run-log/output
-- audit changed files and record the next fix
+- run `npm run build`
+- inspect `/launcher/`, `/print/`, and `/book/` route behavior
+- confirm `/print/` has QRs and tabletop layout
+- confirm `/book/` still loads legacy book view
+- confirm no pointer-following glow behavior remains
+- update feedback status based on evidence
 
 ## Non-Agent Docs That Must Stay Aligned
 
@@ -129,6 +143,7 @@ A coherent first implementation batch may include:
 - If no user target is supplied, the autonomous turn should choose the first eligible mode from its priority ladder and stop after that objective.
 - After docs are aligned and feedback is implementation-ready, scheduled turns should prefer implementation over more planning.
 - Scheduled implementation turns should produce a post-change audit and next-turn handoff.
+- Print-view motion should be physical tilt/parallax only; no cursor-following glow should return unless user feedback reverses that direction.
 
 ## Do Not Touch Yet
 
@@ -145,23 +160,22 @@ Do not edit these in a State Intelligence Sync or planning turn unless explicitl
 
 ## Needs User Decision
 
-- Should `/book/` be deleted, redirected to `/print/`, hidden from launcher UI, or retained as a debug/experimental route?
+- Should `/book/` stay as legacy/debug, redirect to `/print/`, or be removed from public/static paths?
 - Should `/print/` become the only non-AR review path shown publicly?
-- Should the physical book-opening transition be a CSS/DOM transition, a canvas transition, or a lightweight WebGL transition?
+- After browser review, should the physical book-opening transition stay CSS/DOM or move to a more advanced canvas/WebGL transition?
 
 ## Evidence / Validation Boundaries
 
-- Current State Intelligence Sync and Autonomous Bounded Turn prompt changes are documentation/intelligence changes only.
-- Scheduled prompt and lock changes do not prove the UI changed.
-- No build or browser preview is implied by an agent prompt/docs turn.
-- No phone, camera, WebXR, or AR path is proven unless directly tested.
-- Feedback should remain active until implementation is completed and evidenced.
+- The print-first tabletop implementation was pushed to source on `main`.
+- The implementation was inspected through repository file review.
+- `npm run build` was requested but could not be run from this connector-only environment.
+- No browser preview, deployed GitHub Pages check, phone, camera, WebXR, or AR path validation has been performed in this turn.
+- Feedback should remain active until implementation is completed and evidenced by build/browser validation.
 
 ## Recommended Next Turns
 
-1. Run one scheduled Autonomous Bounded Turn with implementation pressure and max-upgrade behavior.
-2. Implement the print-first tabletop visual/navigation pass if no blocker exists.
-3. Audit the print-view UI implementation and run build/preview validation.
-4. Decide `/book/` route treatment if implementation reaches navigation/route behavior.
-5. Run `agent/prompts/004-ar-route-check.md` for AR route QA when product/navigation direction is stable.
-6. Run QR/print readiness after AR route QA and print-view direction are validated.
+1. Run build and browser/deployed-route QA for `/launcher/`, `/print/`, `/book/`, `/ar/<slug>/`, and `/debug/ar/<slug>/`.
+2. If validation passes, move implemented print-first/tabletop/no-glow feedback into `processed-feedback.md` with evidence.
+3. Decide final `/book/` route treatment.
+4. Run `agent/prompts/004-ar-route-check.md` for AR route QA when product/navigation direction is stable.
+5. Run QR/print readiness after AR route QA and print-view direction are validated.
