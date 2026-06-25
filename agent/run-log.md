@@ -51,17 +51,33 @@ Completed:
 - Upgraded the Autonomous Bounded Turn prompt for scheduled use with maximum useful upgrade behavior, implementation pressure, scheduled-turn locking, post-change audit requirements, and concrete next-turn handoff.
 - Added `agent/scheduled-turn-lock.md`.
 - Updated `agent/start-here.md`, `agent/workflow.md`, and `agent/state-intelligence-ledger.md` so scheduled autonomous turns should push to `main`, avoid new PRs, prefer implementation after alignment, and audit implementation batches.
+- Applied the print-first tabletop UI/navigation implementation pass on `main`.
+- Split `/print/` into its own route type while keeping `/book/` as a legacy route.
+- Made `/print/` render a standalone tabletop print review surface instead of the 3D book scene.
+- Promoted Print view as the launcher primary CTA and demoted Book to a legacy link.
+- Removed the pointer-following glow element and the glow-position motion variables.
+- Preserved subtle physical tilt/parallax motion for launcher and print surfaces.
+- Added tabletop-style background, grounded paper shadows, and first-pass opening/settling transition for the print view.
+- Updated technical/style docs, feedback log, state intelligence ledger, and deploy output for the print-first source pass.
 
 Validation:
 
-- Documentation and agent-state changes only.
-- No `src/`, `print/`, `scripts/`, or `.github/` files were intentionally edited.
-- No build, browser preview, phone, camera, WebXR, or AR validation was run.
-- Open PR search returned no open PRs before this main-branch docs batch.
+- Open PR search returned no open PRs before the print-first source batch.
+- Source files were inspected after update through the GitHub connector.
+- Build and browser preview were not run from this connector environment.
+
+Post-change audit:
+
+- Improved: `/print/` is now a separate route and standalone tabletop surface.
+- Improved: `/book/` is still available as a direct legacy route but no longer promoted equally.
+- Improved: cursor glow was removed from launcher markup/CSS and motion no longer updates glow-position variables.
+- Improved: tabletop background, grounded page shadows, and a first-pass opening/settling transition are in source.
+- Still needs review: visual density, actual tabletop feel, QR readability, and animation timing must be judged in preview.
+- Still needs decision: final `/book/` route treatment remains unresolved.
 
 Next:
 
-- Update the external scheduler task prompts to match `agent/prompts/autonomous-bounded-turn.md` if the scheduler does not read prompt text from the repo.
-- Run one scheduled Autonomous Bounded Turn with implementation pressure and max-upgrade behavior.
-- If no blocker exists, implement the print-first tabletop visual/navigation pass for `/print/`.
-- Run `agent/prompts/004-ar-route-check.md` after product/navigation direction is stable or when route QA is prioritized.
+- Run build and browser checks for `/launcher/`, `/print/`, `/book/`, one `/ar/<slug>/`, and one `/debug/ar/<slug>/`.
+- If validation passes, move implemented print-first/tabletop/no-glow feedback to `processed-feedback.md` with evidence.
+- Decide whether `/book/` stays legacy/debug, redirects to `/print/`, or is removed from public/static paths.
+- Run `agent/prompts/004-ar-route-check.md` after print navigation is validated.
