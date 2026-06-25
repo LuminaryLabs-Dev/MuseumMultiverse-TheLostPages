@@ -61,35 +61,50 @@ That prompt is the top-level mode selector. It reads repo state, selects exactly
 4. `agent/goal.md`
 5. `agent/dependencies.md`
 6. `agent/state-intelligence-ledger.md`
-7. `agent/feedback/active-feedback.md`
-8. `agent/feedback/feedback-inbox.md`
-9. `agent/feedback/feedback-rules.md`
-10. `agent/feedback/feedback-log.md`
-11. `agent/feedback/processed-feedback.md`
-12. `agent/memory.md`
-13. `agent/run-log.md`
-14. `agent/change-log.md`
-15. `docs/STATE-ALIGNMENT-MAP.md`
-16. `docs/DNA.md`
-17. `docs/FULL-OUTLINE.md`
-18. `docs/STYLE-GUIDE.md`
-19. `docs/TECHNICAL-BUILD-MAP.md`
-20. `docs/QA-ACCEPTANCE.md`
-21. `docs/TRACEABILITY-MATRIX.md`
-22. `docs/chatgpt-master-start-source.md`
-23. `README.md`
-24. `output-rules.md`
-25. `output.md`
+7. `agent/scheduled-turn-lock.md` if present
+8. `agent/prompts/autonomous-bounded-turn.md`
+9. `agent/feedback/active-feedback.md`
+10. `agent/feedback/feedback-inbox.md`
+11. `agent/feedback/feedback-rules.md`
+12. `agent/feedback/feedback-log.md`
+13. `agent/feedback/processed-feedback.md`
+14. `agent/memory.md`
+15. `agent/run-log.md`
+16. `agent/change-log.md`
+17. `docs/STATE-ALIGNMENT-MAP.md`
+18. `docs/DNA.md`
+19. `docs/FULL-OUTLINE.md`
+20. `docs/STYLE-GUIDE.md`
+21. `docs/TECHNICAL-BUILD-MAP.md`
+22. `docs/QA-ACCEPTANCE.md`
+23. `docs/TRACEABILITY-MATRIX.md`
+24. `docs/chatgpt-master-start-source.md`
+25. `README.md`
+26. `output-rules.md`
+27. `output.md`
+
+## Scheduled Autonomous Turn Read Order
+
+Use this read order when a scheduled Slot A/B/C/D automation runs.
+
+1. `agent/scheduled-turn-lock.md`
+2. `agent/prompts/autonomous-bounded-turn.md`
+3. the Autonomous Bounded Turn read order above
+
+Scheduled turns should check the lock before editing source or docs. If the lock is active and not stale, the turn should stop.
 
 ## Rules
 
 - Read `pointer.md` before choosing work.
 - Do not invent the next task when the pointer already names one, unless the user explicitly triggers the Autonomous Bounded Turn mode selector.
-- Keep each run bounded.
+- Keep each run bounded to one coherent objective.
+- Scheduled Autonomous Bounded Turns should make the largest safe coherent upgrade toward active goals and feedback, not one tiny edit by default.
+- Implementation is preferred after feedback is captured and docs are aligned, unless a real blocker exists.
+- Every implementation turn should audit the changed area and record the next concrete fix.
 - Update `output.md` with the shortest useful deploy message.
 - Update the pointer after a successful run only when the active task was completed or the pointer is stale, blocked, or misleading.
 - Record durable feedback in `agent/feedback/`.
 - Use `agent/prompts/state-intelligence-sync.md` when the user asks for repo alignment, drift detection, or future-turn inference.
 - Use `agent/prompts/autonomous-bounded-turn.md` when the user asks for one generic bounded turn that should derive its own objective from repo state.
 - State Intelligence Sync turns may update docs and agent knowledge, but must not edit app/source implementation unless explicitly requested.
-- Autonomous Bounded Turns must select exactly one mode, execute or block exactly one objective, update state, and stop.
+- Autonomous Bounded Turns must select exactly one mode, execute or block exactly one coherent objective, update state, and stop.
