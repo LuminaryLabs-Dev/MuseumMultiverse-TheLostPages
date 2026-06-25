@@ -32,3 +32,28 @@ Notes:
 - The requested hidden agent path could not be written by the current connector, so this repo uses `agent/` for the same operating model.
 - The paper page visual pass was code-reviewed through the connector, but npm build and browser/device QA were not run in this environment.
 - The active pointer remains on AR route QA because this visual pass did not complete `prompts/004-ar-route-check.md`.
+
+## 2026-06-25
+
+Completed:
+
+- Implemented the State Intelligence Sync documentation and agent workflow system.
+- Added `agent/workflows/state-intelligence-sync-workflow.md`.
+- Added `agent/prompts/state-intelligence-sync.md`.
+- Added `agent/state-intelligence-ledger.md`.
+- Added `docs/STATE-ALIGNMENT-MAP.md`.
+- Updated agent workflow, memory, start-here, feedback rules, feedback inbox, and feedback log for state alignment and inference turns.
+- Mirrored active print-first and tabletop feedback into feedback inbox/log with explicit status language.
+- Aligned non-agent docs with active direction that `/print/` should become the primary non-AR presentation surface and `/book/` is pending route/product decision.
+- Updated style/QA/technical docs to distinguish pending product direction from implemented source behavior.
+
+Validation:
+
+- Documentation and agent-state changes only.
+- No `src/`, `print/`, `scripts/`, or `.github/` files were intentionally edited.
+- No build, browser preview, phone, camera, WebXR, or AR validation was run.
+
+Next:
+
+- Run a print-view implementation planning turn for `/print/` primary route treatment, `/book/` decision, tabletop background, grounded shadows, subtle physical reactivity, pointer-glow removal, and physical opening transition.
+- Run `agent/prompts/004-ar-route-check.md` after product/navigation direction is stable or when route QA is prioritized.

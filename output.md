@@ -1,3 +1,3 @@
-✅ Lost Pages paper pass
+✅ Lost Pages state sync
 
-Squared page cards and added paper texture plus GLSL page shading for the book/print view.
+Added reusable state-alignment docs and aligned active print-view feedback with project docs.

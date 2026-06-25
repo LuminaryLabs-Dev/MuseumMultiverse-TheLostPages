@@ -24,3 +24,10 @@ Status: active
 - Motion should feel subtle and reactive; avoid spectacle that distracts from AR route selection.
 - Page surfaces should read as square-corner paper, not rounded cards; use texture and shader-based shading where the WebGL book/print route owns the page surface.
 - User feedback should be added to `main` as feedback only. Do not change app code unless implementation is explicitly requested.
+- A State Intelligence Sync turn may update docs and agent knowledge files, but must not change app/source implementation.
+- Active feedback should be mirrored across `active-feedback.md`, `feedback-inbox.md`, and `feedback-log.md`.
+- Non-agent docs should reflect active direction as pending or current product direction when implementation is not complete.
+- Implementation status must be explicit: captured, aligned-to-docs, ready-for-implementation, implemented, processed, superseded, or blocked.
+- Do not mark feedback processed unless implementation, rejection, or supersession is evidenced.
+- Main print view is the preferred future non-AR presentation surface; the dedicated 3D book route is pending demotion/removal/legacy treatment unless deliberately retained.
+- Print-view visual direction should feel physical: tabletop surface, grounded shadows, subtle orientation/parallax, no pointer-following glow.

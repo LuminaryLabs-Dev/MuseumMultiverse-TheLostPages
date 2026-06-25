@@ -3,7 +3,7 @@
 Status: active master starting source  
 Repository: `LuminaryLabs-Dev/MuseumMultiverse-TheLostPages`  
 Primary branch: `main`  
-Last synthesized: 2026-06-24  
+Last synthesized: 2026-06-25  
 Primary audience: future ChatGPT / agent runs, project operators, and contributors
 
 ## 1. What this document is
@@ -21,6 +21,7 @@ This document consolidates the current repository state across:
 - runtime/dependency boundary
 - build and deployment path
 - active agent workflow
+- state intelligence sync workflow
 - active feedback and known gaps
 - recommended next work
 
@@ -28,7 +29,7 @@ This document does not replace the repo's operating files. It points to the file
 
 ## 2. Current one-sentence state
 
-Lost Pages is an active Vite-based AR companion magazine prototype with eight authored QR-launched AR page modules, a launcher/book/print route structure, GitHub Pages deployment, NexusRealtime-backed runtime adapters, print copy sources, and a repo-local `agent/` operating system; the next meaningful work is AR route QA followed by QR/print readiness.
+Lost Pages is an active Vite-based AR companion magazine prototype with eight authored QR-launched AR page modules, a launcher/print/book route structure, GitHub Pages deployment, NexusRealtime-backed runtime adapters, print copy sources, supporting docs, and a repo-local `agent/` operating system. Active product direction now prefers the main print view as the primary non-AR review/presentation surface, while the dedicated 3D book route is pending demotion, removal, redirect, or legacy/debug treatment. AR route QA is still pending.
 
 ## 3. Product definition
 
@@ -52,27 +53,39 @@ The repo must support:
 - AR routes for mobile launch
 - short deploy chat messages
 - durable agent handoff state
+- state alignment and inference turns
 
-## 4. Repository shape
+## 4. Current active product direction
 
-### Main areas
+Active feedback currently says:
+
+- main print view should become the primary non-AR review/presentation surface
+- dedicated 3D book view should be removed, hidden, redirected, or demoted unless deliberately retained as legacy/debug/experimental
+- print-view background should feel like a tabletop or physical surface
+- page layout should have grounded drop shadows
+- page layout may have subtle physical orientation/parallax
+- pointer-following glow should be removed
+- background should avoid dense digital-grid feeling
+- future visual direction should explore a physical book-opening transition into the page layout
+
+These are active directions, not necessarily implemented source behavior. Do not claim route, visual, or runtime implementation until source changes and validation evidence exist.
+
+## 5. Repository shape
 
 | Area | Purpose |
 |---|---|
-| `src/` | Browser app, route resolution, AR runtime integration, page data, launcher/book UI, AR rendering surfaces, and authored experiences. |
+| `src/` | Browser app, route resolution, AR runtime integration, page data, launcher/print/book UI, AR rendering surfaces, and authored experiences. |
 | `src/experiences/` | Eight page-specific experience modules. Each experience has `copy.js`, `level.js`, `tuning.js`, and `index.js`. |
-| `src/ar/registry/experiences.js` | The experience registry. This is the source of truth for active AR slugs and route generation. |
+| `src/ar/registry/experiences.js` | The experience registry. Source of truth for active AR slugs and route generation. |
 | `print/magazine-pages/` | Print-facing Markdown copy for each magazine page. |
-| `docs/` | Human-facing documentation. This master document now lives here. |
+| `docs/` | Product, design, QA, technical, state-alignment, and supporting-content documentation. |
 | `agent/` | Repo-local long-running operating state for future ChatGPT/agent work. |
 | `scripts/` | Build/deploy/static export and deploy message helpers. |
-| `.github/workflows/deploy-lost-pages.yml` | GitHub Actions workflow for build, Pages deploy, and Discord/deploy chat notification. |
+| `.github/workflows/deploy-lost-pages.yml` | GitHub Actions workflow for build, Pages deploy, and deploy chat notification. |
 | `output.md` | Current short deploy chat message source. |
 | `output-rules.md` | Deploy chat style rules. |
 
-### Important docs
-
-Read these when orienting the project:
+Important docs include:
 
 1. `docs/project-overview.md`
 2. `docs/eight-pages-qr-structure.md`
@@ -82,9 +95,15 @@ Read these when orienting the project:
 6. `docs/feedback-loop.md`
 7. `docs/agent-operating-model.md`
 8. `docs/prototype-workflow.md`
-9. `docs/chatgpt-master-start-source.md` - this document
+9. `docs/DNA.md`
+10. `docs/FULL-OUTLINE.md`
+11. `docs/STYLE-GUIDE.md`
+12. `docs/TECHNICAL-BUILD-MAP.md`
+13. `docs/QA-ACCEPTANCE.md`
+14. `docs/STATE-ALIGNMENT-MAP.md`
+15. `docs/chatgpt-master-start-source.md`
 
-## 5. Build, dependency, and deployment state
+## 6. Build, dependency, and deployment state
 
 The app is a private ESM Vite project.
 
@@ -140,36 +159,28 @@ Direct AR route shape:
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/ar/<slug>/
 ```
 
-## 6. Route model
+## 7. Route model
 
 The app resolves routes in `src/app/routes/router.js`.
 
-Route families:
+Current route families:
 
 | Route | Current meaning |
 |---|---|
 | `/` | Launcher. |
 | `/launcher/` | Launcher. |
-| `/book/` | Full book/composition-notebook view. |
-| `/print/` | Alias to the book/print review surface. |
+| `/print/` | Print review route; active direction says this should become the primary non-AR presentation/review surface. |
+| `/book/` | Current composition-book/reference route; active direction says it is pending demotion, hiding, redirect, removal, or legacy/debug treatment. |
 | `/ar/<slug>/` | QR-launched immersive AR route. |
 | `/ar/<slug>/?debug=1` | Debug route for the same slug. |
 | `/debug/ar/<slug>/` | Desktop debug surface. |
 | `?page=<slug>` | Legacy/search-param route into an experience. |
 
-Static route export is handled by `scripts/export-static-routes.mjs`. The current export list includes:
+Static route export is handled by `scripts/export-static-routes.mjs`. The current export list has included launcher, book, print, ar, phone, every `/ar/<slug>/`, and every `/debug/ar/<slug>/`.
 
-- `launcher`
-- `book`
-- `print`
-- `ar`
-- `phone`
-- every `/ar/<slug>/`
-- every `/debug/ar/<slug>/`
+Do not remove `/book/` from docs or route assumptions until implementation actually removes, redirects, or hides it.
 
-This static export matters because GitHub Pages needs a real `index.html` in each direct route folder that a phone may open.
-
-## 7. Experience registry and eight-page map
+## 8. Experience registry and eight-page map
 
 The registry file is:
 
@@ -187,7 +198,7 @@ It currently registers eight experiences:
 | 04 | `curators-warning` | The Curator's Warning | Scan the Red Seal | Red Seal Note | Restore warning words and read the warning. |
 | 05 | `tiny-platformer-diorama` | Tiny Platformer Diorama | Scan to Play the Tiny World | Tiny Portal Badge | Clear tiny hazards and enter the goal gate. |
 | 06 | `in-between-exhibit` | The In-Between Exhibit | Scan Between Worlds | Portal Stabilizer | Sort artifacts into matching worlds. |
-| 07 | `monster-behind-canvas` | The Monster Behind the Canvas | Scan, But Don't Blink | Shadow Exhibit Fragment | Pulse a reveal beam and lock the canvas. |
+| 07 | `monster-behind-canvas` | The Monster Behind the Canvas | Scan, But Don't Blink | Shadow Exhibit Fragment | Reveal and seal the canvas. |
 | 08 | `secret-portal-room` | The Secret Portal Room | Scan to Unlock the Lost Room | Final Portal Key | Light eight sockets and unlock the final portal. |
 
 Each experience module follows this pattern:
@@ -199,11 +210,9 @@ src/experiences/<slug>/tuning.js
 src/experiences/<slug>/index.js
 ```
 
-The manifest factory is `src/experiences/authoring.js`. It merges copy, level, tuning, preferred AR modes, and AR metadata into a single experience manifest.
+The manifest factory is `src/experiences/authoring.js`. The shared reward dataset is `src/experiences/shared/rewards.js`.
 
-The shared reward dataset is `src/experiences/shared/rewards.js`. It uses storage key `lost-pages-progress` and defines eight reward slots. The final portal room currently requires all eight rewards.
-
-## 8. Print source map
+## 9. Print source map
 
 Print copy exists under:
 
@@ -224,9 +233,9 @@ print/magazine-pages/07-monster-behind-canvas.md
 print/magazine-pages/08-secret-portal-room.md
 ```
 
-Important risk: the print Markdown duplicates copy that also exists in `src/experiences/<slug>/copy.js`. Before printing, run a copy-sync check so printed copy, launcher copy, QR labels, collectibles, and AR route manifests do not drift apart.
+Important risk: print Markdown duplicates copy that also exists in `src/experiences/<slug>/copy.js`. Before printing, run a copy-sync check so printed copy, launcher copy, QR labels, collectibles, and AR route manifests do not drift apart.
 
-## 9. Runtime and NexusRealtime boundary
+## 10. Runtime and NexusRealtime boundary
 
 Lost Pages should own:
 
@@ -236,7 +245,7 @@ Lost Pages should own:
 - QR targets
 - AR experience manifests
 - Museum Multiverse content and tone
-- print and book presentation
+- print presentation
 - deploy chat output
 
 NexusRealtime should own:
@@ -258,41 +267,31 @@ Runtime adapter file:
 src/ar/runtime/session.js
 ```
 
-That file creates NexusRealtime-backed engines, selects kits, checks AR support, creates debug/fallback runtime paths, and delegates immersive launch behavior to `createARLaunchRuntime`.
-
-The current preferred AR modes are defined in `src/experiences/authoring.js`:
-
-```text
-page-marker
-webxr-plane
-camera-overlay
-fallback-preview
-```
-
 Do not claim phone, camera, WebXR, or headset proof unless it was actually tested on that device/path.
 
-## 10. Launcher, book, and visual direction
+## 11. Launcher, print, book, and visual direction
 
-The app has two major user-facing non-AR surfaces:
+The app has user-facing non-AR surfaces:
 
-| Surface | Files | Current direction |
+| Surface | Files | Current / pending direction |
 |---|---|---|
 | Launcher | `src/app/launcher/renderLauncher.js`, `src/app/launcher/cleanLauncher.css`, `src/app/launcher/launcherMotion.js` | Simpler comic-book spread launcher with subtle reactive motion. |
-| Book/print | `src/app/launcher/renderPrint.js`, `src/app/launcher/bookScene.js`, `src/app/launcher/pageTextures.js` | Canvas/Three.js composition-notebook view using generated page textures and a GLB notebook model when available. |
+| Print | `src/app/launcher/renderPrint.js`, `src/app/launcher/pageTextures.js` | Active direction says this should be the primary non-AR review/presentation surface. |
+| Book | `src/app/launcher/bookScene.js`, `src/app/launcher/pageTextures.js` | Current route exists, but active direction says it is pending demotion/removal/redirect/legacy treatment. |
 
-Current feedback says the launcher/book direction should avoid a heavy sepia tone. Do not make a visual change from that note alone; treat it as input for the next visual pass.
+Visual direction:
 
-Book-scene details to preserve unless deliberately changing the direction:
+- avoid heavy sepia as default
+- squared paper page surfaces, not rounded cards
+- tabletop/physical surface for main print view
+- grounded shadows under the page layout
+- subtle physical parallax/orientation if reactive motion is used
+- remove pointer-following glow
+- explore a physical book-opening transition into the page layout
 
-- black canvas-only background
-- GLB composition notebook model if available
-- fallback notebook geometry if the GLB fails to load
-- two visible page textures
-- generated QR textures on pages
-- scroll/click/touch page-turn behavior
-- `spreadIndex` kept separate from animation time
+Do not make visual implementation claims from docs alone.
 
-## 11. Agent operating system
+## 12. Agent operating system
 
 The repo uses `agent/` as the long-running ChatGPT/agent operating surface. The preferred hidden folder name would have been `.agent/`, but hidden path writes were blocked, so `agent/` is the active operating folder.
 
@@ -304,22 +303,6 @@ agent/pointer.md
 agent/workflow.md
 ```
 
-Required read order from `agent/start-here.md`:
-
-1. `agent/start-here.md`
-2. `agent/pointer.md`
-3. `agent/workflow.md`
-4. `agent/goal.md`
-5. `agent/dependencies.md`
-6. `agent/feedback/active-feedback.md`
-7. workflow named in the pointer
-8. prompt named in the pointer
-9. `agent/memory.md`
-10. `agent/run-log.md`
-11. `agent/change-log.md`
-12. `output-rules.md`
-13. `output.md`
-
 Current pointer:
 
 ```text
@@ -330,80 +313,71 @@ Next prompt if complete: prompts/005-qr-print-readiness.md
 
 Pointer reason:
 
-The launcher cleanup pass is complete. The next best run should check AR route behavior and confirm phone-openable route assumptions.
+The launcher cleanup pass is complete. The next best run should check AR route behavior and confirm phone-openable route assumptions. A user may explicitly trigger `agent/prompts/state-intelligence-sync.md` before implementation when docs and agent state need alignment.
 
-## 12. Active feedback and current gaps
+## 13. State Intelligence Sync system
 
-Active feedback currently includes:
+Use this trigger prompt:
 
-- keep deploy chat messages short
-- track important changes in the agent folder
-- use pointer and workflow files before editing
-- maintain long-term goal tracking for the eight-page QR structure
-- maintain dependency notes for NexusRealtime
-- make static AR routes phone-openable through build/export
-- keep launcher cleaner, simpler, and less PDF-heavy
-- add subtle reactive JavaScript motion, not spectacle
-- avoid heavy sepia tone in the next visual pass
-- avoid multiple deploy chat messages for one batch
-- make `output.md` a smarter deploy message source
+```text
+Run the Lost Pages State Intelligence Sync turn.
+```
+
+Primary files:
+
+```text
+agent/workflows/state-intelligence-sync-workflow.md
+agent/prompts/state-intelligence-sync.md
+agent/state-intelligence-ledger.md
+docs/STATE-ALIGNMENT-MAP.md
+```
+
+Purpose:
+
+- read agent state
+- read non-agent docs
+- report current repo state
+- detect drift
+- infer durable future rules
+- update docs/memory/feedback only
+- avoid app/source implementation unless explicitly requested
+
+## 14. Active feedback and current gaps
 
 Current known gaps / next checks:
 
-1. **AR route QA is pending.** The current pointer is `prompts/004-ar-route-check.md`.
-2. **QR print readiness is next.** The next prompt is `prompts/005-qr-print-readiness.md` if AR route QA completes.
-3. **Device proof is not established by docs alone.** Do not claim live phone/WebXR/headset validation unless that test was performed and recorded.
-4. **Smart deploy output is only partially started.** `scripts/render-output-message.mjs` exists, but the run log says the workflow still needs to be safely wired to call it.
-5. **Copy can drift between print Markdown and JS copy files.** Sync print source and experience copy before producing final print pages.
-6. **Visual direction has unresolved feedback.** Future visual work should reduce heavy sepia and preserve readability.
-7. **Deployment messages can drift from actual changes.** If editing main, update `output.md` once, at the end of the completed batch.
+1. AR route QA is pending.
+2. QR print readiness is next after AR route QA.
+3. Device proof is not established by docs alone.
+4. Smart deploy output is only partially started.
+5. Copy can drift between print Markdown and JS copy files.
+6. Visual/product direction has unresolved feedback around print-first presentation and book-view demotion.
+7. Print-view direction needs a bounded implementation pass.
+8. Deployment messages can drift from actual changes unless `output.md` is updated once at the end of a completed batch.
 
-## 13. Recommended next run
+## 15. Recommended next runs
 
-The next best bounded run is:
+Recommended documentation/intelligence run:
+
+```text
+agent/workflows/state-intelligence-sync-workflow.md
+agent/prompts/state-intelligence-sync.md
+```
+
+Recommended implementation planning run:
+
+```text
+Plan a print-view visual/navigation implementation pass for /print primary, /book treatment, tabletop background, grounded shadows, subtle non-glow reactivity, and physical opening transition.
+```
+
+Recommended QA run still pending:
 
 ```text
 agent/workflows/ar-qa-workflow.md
 agent/prompts/004-ar-route-check.md
 ```
 
-Recommended scope:
-
-1. Inspect route resolution for `/ar/<slug>/`, `/debug/ar/<slug>/`, and `/ar/<slug>/?debug=1`.
-2. Confirm every registered slug has a static route exported.
-3. Confirm launcher QR targets use the expected public origin.
-4. Confirm normal AR route shows one `Start AR` gate before immersive/camera-first behavior.
-5. Confirm debug routes preserve desktop controls.
-6. Record what was validated and what was not validated.
-7. Update `output.md`, `agent/run-log.md`, and `agent/pointer.md` only after the bounded run is actually complete.
-
-Acceptance standard:
-
-- route evidence recorded
-- no untested device claims
-- pointer moved only if the check passes
-- output message short and accurate
-
-## 14. How ChatGPT should work in this repo
-
-When starting a new ChatGPT project session, use this process:
-
-1. Read this master document.
-2. Read `agent/start-here.md` and `agent/pointer.md`.
-3. Read the active workflow and prompt named by the pointer.
-4. Read `agent/feedback/active-feedback.md` before planning changes.
-5. Inspect only the files needed for the selected prompt.
-6. Keep the run bounded.
-7. Validate using the closest available check.
-8. Be explicit about what was not tested.
-9. Update `output.md` last if the repo was changed.
-10. Update `agent/run-log.md` and `agent/pointer.md` if the run completed.
-11. Update `agent/memory.md` only when a durable rule is learned.
-12. Update `agent/change-log.md` only when agent operating files changed.
-
-## 15. Master source-of-truth rules
-
-Use these rules to prevent drift:
+## 16. Master source-of-truth rules
 
 - Experience slugs live in `src/ar/registry/experiences.js`.
 - Experience copy lives in `src/experiences/<slug>/copy.js`.
@@ -416,10 +390,11 @@ Use these rules to prevent drift:
 - Current task state lives in `agent/pointer.md`.
 - Long-term product goal lives in `agent/goal.md`.
 - Durable instructions live in `agent/memory.md`.
-- User feedback lives in `agent/feedback/active-feedback.md` and `processed-feedback.md`.
+- User feedback lives in `agent/feedback/`.
+- State intelligence lives in `agent/state-intelligence-ledger.md` and `docs/STATE-ALIGNMENT-MAP.md`.
 - Public deploy message source lives in `output.md` and `output-rules.md`.
 
-## 16. Update policy for this document
+## 17. Update policy for this document
 
 Update this document when any of these change:
 
@@ -434,5 +409,7 @@ Update this document when any of these change:
 - core product goal
 - QR/phone validation status
 - major visual direction
+- state intelligence workflow
+- primary non-AR review surface direction
 
 Keep this file as the high-level master source. Do not turn it into a run log. Detailed execution history belongs in `agent/run-log.md`; durable instructions belong in `agent/memory.md`; active work belongs in `agent/pointer.md`.

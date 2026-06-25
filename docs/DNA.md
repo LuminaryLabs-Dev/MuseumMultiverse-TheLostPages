@@ -17,8 +17,9 @@ A reader should be able to hold the printed magazine, scan one page, enter one f
 2. **QR as portal** — every QR code should feel like a doorway, not a utility sticker.
 3. **Micro-game per page** — every route needs one clear action loop and one clear reward.
 4. **Museum magic, not generic AR** — scenes should feel like haunted exhibit labels, living frames, curator warnings, sketchbook creatures, and hidden rooms.
-5. **Readable over ornamental** — avoid overdone PDF styling, heavy sepia, or unreadable texture.
+5. **Readable over ornamental** — avoid overdone PDF styling, heavy sepia, unreadable texture, and dense digital backgrounds.
 6. **Agent-safe structure** — every page must have docs that map DNA, design, assets, routes, game logic, and implementation files.
+7. **Print view first** — active direction prefers the main print view as the primary non-AR review/presentation surface.
 
 ## Core loop
 
@@ -42,8 +43,18 @@ The tone is playful, eerie, handmade, and museum-specific. It should feel like a
 - Museum signage mixed with sketchbook/comic energy.
 - Limited texture and readable contrast.
 - Reactive motion that supports discovery rather than spectacle.
-- Black-canvas book/launcher direction preserved unless a later visual pass deliberately changes it.
 - Avoid heavy sepia as the default look.
+- Page surfaces should read as squared paper, not rounded UI cards.
+- The primary non-AR review/presentation surface should be the main print view.
+- The dedicated 3D book view is pending demotion/removal unless deliberately retained as debug, experimental, or legacy.
+- The print view should feel like paper on a physical tabletop.
+- Avoid flat digital-grid backgrounds and pointer-following glow effects.
+- Use grounded shadows and subtle physical parallax/orientation when motion is needed.
+- A future visual/navigation pass should decide how a physical book-opening transition leads into the print layout.
+
+## Current implementation versus pending direction
+
+Current implementation may still contain `/book/`, book-scene code, and book/print route language. Active product direction now prefers `/print/` as the primary presentation surface. Do not treat pending direction as implemented until route/navigation/source changes are actually made and validated.
 
 ## Ownership boundary
 

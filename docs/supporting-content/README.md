@@ -23,6 +23,20 @@ This folder is the non-agent product and creative documentation scaffold for Mus
 12. `agent/start-here.md`
 13. `agent/pointer.md`
 
+## Required read order for state alignment and inference
+
+1. `agent/start-here.md`
+2. `agent/pointer.md`
+3. `agent/workflow.md`
+4. `agent/feedback/active-feedback.md`
+5. `agent/feedback/feedback-inbox.md`
+6. `agent/feedback/feedback-rules.md`
+7. `agent/feedback/feedback-log.md`
+8. `agent/memory.md`
+9. `agent/state-intelligence-ledger.md`
+10. `docs/STATE-ALIGNMENT-MAP.md`
+11. relevant product/source-of-truth docs under `docs/`
+
 ## Top-level documentation tree
 
 ```text
@@ -40,6 +54,7 @@ docs/
 ├── AGENT-BUILD-MANUAL.md
 ├── TRACEABILITY-MATRIX.md
 ├── PAGE-DOC-STANDARD.md
+├── STATE-ALIGNMENT-MAP.md
 ├── supporting-content/
 │   └── README.md
 └── pages/
@@ -79,6 +94,12 @@ PageXX-PageName/README.md
 ```
 
 A later content pass may split page packets into separate files such as `DNA.md`, `DESIGN.md`, `EXPERIENCE.md`, `STRUCTURE.md`, `GAME.md`, `PROJECTED-ASSETS.md`, and `FULL-OUTLINE.md` if that becomes easier for agent orchestration.
+
+## State Intelligence Sync rule
+
+Before implementing major feedback, run or consider a State Intelligence Sync when agent state and non-agent docs disagree.
+
+A State Intelligence Sync can update docs and agent knowledge. It should not update `src/`, `print/`, `scripts/`, or `.github/` unless implementation is explicitly requested.
 
 ## Build rule
 
