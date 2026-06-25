@@ -31,6 +31,8 @@ For multi-file work, batch changes first and publish once.
 
 `output.md` should be updated last so the deploy chat describes the whole batch, not each intermediate file edit.
 
+Scheduled autonomous turns push to `main` only and do not create new PRs.
+
 ## Self Learning Loop
 
 Feedback becomes active feedback.
@@ -42,6 +44,8 @@ Active feedback plus docs drift becomes a State Intelligence Sync turn.
 State Intelligence Sync turns produce implementation prompts, pointer recommendations, durable memory, and docs alignment.
 
 Autonomous Bounded Turns select exactly one eligible mode from repo state, complete or block one objective, update state, and stop.
+
+Scheduled Autonomous Upgrade Turns make the largest coherent safe upgrade toward active goals and feedback, then audit the result and record the next fix.
 
 Run results become run log entries.
 
@@ -83,13 +87,60 @@ An Autonomous Bounded Turn must:
 - read the required repo state before selecting a mode
 - produce a turn ledger before editing
 - pick the first eligible mode from the priority ladder
-- execute exactly one objective
+- execute exactly one coherent objective
 - avoid running a queue of follow-up work
 - avoid starting the recommended next turn
 - update `output.md` once at the end if repo state changed
 - stop after the selected objective is complete or blocked
 
 An Autonomous Bounded Turn should not move `agent/pointer.md` unless the pointed task completed, is blocked, is obsolete, or is clearly superseded by a higher-priority repo-state issue.
+
+## Scheduled Autonomous Upgrade Turns
+
+Use this behavior when the four scheduled hourly slots run the autonomous prompt.
+
+Scheduled turns should:
+
+- check `agent/scheduled-turn-lock.md` before work
+- handle open PRs that target `main` before new work
+- stop if an open PR requires review or conflict resolution
+- push only to `main`
+- avoid creating new PRs
+- choose one coherent objective from repo state
+- make the largest safe upgrade batch that belongs to that objective
+- prefer implementation after active feedback is captured and docs are aligned
+- avoid repeating implementation planning for the same feedback theme unless new information or a real blocker exists
+- audit the changed area immediately after implementation
+- record concrete next-turn guidance
+
+Valid large scheduled objectives include:
+
+- make `/print/` the primary tabletop review surface
+- implement the print-view visual feedback batch
+- complete AR route QA and record route evidence
+- reconcile active feedback with docs and implementation state
+- clean up processed feedback after a validated implementation
+
+Invalid scheduled objectives include:
+
+- changing UI, AR runtime, print, route export, and deploy messaging in one unrelated batch
+- changing Lost Pages and NexusRealtime in the same turn unless explicitly requested
+- running a queue of multiple unrelated tasks
+- pushing partial implementation without a closeout audit
+
+## Scheduled Turn Lock
+
+The lock file is:
+
+```text
+agent/scheduled-turn-lock.md
+```
+
+If the lock status is `active` and not stale, scheduled turns should stop.
+
+A lock is stale if it has been active for more than 60 minutes without a completion update.
+
+If no lock exists, scheduled turn setup should create it before relying on 15-minute offset schedules.
 
 ## State Intelligence Sync Turns
 
@@ -147,6 +198,8 @@ If the prompt is obsolete, mark it skipped in the run log and point to the next 
 If a user-triggered State Intelligence Sync completes, leave the current implementation pointer in place unless it is clearly stale, blocked, obsolete, or superseded.
 
 If a user-triggered Autonomous Bounded Turn completes, leave the current implementation pointer in place unless the selected objective directly completed, blocked, obsoleted, or superseded it.
+
+If a scheduled autonomous upgrade turn completes implementation work that supersedes the current pointer, update the pointer only with explicit evidence and a run-log note.
 
 ## Output Rules
 
