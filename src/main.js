@@ -7,7 +7,7 @@ import { getSurfaceLabel } from './ar/runtime/plane-detection.js';
 import { getRuntimeUiState } from './ar/runtime/ui-state.js';
 import { renderQrCode } from './lib/qr.js';
 import { renderLauncherMarkup, renderLauncherQrCodes } from './app/launcher/renderLauncher.js';
-import { renderBookMarkup, renderBookQrCodes } from './app/launcher/renderPrint.js';
+import { renderBookMarkup, renderBookQrCodes, renderPrintMarkup, renderPrintQrCodes } from './app/launcher/renderPrint.js';
 import { routeFromLocation } from './app/routes/router.js';
 import { withBasePath } from './app/routes/basePath.js';
 import { resolvePublicOrigin } from './lib/origin.js';
@@ -42,17 +42,6 @@ function installStaticAssetVariables() {
   Object.entries(assets).forEach(([name, path]) => {
     document.documentElement.style.setProperty(name, `url("${withBasePath(path)}")`);
   });
-}
-
-function navigate(to) {
-  const targetPath = withBasePath(to);
-  if (window.location.pathname === targetPath) {
-    return;
-  }
-
-  cleanupCurrentSurface();
-  history.pushState({}, '', targetPath);
-  render();
 }
 
 function setTitle(text) {
@@ -123,8 +112,16 @@ async function render() {
   cleanupCurrentSurface();
   const route = routeFromLocation();
 
+  if (route.type === 'print') {
+    setTitle(`${cover.title} - Print`);
+    app.innerHTML = renderPrintMarkup(origin);
+    await renderPrintQrCodes(app, origin);
+    launcherCleanup = enhanceLauncherMotion(app);
+    return;
+  }
+
   if (route.type === 'book') {
-    setTitle(`${cover.title} - Book`);
+    setTitle(`${cover.title} - Legacy Book`);
     app.innerHTML = renderBookMarkup();
     bookCleanup = enhanceBookScene(app, { origin });
     await renderBookQrCodes(app, origin);
@@ -148,17 +145,6 @@ async function render() {
 }
 
 window.addEventListener('popstate', render);
-
-document.addEventListener('click', (event) => {
-  const link = event.target.closest('a[data-nav]');
-  if (!link) return;
-
-  const href = link.getAttribute('href');
-  if (!href || href.startsWith('http')) return;
-
-  event.preventDefault();
-  navigate(href);
-});
 
 installStaticAssetVariables();
 render();
