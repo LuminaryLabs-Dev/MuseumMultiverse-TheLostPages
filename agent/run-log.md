@@ -46,6 +46,8 @@ Completed:
 - Mirrored active print-first and tabletop feedback into feedback inbox/log with explicit status language.
 - Aligned non-agent docs with active direction that `/print/` should become the primary non-AR presentation surface and `/book/` is pending route/product decision.
 - Updated style/QA/technical docs to distinguish pending product direction from implemented source behavior.
+- Added the Autonomous Bounded Turn reusable prompt as the top-level generic mode selector.
+- Updated `agent/start-here.md`, `agent/workflow.md`, and `agent/state-intelligence-ledger.md` so generic turns can read repo state, choose one bounded mode, update state, and stop.
 
 Validation:
 
@@ -55,5 +57,6 @@ Validation:
 
 Next:
 
+- Use `agent/prompts/autonomous-bounded-turn.md` when the user wants one generic bounded turn selected from repo state.
 - Run a print-view implementation planning turn for `/print/` primary route treatment, `/book/` decision, tabletop background, grounded shadows, subtle physical reactivity, pointer-glow removal, and physical opening transition.
 - Run `agent/prompts/004-ar-route-check.md` after product/navigation direction is stable or when route QA is prioritized.
