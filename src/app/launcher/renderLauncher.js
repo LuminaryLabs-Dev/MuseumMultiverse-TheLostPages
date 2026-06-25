@@ -43,6 +43,8 @@ export function renderLauncherMarkup(origin = '') {
 
   return `
     <section class="clean-comic-launcher" data-comic-stage aria-label="Museum Multiverse Lost Pages launcher">
+      <div class="clean-comic-launcher__paper-viewport" data-paper-viewport aria-hidden="true"></div>
+
       <header class="clean-comic-hero" data-comic-card>
         <div>
           <p class="clean-comic-hero__eyebrow">Museum Multiverse</p>
