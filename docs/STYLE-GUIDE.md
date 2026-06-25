@@ -6,6 +6,8 @@ Status: supporting content scaffold
 
 Lost Pages should feel like a haunted comic-book museum magazine, not a flat PDF and not a generic AR demo.
 
+The active product direction prefers the main print view as the primary non-AR review/presentation surface. The dedicated 3D book view is pending a product decision: remove, redirect, hide, or retain as debug/experimental/legacy.
+
 ## Visual rules
 
 - Favor bold, readable page hierarchy.
@@ -16,8 +18,18 @@ Lost Pages should feel like a haunted comic-book museum magazine, not a flat PDF
 - Avoid dense texture behind body copy.
 - Preserve readability before atmosphere.
 - Page surfaces should read as paper: squared corners, subtle fiber texture, and edge shading.
-- Book/print WebGL page surfaces should use GLSL shading for paper grain, lighting, and rectangular paper edges.
+- Book/print WebGL page surfaces should use GLSL shading for paper grain, lighting, and rectangular paper edges while that implementation exists.
 - Do not round page cards or paper sheets unless a later design intentionally changes the magazine page metaphor.
+
+## Print View Surface Direction
+
+- Main print view is the primary presentation/review surface.
+- Background should read as tabletop or physical surface, not a dense digital grid.
+- Use grounded shadows under the page layout.
+- Avoid pointer-following glow effects.
+- Keep reactivity subtle and physical: orientation, parallax, paper lift, or a similar physical response.
+- A future pass should explore a physical book-opening transition into the page layout.
+- Treat these as design rules until implementation work changes the source files.
 
 ## Motion rules
 
@@ -25,6 +37,7 @@ Lost Pages should feel like a haunted comic-book museum magazine, not a flat PDF
 - Use motion to signal discovery, progress, completion, or danger.
 - Avoid spectacle that distracts from route launch or QR scanning.
 - Desktop debug motion should not hide controls.
+- Physical print-view motion should feel grounded and tactile, not glow-based.
 
 ## UI rules
 
@@ -32,6 +45,7 @@ Lost Pages should feel like a haunted comic-book museum magazine, not a flat PDF
 - Every page needs a visible objective.
 - Progress feedback should be countable or otherwise obvious.
 - Reward feedback should be distinct from ordinary interaction feedback.
+- Non-AR review navigation should prioritize the main print view unless `/book/` is deliberately retained for debug or legacy review.
 
 ## Voice
 
