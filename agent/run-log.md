@@ -48,15 +48,20 @@ Completed:
 - Updated style/QA/technical docs to distinguish pending product direction from implemented source behavior.
 - Added the Autonomous Bounded Turn reusable prompt as the top-level generic mode selector.
 - Updated `agent/start-here.md`, `agent/workflow.md`, and `agent/state-intelligence-ledger.md` so generic turns can read repo state, choose one bounded mode, update state, and stop.
+- Upgraded the Autonomous Bounded Turn prompt for scheduled use with maximum useful upgrade behavior, implementation pressure, scheduled-turn locking, post-change audit requirements, and concrete next-turn handoff.
+- Added `agent/scheduled-turn-lock.md`.
+- Updated `agent/start-here.md`, `agent/workflow.md`, and `agent/state-intelligence-ledger.md` so scheduled autonomous turns should push to `main`, avoid new PRs, prefer implementation after alignment, and audit implementation batches.
 
 Validation:
 
 - Documentation and agent-state changes only.
 - No `src/`, `print/`, `scripts/`, or `.github/` files were intentionally edited.
 - No build, browser preview, phone, camera, WebXR, or AR validation was run.
+- Open PR search returned no open PRs before this main-branch docs batch.
 
 Next:
 
-- Use `agent/prompts/autonomous-bounded-turn.md` when the user wants one generic bounded turn selected from repo state.
-- Run a print-view implementation planning turn for `/print/` primary route treatment, `/book/` decision, tabletop background, grounded shadows, subtle physical reactivity, pointer-glow removal, and physical opening transition.
+- Update the external scheduler task prompts to match `agent/prompts/autonomous-bounded-turn.md` if the scheduler does not read prompt text from the repo.
+- Run one scheduled Autonomous Bounded Turn with implementation pressure and max-upgrade behavior.
+- If no blocker exists, implement the print-first tabletop visual/navigation pass for `/print/`.
 - Run `agent/prompts/004-ar-route-check.md` after product/navigation direction is stable or when route QA is prioritized.
