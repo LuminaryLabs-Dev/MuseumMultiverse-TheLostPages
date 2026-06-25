@@ -4,7 +4,7 @@ Status: supporting content scaffold
 
 ## One-line outline
 
-An eight-page printed museum magazine becomes a sequence of QR-launched micro-experiences that wake the museum, open living frames, restore lost memories, decode curator warnings, play tiny worlds, stabilize portals, contain a canvas monster, and unlock the final room.
+An eight-page printed museum magazine becomes a sequence of QR-launched micro-experiences that wake the museum, open living frames, restore lost memories, decode curator warnings, play tiny worlds, stabilize portals, manage the canvas shadow, and open the final room.
 
 ## Reader journey
 
@@ -15,8 +15,8 @@ Page 03: recover a child's lost museum memory
 Page 04: decode the curator's warning system
 Page 05: play inside a miniature exhibit world
 Page 06: sort artifacts between overlapping realities
-Page 07: contain the thing hiding behind the canvas
-Page 08: use the collected fragments to unlock the portal room
+Page 07: resolve the canvas shadow encounter
+Page 08: use the collected fragments to open the portal room
 ```
 
 ## Product stages
@@ -47,12 +47,13 @@ Page 08: use the collected fragments to unlock the portal room
 - Print Markdown, launcher copy, route manifest, QR label, and page docs are checked for drift.
 - Final QR targets use the intended public deployment origin.
 - Each print page can stand alone as a magazine page without relying on the phone.
+- The main print view is treated as the primary non-AR review/presentation surface.
 
 ### Stage 5 — Final portal readiness
 
 - All reward slots are tracked.
 - Page 08 can detect prior progress.
-- The final portal room communicates locked, partially unlocked, and unlocked states.
+- The final portal room communicates empty, partial, and complete progress states.
 
 ## Page-by-page outline
 
@@ -64,9 +65,21 @@ Page 08: use the collected fragments to unlock the portal room
 | 04 | `curators-warning` | Warning decode | Restore warning words | Red Seal Note |
 | 05 | `tiny-platformer-diorama` | Playable miniature | Clear hazards and goal gate | Tiny Portal Badge |
 | 06 | `in-between-exhibit` | Reality sorting | Sort artifacts by world | Portal Stabilizer |
-| 07 | `monster-behind-canvas` | Threat containment | Pulse reveal beam and lock canvas | Shadow Exhibit Fragment |
+| 07 | `monster-behind-canvas` | Canvas shadow encounter | Reveal and seal the canvas | Shadow Exhibit Fragment |
 | 08 | `secret-portal-room` | Finale | Light eight sockets | Final Portal Key |
+
+## Current active direction
+
+Active feedback prefers the main print view over a dedicated 3D book view.
+
+Pending implementation decisions:
+
+- whether `/book/` should be removed, redirected, hidden, or retained as legacy/debug/experimental
+- how `/print/` becomes the primary presentation route
+- how the physical tabletop background, grounded shadow, non-glow reactivity, and book-opening transition are implemented
+
+Do not mark these decisions implemented until the source and route changes are made and validated.
 
 ## Final outcome
 
-The finished repo should support a printed eight-page artifact, a phone-friendly launcher, a book/print review surface, direct AR routes for every QR code, desktop debug routes, short deploy messages, and durable agent handoff state.
+The finished repo should support a printed eight-page artifact, a phone-friendly launcher, a primary print review/presentation surface, direct AR routes for every QR code, desktop debug routes, short deploy messages, and durable agent handoff state.
