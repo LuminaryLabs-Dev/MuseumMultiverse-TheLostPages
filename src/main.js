@@ -15,12 +15,14 @@ import { renderDebugExperienceShell } from './ar/runtime/debug-shell.js';
 import { renderImmersiveExperience, renderImmersiveGate } from './ar/runtime/immersive-shell.js';
 import { enhanceBookScene } from './app/launcher/bookScene.js';
 import { enhanceLauncherMotion } from './app/launcher/launcherMotion.js';
+import { enhancePaperSurface } from './app/launcher/paperSurface.js';
 
 const app = document.querySelector('#app');
 const origin = resolvePublicOrigin();
 let activeRuntime = null;
 let bookCleanup = null;
 let launcherCleanup = null;
+let paperCleanup = null;
 
 function cleanupCurrentSurface() {
   activeRuntime?.renderer?.dispose?.();
@@ -30,6 +32,8 @@ function cleanupCurrentSurface() {
   bookCleanup = null;
   launcherCleanup?.();
   launcherCleanup = null;
+  paperCleanup?.();
+  paperCleanup = null;
 }
 
 function installStaticAssetVariables() {
@@ -115,6 +119,7 @@ async function render() {
   if (route.type === 'print') {
     setTitle(`${cover.title} - Print`);
     app.innerHTML = renderPrintMarkup(origin);
+    paperCleanup = enhancePaperSurface(app);
     await renderPrintQrCodes(app, origin);
     launcherCleanup = enhanceLauncherMotion(app);
     return;
@@ -140,6 +145,7 @@ async function render() {
 
   setTitle(cover.title);
   app.innerHTML = renderLauncherMarkup(origin);
+  paperCleanup = enhancePaperSurface(app);
   await renderLauncherQrCodes(app, origin);
   launcherCleanup = enhanceLauncherMotion(app);
 }
