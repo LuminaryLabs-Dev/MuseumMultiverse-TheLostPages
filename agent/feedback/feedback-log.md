@@ -23,10 +23,12 @@ Files updated:
 - `agent/feedback/feedback-inbox.md`
 - `agent/feedback/feedback-rules.md`
 - `agent/feedback/feedback-log.md`
+- non-agent docs during State Intelligence Sync
 
 Implementation status:
 
-- Feedback captured only.
+- Feedback captured.
+- Feedback aligned to docs as pending product direction.
 - No route, visual, source, print, or runtime implementation performed.
 
 Recommended next handling:
@@ -51,12 +53,71 @@ Files updated:
 - `agent/feedback/active-feedback.md`
 - `agent/feedback/feedback-inbox.md`
 - `agent/feedback/feedback-log.md`
+- non-agent docs during State Intelligence Sync
 
 Implementation status:
 
-- Feedback captured only.
+- Feedback captured.
+- Feedback aligned to docs as pending visual direction.
 - No implementation performed.
 
 Recommended next handling:
 
 - Future print-view visual pass should use tabletop surface treatment, grounded shadows, and subtle non-glow reactivity.
+
+### Feedback intake must stay feedback-only unless implementation is explicit
+
+Source:
+
+- User feedback after feedback-only turns began.
+
+Captured feedback:
+
+- Feedback turns should append to feedback docs on `main` only.
+- Feedback turns should not change JS/app/product/runtime files unless implementation is explicitly requested.
+
+Files updated:
+
+- `agent/feedback/active-feedback.md`
+- `agent/feedback/feedback-inbox.md`
+- `agent/feedback/feedback-log.md`
+- `agent/feedback/feedback-rules.md`
+- `agent/memory.md`
+
+Implementation status:
+
+- Operating rule captured and aligned to agent docs.
+- No app/source implementation performed.
+
+Recommended next handling:
+
+- Continue separating feedback intake, state intelligence sync, and implementation turns.
+
+### Physical book-opening transition into print layout
+
+Source:
+
+- User feedback after tabletop direction.
+
+Captured feedback:
+
+- Background still feels too dense and digital.
+- Future direction should use a physical book-opening transition into the page layout.
+- Preserve style intent in design rules before any code pass.
+
+Files updated:
+
+- `agent/feedback/active-feedback.md`
+- `agent/feedback/feedback-inbox.md`
+- `agent/feedback/feedback-log.md`
+- non-agent docs during State Intelligence Sync
+
+Implementation status:
+
+- Feedback captured.
+- Feedback aligned to docs as pending direction.
+- No visual/source/runtime implementation performed.
+
+Recommended next handling:
+
+- Future print-view planning should decide how the physical transition relates to `/book/` and `/print/` before editing source files.
