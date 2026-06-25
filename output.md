@@ -1,3 +1,3 @@
-✅ Lost Pages print view
+✅ Lost Pages paper background
 
-Made the print route a tabletop review surface with paper shadows and subtle physical motion.
+Added a cached WebGL paper surface with non-striped multi-octave texture, normal depth, and fallback styling.
