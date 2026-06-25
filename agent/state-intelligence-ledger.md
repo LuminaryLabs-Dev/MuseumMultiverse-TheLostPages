@@ -12,6 +12,7 @@ Last updated: 2026-06-25
 - `print/` is print-facing copy.
 - Current pointer remains on AR route QA: `agent/prompts/004-ar-route-check.md`.
 - The State Intelligence Sync workflow exists to align knowledge before implementation turns.
+- The Autonomous Bounded Turn prompt exists as the top-level generic mode selector for one on-demand bounded turn.
 
 ## Current Active Feedback
 
@@ -26,6 +27,17 @@ Last updated: 2026-06-25
 - Use subtle physical orientation/parallax rather than cursor glow.
 - Remove pointer-following glow effects.
 - Background still feels too dense and digital; future direction should use a physical book-opening transition into the page layout.
+
+## Available Reusable Turn Prompts
+
+```text
+agent/prompts/autonomous-bounded-turn.md
+agent/prompts/state-intelligence-sync.md
+```
+
+Use `autonomous-bounded-turn.md` when the user wants one generic turn that derives the next objective from repo state.
+
+Use `state-intelligence-sync.md` when the user specifically wants repo alignment, drift detection, or inference expansion without app/source implementation.
 
 ## Pending Implementation Directions
 
@@ -52,7 +64,7 @@ These are not implemented by this ledger. They should guide future bounded imple
 - `docs/STATE-ALIGNMENT-MAP.md`
 - `docs/supporting-content/README.md`
 
-## Known Drift Addressed In This Sync
+## Known Drift Addressed In Prior Sync
 
 - Several docs treated `/book/` or book/print as a primary core surface while active feedback now prefers a print-first presentation surface.
 - Active feedback had newer items that were not fully mirrored in feedback inbox/log.
@@ -65,10 +77,12 @@ These are not implemented by this ledger. They should guide future bounded imple
 - A docs alignment turn should run before implementing major feedback if non-agent docs are stale.
 - The route/docs model should distinguish current implementation from pending product direction.
 - Device, phone, camera, WebXR, and AR claims remain evidence-bound and must not be inferred from docs.
+- Generic autonomous turns should select one mode and one objective, not execute a queue.
+- If no user target is supplied, the autonomous turn should choose the first eligible mode from its priority ladder and stop after that objective.
 
 ## Do Not Touch Yet
 
-Do not edit these in a State Intelligence Sync turn unless explicitly requested:
+Do not edit these in a State Intelligence Sync or planning turn unless explicitly requested:
 
 - `src/*`
 - `print/*`
@@ -87,15 +101,16 @@ Do not edit these in a State Intelligence Sync turn unless explicitly requested:
 
 ## Evidence / Validation Boundaries
 
-- Current State Intelligence Sync changes are documentation/intelligence changes only.
-- No build or browser preview is implied by a sync turn.
+- Current State Intelligence Sync and Autonomous Bounded Turn prompt changes are documentation/intelligence changes only.
+- No build or browser preview is implied by an agent prompt/docs turn.
 - No phone, camera, WebXR, or AR path is proven unless directly tested.
 - Feedback should remain active until implementation is completed and evidenced.
 
 ## Recommended Next Turns
 
-1. Run a print-view implementation planning turn.
-2. Decide `/book/` route treatment.
-3. Implement print-first tabletop visual/navigation pass.
-4. Run `agent/prompts/004-ar-route-check.md` for AR route QA when product/navigation direction is stable.
-5. Run QR/print readiness after AR route QA and print-view direction are validated.
+1. Run one Autonomous Bounded Turn when the user wants the repo to select the next best bounded objective.
+2. Run a print-view implementation planning turn.
+3. Decide `/book/` route treatment.
+4. Implement print-first tabletop visual/navigation pass.
+5. Run `agent/prompts/004-ar-route-check.md` for AR route QA when product/navigation direction is stable.
+6. Run QR/print readiness after AR route QA and print-view direction are validated.
