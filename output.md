@@ -1,3 +1,3 @@
-✅ Lost Pages state sync
+✅ Lost Pages bounded turn prompt
 
-Added reusable state-alignment docs and aligned active print-view feedback with project docs.
+Added a reusable autonomous bounded-turn prompt that selects one repo-derived objective and stops.
