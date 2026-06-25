@@ -22,7 +22,6 @@ Status: active
 - New feedback: the main print view background should feel like a tabletop or physical surface, not a flat digital grid. Add grounded drop shadows under the page layout, make the surface slightly reactive through subtle orientation/parallax, and remove the current pointer-following glow effect. Do not implement this from feedback intake alone; treat it as visual direction for the next print-view pass.
 - New feedback: when the user gives Lost Pages feedback, append it to feedback docs on `main` only; do not make JS/app/product changes unless the user explicitly asks for implementation.
 - New feedback: background still feels too dense and digital; future direction should use a physical book-opening transition into the page layout and preserve style intent in design rules before any code pass.
-- New feedback: State Intelligence Sync turns should align agent state with non-agent docs, infer durable future rules, and update docs/agent knowledge only unless implementation is explicitly requested.
 
 ## Handling Rule
 
