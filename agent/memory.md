@@ -23,3 +23,4 @@ Status: active
 - Launcher visuals should stay clean, comic-book-like, readable, and less PDF-heavy.
 - Motion should feel subtle and reactive; avoid spectacle that distracts from AR route selection.
 - Page surfaces should read as square-corner paper, not rounded cards; use texture and shader-based shading where the WebGL book/print route owns the page surface.
+- User feedback should be added to `main` as feedback only. Do not change app code unless implementation is explicitly requested.
