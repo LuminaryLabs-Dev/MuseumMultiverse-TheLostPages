@@ -24,12 +24,22 @@ The active product direction now uses the main print view as the primary non-AR 
 ## Print View Surface Direction
 
 - Main print view is the primary presentation/review surface.
-- Background should read as tabletop or physical surface, not a dense digital grid.
+- Background should read as tabletop or physical paper surface, not a dense digital grid.
+- Background texture should be organic multi-octave paper/pulp noise, not visible repeated stripes.
 - Use grounded shadows under the page layout.
 - Avoid pointer-following glow effects.
 - Keep reactivity subtle and physical: orientation, parallax, paper lift, or a similar physical response.
 - A first-pass physical book-opening transition now exists as a CSS/DOM opening-and-settling transition into the page layout.
-- Future polish should judge the transition in browser/device preview before deciding whether it needs WebGL or more complex motion.
+- Future polish should judge the transition in browser/device preview before deciding whether it needs more complex motion.
+
+## Paper shader rules
+
+- The paper background may use a Three.js/WebGL viewport as a flat 2.5D substrate behind DOM content.
+- Text, QR codes, and page controls should remain DOM-rendered for readability, accessibility, and browser compatibility.
+- Procedural paper noise should be generated once and cached for reuse; do not regenerate multi-octave noise every frame.
+- Use cached albedo, normal, and height/depth maps to create PBR-like paper lighting.
+- Keep the shader WebGL1-friendly and include a non-striped CSS fallback for constrained browsers/devices.
+- Do not reintroduce diagonal stripe backgrounds as a substitute for paper grain.
 
 ## Motion rules
 
