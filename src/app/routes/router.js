@@ -4,22 +4,27 @@ import { stripBasePath } from './basePath.js';
 export function routeFromLocation(location = window.location) {
   const { search } = location;
   const pathname = stripBasePath(location.pathname);
+  const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/g, '') : pathname;
   const params = new URLSearchParams(search);
 
-  if (pathname === '/book' || pathname === '/print') {
+  if (normalizedPath === '/print') {
+    return { type: 'print' };
+  }
+
+  if (normalizedPath === '/book') {
     return { type: 'book' };
   }
 
-  if (pathname === '/' || pathname === '/launcher') {
+  if (normalizedPath === '/' || normalizedPath === '/launcher') {
     return { type: 'launcher' };
   }
 
-  const debugMatch = pathname.match(/^\/debug\/ar\/([^/]+)\/?$/);
+  const debugMatch = normalizedPath.match(/^\/debug\/ar\/([^/]+)$/);
   if (debugMatch) {
     return { type: 'experience-debug', experience: getExperienceBySlug(debugMatch[1]) };
   }
 
-  const match = pathname.match(/^\/ar\/([^/]+)\/?$/);
+  const match = normalizedPath.match(/^\/ar\/([^/]+)$/);
   if (match) {
     return {
       type: params.get('debug') === '1' ? 'experience-debug' : 'experience',
