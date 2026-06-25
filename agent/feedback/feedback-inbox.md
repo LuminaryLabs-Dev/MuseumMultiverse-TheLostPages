@@ -4,7 +4,19 @@ Status: active
 
 Use this file for newly captured user feedback before it is fully resolved or implemented.
 
+## Status labels
+
+- `captured`
+- `aligned-to-docs`
+- `ready-for-implementation`
+- `implemented`
+- `processed`
+- `superseded`
+- `blocked`
+
 ## 2026-06-24 — Prioritize main print view over book view
+
+Status: `aligned-to-docs`, `ready-for-implementation`, not implemented
 
 Raw feedback:
 
@@ -32,6 +44,8 @@ Recommended future action:
 
 ## 2026-06-24 — Tabletop print-view background direction
 
+Status: `aligned-to-docs`, `ready-for-implementation`, not implemented
+
 Raw feedback:
 
 - The main print view background should feel like a tabletop or physical surface.
@@ -58,3 +72,59 @@ Recommended future action:
 - Replace the flat digital/grid feeling with a tabletop-like background.
 - Add realistic drop shadowing under the page spread.
 - Keep any reactivity subtle and physical, not glow-based.
+
+## 2026-06-24 — Feedback intake must stay feedback-only unless implementation is explicit
+
+Status: `captured`, `aligned-to-docs`, active operating rule
+
+Raw feedback:
+
+- When the user gives Lost Pages feedback, append it to feedback docs on `main` only.
+- Do not make JavaScript, app, route, visual, product, or runtime changes unless the user explicitly asks for implementation.
+
+Context:
+
+- This rule was added after feedback intake started updating durable repo feedback files.
+- It should govern future feedback-only turns.
+
+Classification:
+
+- Agent workflow direction
+- Feedback handling direction
+- Active feedback
+- Durable operating rule
+
+Recommended future action:
+
+- Keep feedback intake separate from implementation turns.
+- Use State Intelligence Sync when feedback must be mirrored into docs and memory.
+
+## 2026-06-24 — Physical book-opening transition into print layout
+
+Status: `captured`, `aligned-to-docs`, not implemented
+
+Raw feedback:
+
+- Background still feels too dense and digital.
+- Future direction should use a physical book-opening transition into the page layout.
+- Preserve the style intent in design rules before any code pass.
+
+Context:
+
+- This feedback extends the tabletop print-view direction.
+- Implementation was not requested at intake time.
+
+Classification:
+
+- Visual direction
+- Print-view direction
+- Interaction/motion direction
+- Product presentation direction
+- Active feedback
+- Not yet implemented
+
+Recommended future action:
+
+- Before implementing, decide how `/book/` relates to `/print/`.
+- Plan a print-view visual/navigation pass that includes the physical transition.
+- Keep the direction documented as pending until implementation is evidenced.
