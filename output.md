@@ -1,3 +1,3 @@
-✅ Lost Pages bounded turn prompt
+✅ Lost Pages scheduled turns
 
-Added a reusable autonomous bounded-turn prompt that selects one repo-derived objective and stops.
+Upgraded the autonomous prompt with larger coherent batches and post-change audits.
