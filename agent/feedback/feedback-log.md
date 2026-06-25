@@ -32,3 +32,31 @@ Implementation status:
 Recommended next handling:
 
 - Future visual/navigation pass should decide whether `/book/` becomes removed, redirected, hidden, or retained only as debug/experimental.
+
+### Tabletop print view direction
+
+Source:
+
+- User feedback in ChatGPT with screenshot of the main print-style view.
+
+Captured feedback:
+
+- Main print view should use a tabletop-like physical background.
+- Page layout needs grounded drop shadow.
+- Page layout should have subtle physical orientation or parallax response.
+- Current cursor glow should be removed.
+
+Files updated:
+
+- `agent/feedback/active-feedback.md`
+- `agent/feedback/feedback-inbox.md`
+- `agent/feedback/feedback-log.md`
+
+Implementation status:
+
+- Feedback captured only.
+- No implementation performed.
+
+Recommended next handling:
+
+- Future print-view visual pass should use tabletop surface treatment, grounded shadows, and subtle non-glow reactivity.
