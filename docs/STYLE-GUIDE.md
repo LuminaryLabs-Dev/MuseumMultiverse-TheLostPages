@@ -6,7 +6,7 @@ Status: supporting content scaffold
 
 Lost Pages should feel like a haunted comic-book museum magazine, not a flat PDF and not a generic AR demo.
 
-The active product direction prefers the main print view as the primary non-AR review/presentation surface. The dedicated 3D book view is pending a product decision: remove, redirect, hide, or retain as debug/experimental/legacy.
+The active product direction now uses the main print view as the primary non-AR review/presentation surface. The dedicated 3D book view is retained only as a legacy/debug/composition reference unless a later product decision removes or redirects it.
 
 ## Visual rules
 
@@ -28,8 +28,8 @@ The active product direction prefers the main print view as the primary non-AR r
 - Use grounded shadows under the page layout.
 - Avoid pointer-following glow effects.
 - Keep reactivity subtle and physical: orientation, parallax, paper lift, or a similar physical response.
-- A future pass should explore a physical book-opening transition into the page layout.
-- Treat these as design rules until implementation work changes the source files.
+- A first-pass physical book-opening transition now exists as a CSS/DOM opening-and-settling transition into the page layout.
+- Future polish should judge the transition in browser/device preview before deciding whether it needs WebGL or more complex motion.
 
 ## Motion rules
 
@@ -38,6 +38,7 @@ The active product direction prefers the main print view as the primary non-AR r
 - Avoid spectacle that distracts from route launch or QR scanning.
 - Desktop debug motion should not hide controls.
 - Physical print-view motion should feel grounded and tactile, not glow-based.
+- Pointer movement may drive paper tilt/parallax, but it should not move a visible glow or spotlight.
 
 ## UI rules
 
@@ -46,6 +47,7 @@ The active product direction prefers the main print view as the primary non-AR r
 - Progress feedback should be countable or otherwise obvious.
 - Reward feedback should be distinct from ordinary interaction feedback.
 - Non-AR review navigation should prioritize the main print view unless `/book/` is deliberately retained for debug or legacy review.
+- If `/book/` remains available, label or style it as legacy/debug/secondary rather than as an equal primary surface.
 
 ## Voice
 
