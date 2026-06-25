@@ -20,12 +20,14 @@ Status: active
 - New feedback: page surfaces should look like squared paper, not rounded cards; use paper texture, shading, and GLSL shading for the WebGL book/print pages.
 - Print-first source pass applied: `/print/` is now routed separately and rendered as the primary tabletop print surface; `/book/` remains available as a de-emphasized legacy route pending final route decision.
 - Tabletop source pass applied: the print view now has tabletop styling, grounded paper shadows, no-glow motion, and subtle tilt/parallax in source. Build and visual validation are still pending.
+- Background shader pass applied: launcher and print backgrounds now mount a cached WebGL paper viewport with precomputed multi-octave noise, albedo, normal, and height maps. The previous striped background treatment was removed from the main background and hero surfaces.
 - Feedback intake rule: when the user gives Lost Pages feedback, append it to feedback docs on `main` only; do not make app/source changes unless the user explicitly asks for implementation.
 - Physical opening source pass applied: a first-pass opening-and-settling transition is now in the print view. Visual polish remains active pending preview.
 
 ## Still Active After Source Pass
 
 - Validate `/print/` in build, browser preview, and deployed route review.
+- Confirm the WebGL paper viewport falls back cleanly on older or constrained browsers.
 - Decide final `/book/` treatment: keep as legacy, redirect to `/print/`, or remove from public navigation/static paths.
 - Polish the physical opening transition after visual review.
 - Run AR route QA and QR/print readiness after print-view direction is stable.
