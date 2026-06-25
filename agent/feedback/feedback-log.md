@@ -164,3 +164,43 @@ Recommended next handling:
 
 - Run build and browser preview for `/launcher/`, `/print/`, `/book/`, and representative AR/debug routes.
 - Decide whether `/book/` should stay as legacy, redirect to `/print/`, or be removed from static export/navigation entirely.
+
+### Cached PBR paper background shader pass
+
+Source:
+
+- User requested a non-striped paper-like background, multi-octave noise, cached precomputed noise, GLSL shader use, broad device/browser compatibility, and PBR-style paper normal/depth.
+
+Applied feedback:
+
+- Added a reusable `paperSurface.js` enhancer that mounts a Three.js/WebGL paper viewport behind launcher and print surfaces.
+- Paper maps are generated once per app session and cached in a module/window singleton.
+- The cached maps include albedo, normal, and height/depth data derived from deterministic multi-octave noise and fiber detail.
+- The shader uses WebGL1-friendly GLSL, normal/depth lighting, low-power renderer settings, and a CSS fallback path.
+- The main background and hero surfaces no longer use the prior striped/repeating background treatment.
+- The paper viewport renders a flat 2.5D substrate behind the DOM so copy and QR codes stay browser-readable.
+
+Files updated:
+
+- `src/app/launcher/paperSurface.js`
+- `src/app/launcher/renderLauncher.js`
+- `src/app/launcher/renderPrint.js`
+- `src/main.js`
+- `src/app/launcher/cleanLauncher.css`
+- `agent/feedback/active-feedback.md`
+- `agent/feedback/feedback-log.md`
+- `agent/state-intelligence-ledger.md`
+- `agent/run-log.md`
+- `output.md`
+
+Implementation status:
+
+- Source implementation applied on `main`.
+- Build/browser/device validation is still pending.
+- Keep this feedback active until fallback behavior and visual quality are verified in preview.
+
+Recommended next handling:
+
+- Run build and preview `/launcher/` and `/print/` on desktop and a constrained/mobile browser.
+- Verify the shader background is paper-like, non-striped, and visually calm behind the page sheets.
+- If the WebGL paper surface fails anywhere, confirm the CSS fallback still looks acceptable.
