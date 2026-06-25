@@ -43,17 +43,15 @@ export function renderLauncherMarkup(origin = '') {
 
   return `
     <section class="clean-comic-launcher" data-comic-stage aria-label="Museum Multiverse Lost Pages launcher">
-      <div class="clean-comic-launcher__glow" aria-hidden="true"></div>
-
       <header class="clean-comic-hero" data-comic-card>
         <div>
           <p class="clean-comic-hero__eyebrow">Museum Multiverse</p>
           <h1>Lost Pages</h1>
-          <p class="clean-comic-hero__copy">Eight compact AR pages. Scan one, open the route, wake the museum.</p>
+          <p class="clean-comic-hero__copy">Eight compact AR pages. Start from the physical print review surface, then scan a page to wake the museum.</p>
         </div>
         <nav class="clean-comic-hero__actions" aria-label="Launcher controls">
-          <a href="${withBasePath('/book')}" data-nav>Book view</a>
-          <a href="${withBasePath('/print')}" data-nav>Print view</a>
+          <a class="clean-comic-hero__primary-action" href="${withBasePath('/print')}" data-nav>Print view</a>
+          <a class="clean-comic-hero__legacy-action" href="${withBasePath('/book')}" data-nav>Legacy book</a>
         </nav>
       </header>
 
