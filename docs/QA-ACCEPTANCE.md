@@ -4,7 +4,7 @@ Status: supporting content scaffold
 
 ## Purpose
 
-This document defines the evidence an auto agent should record before claiming a Lost Pages page or route is ready.
+This document defines the evidence an auto agent should record before claiming a Lost Pages page, route, visual surface, or State Intelligence Sync is ready.
 
 ## Route QA
 
@@ -33,6 +33,29 @@ For each page:
 - Body copy is legible at print size.
 - Page number, title, scan prompt, and route intent are visible.
 - Print copy and runtime copy are checked for drift.
+
+## Print-view presentation QA
+
+When the print view is implemented as the primary review/presentation surface, verify:
+
+- `/print/` opens the intended primary review surface.
+- `/book/` behavior matches the documented decision: removed, redirected, hidden, legacy, debug, or experimental.
+- Background reads as a physical tabletop or surface rather than a dense digital grid.
+- Page layout has grounded shadows.
+- Reactivity is subtle and physical.
+- Pointer-following glow is not present unless a later style decision restores it.
+- Any physical book-opening transition does not block readability or QR review.
+
+## State Sync QA
+
+A State Intelligence Sync is valid when:
+
+- active feedback is mirrored in inbox/log or intentionally noted as not mirrored
+- docs distinguish pending direction from implemented behavior
+- no implementation is claimed from docs-only changes
+- no source/runtime/build files were changed unless explicitly requested
+- processed feedback is not marked done unless implementation, rejection, or supersession is evidenced
+- a future implementation turn is clearly recommended when needed
 
 ## Device proof language
 
