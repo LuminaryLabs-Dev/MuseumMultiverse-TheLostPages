@@ -18,6 +18,7 @@ Status: active
 - New feedback: future agent runs must follow the workflow more reliably and avoid creating multiple deploy chat messages for one batch.
 - New feedback: output should become a smart message source with fields that can be rendered into a dynamic deploy chat message.
 - New feedback: page surfaces should look like squared paper, not rounded cards; use paper texture, shading, and GLSL shading for the WebGL book/print pages.
+- New feedback: de-emphasize or remove the dedicated 3D book view as the product focus. The main print view should become the primary review/presentation surface. Do not implement this from feedback intake alone; treat it as product direction for the next visual/navigation pass.
 
 ## Handling Rule
 
