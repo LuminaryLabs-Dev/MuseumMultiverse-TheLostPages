@@ -17,6 +17,9 @@ Last updated: 2026-06-25
 - `/print/` now has a distinct route type and renders the primary tabletop print review/presentation surface.
 - `/book/` remains directly available as a legacy composition-book route and is de-emphasized in launcher/print navigation.
 - The pointer-following glow effect has been removed from the launcher/print motion path; pointer motion now only drives subtle paper/card tilt.
+- Launcher and print backgrounds now mount a cached Three.js/WebGL paper viewport behind the DOM.
+- The paper viewport uses precomputed multi-octave noise maps, normal data, and height/depth data; it does not regenerate procedural noise every frame.
+- The main background and hero surfaces no longer use the prior striped background treatment.
 
 ## Current Active Feedback
 
@@ -31,6 +34,7 @@ Last updated: 2026-06-25
 - Use subtle physical orientation/parallax rather than cursor glow.
 - Do not reintroduce pointer-following glow effects.
 - First-pass physical opening/settling transition exists; polish is pending browser review.
+- Background shader quality remains active until build/browser/mobile validation confirms the WebGL paper viewport and CSS fallback behave correctly.
 
 ## Available Reusable Turn Prompts
 
@@ -83,17 +87,29 @@ The 2026-06-25 print-first tabletop implementation pass applied:
 7. Motion changed to physical tilt/parallax only in `launcherMotion.js`.
 8. First-pass CSS/DOM opening-and-settling transition added for print view.
 
+The 2026-06-25 cached paper shader pass applied:
+
+1. Added `src/app/launcher/paperSurface.js`.
+2. Mounted a WebGL paper viewport in launcher and print markup.
+3. Generated deterministic multi-octave albedo, normal, and height/depth maps once per app session.
+4. Cached maps in a module/window singleton for reuse across launcher and print surfaces.
+5. Used a WebGL1-friendly GLSL shader with normal/depth lighting and low-power renderer settings.
+6. Kept the WebGL paper as a flat 2.5D substrate behind DOM text, QR codes, and page sheets.
+7. Removed the prior striped background treatment from the main background and hero surfaces.
+8. Added CSS fallback treatment for browsers or devices that cannot create the WebGL paper surface.
+
 ## Pending Implementation Directions
 
 These remain active after the source pass:
 
 1. Validate `/launcher/`, `/print/`, and `/book/` in a browser preview.
 2. Run `npm run build` and record the result.
-3. Decide whether `/book/` should remain legacy/debug, redirect to `/print/`, or be removed from public/static paths.
-4. Polish the physical opening transition after visual review.
-5. Run AR route QA after print navigation stabilizes.
-6. Run QR/print readiness after route QA and print-view validation.
-7. Move resolved feedback to `processed-feedback.md` only after validation evidence exists.
+3. Confirm the WebGL paper viewport works on representative desktop/mobile browsers and falls back cleanly when WebGL is unavailable.
+4. Decide whether `/book/` should remain legacy/debug, redirect to `/print/`, or be removed from public/static paths.
+5. Polish the physical opening transition after visual review.
+6. Run AR route QA after print navigation stabilizes.
+7. Run QR/print readiness after route QA and print-view validation.
+8. Move resolved feedback to `processed-feedback.md` only after validation evidence exists.
 
 ## Highest-Priority Scheduled Implementation Theme
 
@@ -101,7 +117,7 @@ When no blocker exists and docs remain aligned, the next scheduled implementatio
 
 ```text
 Mode 5 — QA / Validation
-Objective: Validate the print-first tabletop route batch.
+Objective: Validate the print-first tabletop and paper shader route batch.
 ```
 
 A coherent validation batch may include:
@@ -111,6 +127,8 @@ A coherent validation batch may include:
 - confirm `/print/` has QRs and tabletop layout
 - confirm `/book/` still loads legacy book view
 - confirm no pointer-following glow behavior remains
+- confirm the WebGL paper viewport appears non-striped and paper-like
+- confirm CSS fallback still gives a non-striped paper-like background
 - update feedback status based on evidence
 
 ## Non-Agent Docs That Must Stay Aligned
@@ -144,6 +162,8 @@ A coherent validation batch may include:
 - After docs are aligned and feedback is implementation-ready, scheduled turns should prefer implementation over more planning.
 - Scheduled implementation turns should produce a post-change audit and next-turn handoff.
 - Print-view motion should be physical tilt/parallax only; no cursor-following glow should return unless user feedback reverses that direction.
+- The paper/noise substrate should be generated once per app session and reused; do not regenerate procedural noise per animation frame.
+- Use WebGL/Three.js for the paper substrate only while keeping text and QR codes in DOM for compatibility and readability.
 
 ## Do Not Touch Yet
 
@@ -166,7 +186,7 @@ Do not edit these in a State Intelligence Sync or planning turn unless explicitl
 
 ## Evidence / Validation Boundaries
 
-- The print-first tabletop implementation was pushed to source on `main`.
+- The print-first tabletop implementation and cached paper shader pass were pushed to source on `main`.
 - The implementation was inspected through repository file review.
 - `npm run build` was requested but could not be run from this connector-only environment.
 - No browser preview, deployed GitHub Pages check, phone, camera, WebXR, or AR path validation has been performed in this turn.
@@ -175,7 +195,8 @@ Do not edit these in a State Intelligence Sync or planning turn unless explicitl
 ## Recommended Next Turns
 
 1. Run build and browser/deployed-route QA for `/launcher/`, `/print/`, `/book/`, `/ar/<slug>/`, and `/debug/ar/<slug>/`.
-2. If validation passes, move implemented print-first/tabletop/no-glow feedback into `processed-feedback.md` with evidence.
-3. Decide final `/book/` route treatment.
-4. Run `agent/prompts/004-ar-route-check.md` for AR route QA when product/navigation direction is stable.
-5. Run QR/print readiness after AR route QA and print-view direction are validated.
+2. Verify the cached paper shader renders correctly on representative desktop/mobile browsers and that fallback styling is acceptable.
+3. If validation passes, move implemented print-first/tabletop/no-glow/paper-shader feedback into `processed-feedback.md` with evidence.
+4. Decide final `/book/` route treatment.
+5. Run `agent/prompts/004-ar-route-check.md` for AR route QA when product/navigation direction is stable.
+6. Run QR/print readiness after AR route QA and print-view direction are validated.
