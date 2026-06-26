@@ -1,3 +1,3 @@
-✅ Lost Pages booklet view
+✅ Lost Pages AR launch
 
-Made the booklet reader the default view with a sharp, glossy, vertical flipbook page stack.
+Made AR routes use a consistent flat, glossy landing page before launching the full 3D experience.
