@@ -1,3 +1,3 @@
-✅ Lost Pages embedded page rail
+✅ Lost Pages rail stabilized
 
-Removed the swirl and made the rail use live embedded page content on 3D comic-page cards.
+Added embedded comic card srcdoc rendering and parent scroll relay so the rail keeps control while pages display live-styled card content.
