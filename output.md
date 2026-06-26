@@ -1,3 +1,3 @@
-✅ Lost Pages Three.js rail
+✅ Lost Pages rail cleanup
 
-Made the public non-AR surface a vertical Bezier rail of floating comic-page cards for the eight AR experiences.
+Simplified the overlay to title-only and moved the launch UI onto the floating comic pages.
