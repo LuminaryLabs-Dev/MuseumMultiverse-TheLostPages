@@ -1,3 +1,3 @@
-✅ Lost Pages rail stabilized
+✅ Lost Pages horizontal rail
 
-Added embedded comic card srcdoc rendering and parent scroll relay so the rail keeps control while pages display live-styled card content.
+Switched the public launcher to a stable horizontal Three.js comic-page shuffle with title-only overlay and parent-controlled scroll.
