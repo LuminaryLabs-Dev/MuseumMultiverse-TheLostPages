@@ -1,3 +1,3 @@
-✅ Lost Pages page frames
+✅ Lost Pages Three.js hub
 
-Added a Three.js left/right page-frame canvas with overlay slots for placed content.
+Made the public non-AR surface a Three.js portal launcher for the eight full 3D AR experiences.
