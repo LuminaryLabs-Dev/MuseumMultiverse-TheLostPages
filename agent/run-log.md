@@ -116,3 +116,33 @@ Post-change audit:
 Next:
 
 - In a network-enabled repo checkout or CI runner, run `npm install`, commit the regenerated `package-lock.json`, run `npm run check:composition`, run `npm run build`, then preview root, launcher, print, book, phone, one known `/ar/<slug>/`, one known `/debug/ar/<slug>/`, and one intentionally invalid `/ar/<bad-slug>/` route.
+
+### Feedback status repair sync turn
+
+Completed:
+
+- Selected Mode 2 — State Intelligence Sync.
+- Confirmed open PR search returned no open PRs targeting `main` before work.
+- Confirmed `agent/scheduled-turn-lock.md` was completed, not active.
+- Reconciled active feedback and feedback inbox status for the print-first tabletop/booklet implementation.
+- Updated product docs to distinguish source-backed implementation from validation-complete or processed feedback.
+- Kept `agent/pointer.md` unchanged on `prompts/004-ar-route-check.md` because command/browser/device route QA remains incomplete.
+
+Validation:
+
+- GitHub source/document inspection only.
+- No `src/`, `print/`, `scripts/`, or `.github/` files changed.
+- `npm install` was not run.
+- `npm run check:composition` was not run.
+- `npm run build` was not run.
+- Browser preview, deployed-route checks, phone checks, camera/WebXR checks, and AR launch checks were not run.
+
+Post-change audit:
+
+- Improved: feedback and docs now say tabletop/booklet work is source-backed but still unvalidated.
+- Improved: stale “not implemented” feedback status was corrected without moving feedback to processed.
+- Still needs review: dependency lockfile, build, browser, deployed routes, phone, AR launch, paper fallback, and final `/book/` treatment.
+
+Next:
+
+- Run dependency hygiene and QA in a network-enabled repo checkout or CI runner: `npm install`, regenerate and commit `package-lock.json`, run `npm run check:composition`, run `npm run build`, then preview root, launcher, print, book, phone, one known `/ar/<slug>/`, one known `/debug/ar/<slug>/`, and one intentionally invalid `/ar/<bad-slug>/` route.
