@@ -5,10 +5,7 @@
   display: grid;
   place-items: center;
   padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
-  background:
-    radial-gradient(circle at 50% 44%, rgba(78, 54, 255, 0.3), transparent 24rem),
-    radial-gradient(circle at 18% 16%, rgba(0, 178, 255, 0.2), transparent 22rem),
-    #030307;
+  background: #030307;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -28,16 +25,16 @@
   max-width: 920px;
   max-height: 1302px;
   overflow: hidden;
-  border: 2px solid rgba(255, 238, 158, 0.64);
+  border: 0;
   border-radius: 0;
   background:
     linear-gradient(116deg, transparent 0 54%, rgba(255, 255, 255, 0.16) 55%, transparent 61% 100%),
-    radial-gradient(circle at 52% 69%, rgba(99, 41, 244, 0.95), transparent 15%),
-    radial-gradient(circle at 60% 54%, rgba(7, 10, 20, 0.86), rgba(0, 0, 0, 0.98) 33%, transparent 34%),
-    linear-gradient(145deg, #101526 0%, #070914 38%, #0a050d 100%);
-  box-shadow:
-    0 32px 110px rgba(0, 0, 0, 0.72),
-    0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+    radial-gradient(circle at 51% 69%, rgba(107, 45, 255, 0.9), transparent 16%),
+    radial-gradient(circle at 59% 55%, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 1) 32%, transparent 33%),
+    radial-gradient(circle at 12% 38%, rgba(34, 116, 224, 0.45), transparent 18%),
+    radial-gradient(circle at 86% 70%, rgba(11, 164, 255, 0.44), transparent 18%),
+    linear-gradient(145deg, #11182b 0%, #070914 38%, #0b0610 100%);
+  box-shadow: 0 32px 110px rgba(0, 0, 0, 0.72);
   transform: translateZ(0);
 }
 
@@ -51,9 +48,8 @@
 .focus-cover-splash__cover::before {
   inset: 0;
   background:
-    radial-gradient(circle at 42% 70%, rgba(165, 77, 255, 0.72), transparent 16%),
-    radial-gradient(circle at 58% 68%, rgba(17, 218, 255, 0.4), transparent 12%),
-    linear-gradient(90deg, transparent 0 48%, rgba(255, 255, 255, 0.08) 49% 50%, transparent 51% 100%),
+    radial-gradient(circle at 44% 72%, rgba(172, 78, 255, 0.74), transparent 16%),
+    radial-gradient(circle at 60% 69%, rgba(17, 218, 255, 0.4), transparent 12%),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 5px);
   mix-blend-mode: screen;
   opacity: 0.78;
@@ -79,13 +75,13 @@
   z-index: 2;
   left: 5%;
   right: 5%;
-  top: 3%;
+  top: 2.5%;
   display: grid;
   gap: 0;
   transform: rotate(-3deg);
   color: #ffd627;
   font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
-  font-size: clamp(3.2rem, 13vw, 9.2rem);
+  font-size: clamp(3.5rem, 13.5vw, 9.6rem);
   line-height: 0.78;
   letter-spacing: -0.05em;
   text-transform: uppercase;
@@ -99,8 +95,8 @@
 .focus-cover-splash__subtitle {
   position: absolute;
   z-index: 3;
-  left: 25%;
-  right: 6%;
+  left: 24%;
+  right: 5%;
   top: 29%;
   padding: 0.18em 0.65em 0.22em;
   color: #19110a;
