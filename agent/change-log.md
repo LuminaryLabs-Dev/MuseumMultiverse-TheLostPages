@@ -37,3 +37,16 @@ Changed:
 Reason:
 
 Lost Pages needs repeatable turn types that can read repo state, report drift, infer durable future rules, align docs, select one bounded objective, and stop without accumulating unrelated follow-up work.
+
+## 2026-06-26
+
+Changed:
+
+- Updated `agent/state-intelligence-ledger.md` with the inspected shared booklet/print route state.
+- Updated `agent/run-log.md` for the completed State Intelligence Sync turn.
+- Updated `docs/TECHNICAL-BUILD-MAP.md`, `docs/chatgpt-master-start-source.md`, and `README.md` to remove stale distinct `/print/` versus `/book/` assumptions.
+- Updated `agent/scheduled-turn-lock.md` and `output.md` for closeout.
+
+Reason:
+
+The repo had state drift after source changes collapsed public non-experience routes into the shared booklet/print reader while older docs still described distinct non-AR surfaces and incomplete dependency state.
