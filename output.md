@@ -1,3 +1,3 @@
-✅ Lost Pages rail cleanup
+✅ Lost Pages comic rail
 
-Simplified the overlay to title-only and moved the launch UI onto the floating comic pages.
+Added paper shaders, page thickness, shadows, curl, and portal glow to make the Three.js rail feel like floating comic pages.
