@@ -28,7 +28,16 @@ export function installCardInputPatch() {
       }
     });
   }
+  function relay(event) {
+    const canvas = d.querySelector('canvas');
+    if (!canvas || event.target === canvas) return;
+    canvas.dispatchEvent(new WheelEvent('wheel', { deltaY: event.deltaY, deltaX: event.deltaX, bubbles: true, cancelable: true }));
+  }
   const t = globalThis.setInterval(apply, 250);
+  globalThis.addEventListener('wheel', relay, { capture: true, passive: true });
   globalThis.requestAnimationFrame(apply);
-  return () => globalThis.clearInterval(t);
+  return () => {
+    globalThis.clearInterval(t);
+    globalThis.removeEventListener('wheel', relay, { capture: true });
+  };
 }
