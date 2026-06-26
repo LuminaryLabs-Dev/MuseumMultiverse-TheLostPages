@@ -29,11 +29,13 @@ Implementation status:
 
 - Feedback captured.
 - Feedback aligned to docs as pending product direction.
-- No route, visual, source, print, or runtime implementation performed.
+- Later explicit implementation passes made the shared booklet/print reader the public non-AR surface for root, launcher, print, book, and phone.
+- Feedback remains active and unprocessed until build/browser/deployed-route/device validation and final `/book/` decision are recorded.
 
 Recommended next handling:
 
-- Future visual/navigation pass should decide whether `/book/` becomes removed, redirected, hidden, or retained only as debug/experimental.
+- Run dependency hygiene and route/visual QA.
+- Decide whether `/book/` becomes compatibility/legacy, redirected, hidden, or removed.
 
 ### Tabletop print view direction
 
@@ -59,11 +61,13 @@ Implementation status:
 
 - Feedback captured.
 - Feedback aligned to docs as pending visual direction.
-- No implementation performed.
+- Later source passes added tabletop/paper treatment, grounded shadows, no cursor glow, subtle physical motion direction, and a first-pass opening/settling transition.
+- Feedback remains active and unprocessed until build/browser/deployed-route/device validation and fallback review are recorded.
 
 Recommended next handling:
 
-- Future print-view visual pass should use tabletop surface treatment, grounded shadows, and subtle non-glow reactivity.
+- Validate the shared booklet/print reader in build, browser preview, deployed route review, and phone-sized viewport review.
+- Verify the WebGL paper surface and CSS fallback stay readable.
 
 ### Feedback intake must stay feedback-only unless implementation is explicit
 
@@ -116,11 +120,12 @@ Implementation status:
 
 - Feedback captured.
 - Feedback aligned to docs as pending direction.
-- No visual/source/runtime implementation performed.
+- A later source pass added a first-pass opening/settling transition into the shared booklet/print reader.
+- Feedback remains active and unprocessed until browser/device visual review confirms whether the transition is acceptable or needs polish.
 
 Recommended next handling:
 
-- Future print-view planning should decide how the physical transition relates to `/book/` and `/print/` before editing source files.
+- Preview the transition before deciding whether to make it more literal or complex.
 
 ## 2026-06-25
 
@@ -204,3 +209,26 @@ Recommended next handling:
 - Run build and preview `/launcher/` and `/print/` on desktop and a constrained/mobile browser.
 - Verify the shader background is paper-like, non-striped, and visually calm behind the page sheets.
 - If the WebGL paper surface fails anywhere, confirm the CSS fallback still looks acceptable.
+
+## 2026-06-26
+
+### Feedback status repair sync
+
+Source:
+
+- Autonomous Bounded Turn selected Mode 2 because feedback and product docs still contained stale “not implemented” language after source-backed implementation passes.
+
+State change:
+
+- Reconciled `active-feedback.md`, `feedback-inbox.md`, `docs/DNA.md`, `docs/FULL-OUTLINE.md`, and `agent/state-intelligence-ledger.md` to distinguish source-backed implementation from validation-complete work.
+- Kept all relevant print/booklet/tabletop/paper/route feedback active and unprocessed.
+- Did not edit app/source files.
+
+Implementation status:
+
+- Docs/agent status repair only.
+- No build, browser, deployed-route, phone, camera/WebXR, or AR validation was run.
+
+Recommended next handling:
+
+- Run dependency hygiene and QA in a network-enabled repo checkout or CI runner before processing feedback.
