@@ -1,9 +1,9 @@
 import { pages, getPageUrl } from '../../data/pages.js';
 import { renderQrCode } from '../../lib/qr.js';
-import { renderPortalLandingMarkup } from '../landing/portalLanding.js';
+import { renderStableRailMarkup } from '../landing/stableRailLanding.js';
 
 export function renderBookMarkup() {
-  return renderPortalLandingMarkup();
+  return renderStableRailMarkup();
 }
 
 export async function renderBookQrCodes() {
@@ -11,12 +11,12 @@ export async function renderBookQrCodes() {
 }
 
 export function renderPrintMarkup() {
-  return renderPortalLandingMarkup();
+  return renderStableRailMarkup();
 }
 
 export async function renderPrintQrCodes(root, origin) {
   await Promise.all(pages.map((page) => {
-    const target = root.querySelector(`[data-print-qr="${page.slug}"]`);
+    const target = root.querySelector('[data-print-qr="' + page.slug + '"]');
     const pageUrl = getPageUrl(page, origin);
     if (target) target.dataset.qrTarget = pageUrl;
     return renderQrCode(target, pageUrl);
