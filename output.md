@@ -1,3 +1,3 @@
-✅ Lost Pages comic rail
+✅ Lost Pages embedded page rail
 
-Added paper shaders, page thickness, shadows, curl, and portal glow to make the Three.js rail feel like floating comic pages.
+Removed the swirl and made the rail use live embedded page content on 3D comic-page cards.
