@@ -61,53 +61,25 @@ Next:
 
 Completed:
 
-- Ran one State Intelligence Sync turn to reconcile docs with current inspected source behavior.
-- Confirmed there were no open PRs targeting `main` before the turn.
-- Confirmed the scheduled-turn lock was not active.
-- Inspected `package.json`, `package-lock.json`, `src/app/routes/router.js`, `src/main.js`, `src/app/launcher/renderPrint.js`, and `scripts/export-static-routes.mjs`.
-- Aligned route docs around the current shared booklet/print reader fallback for root, launcher, print, book, and phone route entries.
-- Recorded that `package.json` is pinned to the NexusRealtime commit while `package-lock.json` still needs regeneration.
-
-Validation:
-
-- Source inspection through the GitHub connector only.
-- Build, dependency install, lockfile regeneration, browser preview, deployed-route checks, device checks, and experience runtime checks were not run.
-- No app/source files were changed.
-
-Post-change audit:
-
-- Improved: README, technical map, master start source, and state ledger now describe the shared booklet/print route behavior consistently.
-- Still needs review: actual build and preview proof for the shared booklet route and representative experience/debug routes.
-- Still needs follow-up: regenerate and commit `package-lock.json` in a network-enabled environment.
-
-Next:
-
-- Run dependency hygiene and QA: `npm install`, regenerate `package-lock.json`, run `npm run check:composition`, run `npm run build`, and preview root, launcher, print, book, phone, and representative experience/debug routes.
-
-### QA / Validation bounded turn
-
-Completed:
-
-- Confirmed there were no open PRs targeting `main` before work.
-- Confirmed the scheduled-turn lock was not active.
-- Inspected `package.json` and `package-lock.json`; dependency hygiene is still blocked because the lockfile still references `nexusrealtime` at `#0.0.1` while `package.json` pins `ebd19e298d71bfbc51bf452394085ce1d909cb94`.
-- Inspected `src/app/routes/router.js` and `src/main.js`; route source still preserves `/ar/<slug>/`, `/ar/<slug>/?debug=1`, `/debug/ar/<slug>/`, and `?page=<slug>` before falling back to the shared booklet/print surface.
-- Recorded that command-based QA could not be completed in this connector-only run.
+- Ran State Intelligence Sync and QA/Validation source-inspection turns.
+- Confirmed route source preserves AR/debug routes before the shared booklet fallback.
+- Recorded dependency hygiene as blocked until network-enabled install/lockfile/build checks can run.
+- Added a cover splash module that appears on app load and whenever the browser tab returns after being away.
+- The cover splash remains visible for one second, then fades automatically without any click or confirmation step.
+- Loaded the splash before the main app module from `index.html`.
 
 Validation:
 
 - GitHub source inspection only.
 - `npm install` was not run.
-- `package-lock.json` was not regenerated.
-- `npm run check:composition` was not run.
 - `npm run build` was not run.
-- Browser preview, phone route checks, camera/WebXR, and AR testing were not run.
+- Browser resume behavior was not previewed in this environment.
 
 Post-change audit:
 
-- Improved: the blocker is now explicitly recorded as a QA/dependency-runner blocker, not a product decision blocker.
-- Still needs review: command validation in a network-enabled repo checkout or CI runner.
-- Still needs follow-up: regenerate and commit `package-lock.json`, then run composition/build and representative route previews before processing active feedback.
+- Improved: the cover now acts as a short passive re-entry/loading beat instead of requiring interaction.
+- Improved: the splash overlay uses fixed positioning, opacity transitions, and pointer-events none so it does not block clicks after fade-out.
+- Still needs review: deployed browser behavior on desktop and phone.
 
 Next:
 
