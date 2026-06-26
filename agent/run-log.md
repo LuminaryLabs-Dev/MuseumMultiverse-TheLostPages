@@ -67,82 +67,25 @@ Completed:
 - Added a cover splash module that appears on app load and whenever the browser tab returns after being away.
 - The cover splash remains visible for one second, then fades automatically without any click or confirmation step.
 - Loaded the splash before the main app module from `index.html`.
+- Added a Three.js page-frame foundation pass for left/right page frames and overlay slots.
+- Replaced the public non-AR booklet/page surface with a Three.js hub for launching eight AR experiences.
+- Updated the Three.js hub from circular portals to a vertical Bezier rail of floating comic-page cards.
+- Added softmax focus smoothing so the camera travels along the card rail instead of snapping between pages.
 
 Validation:
 
 - GitHub source inspection only.
 - `npm install` was not run.
 - `npm run build` was not run.
-- Browser resume behavior was not previewed in this environment.
+- Browser behavior was not previewed in this environment.
 
 Post-change audit:
 
-- Improved: the cover now acts as a short passive re-entry/loading beat instead of requiring interaction.
-- Improved: the splash overlay uses fixed positioning, opacity transitions, and pointer-events none so it does not block clicks after fade-out.
+- Improved: the public non-AR surface is now centered on one Three.js scene that launches eight AR experiences.
+- Improved: cards look like comic pages and are positioned along a Bezier rail.
+- Improved: camera movement uses weighted softmax focus plus interpolation for smoother travel.
 - Still needs review: deployed browser behavior on desktop and phone.
 
 Next:
 
 - Run dependency hygiene and QA in an environment with a repo checkout and network access: `npm install`, commit the regenerated `package-lock.json`, run `npm run check:composition`, run `npm run build`, and preview root, launcher, print, book, phone, one `/ar/<slug>/`, and one `/debug/ar/<slug>/` route.
-
-### AR route source-inspection QA turn
-
-Completed:
-
-- Confirmed open PR search returned no open PRs targeting `main` before work.
-- Confirmed `agent/scheduled-turn-lock.md` was not active before work.
-- Inspected `src/app/routes/router.js`, `src/main.js`, `src/ar/registry/experiences.js`, `src/data/pages.js`, `src/lib/origin.js`, `src/app/routes/basePath.js`, `scripts/export-static-routes.mjs`, `package.json`, `package-lock.json`, and `.github/workflows/deploy-lost-pages.yml`.
-- Source evidence: `/debug/ar/<slug>/`, `/ar/<slug>/`, `/ar/<slug>/?debug=1`, and `?page=<slug>` are matched before the default print/booklet fallback.
-- Source evidence: the static export script writes `launcher`, `book`, `print`, `ar`, `phone`, every `ar/<slug>`, and every `debug/ar/<slug>` route from the registry.
-- Source evidence: the registry currently imports eight experience modules and `src/data/pages.js` builds QR page URLs as `/ar/<slug>/` under the resolved public origin.
-- Source evidence: the GitHub Pages workflow sets `VITE_BASE_PATH` and `VITE_PUBLIC_ORIGIN`, runs `npm install`, then runs `npm run build`.
-
-Validation:
-
-- Source inspection through the GitHub connector only.
-- No app/source files were changed.
-- `npm install` was not run.
-- `npm run check:composition` was not run.
-- `npm run build` was not run.
-- Browser preview, deployed-route checks, phone checks, camera/WebXR checks, and AR launch checks were not run.
-
-Post-change audit:
-
-- Improved: route QA now has source-backed evidence for route parsing, QR route formation, static route export coverage, and deployment build intent.
-- Still needs review: actual command build, deployed route status, browser behavior, phone behavior, and AR/camera/WebXR launch.
-- Risk: unknown or misspelled AR slugs currently resolve to an experience route with no manifest, then fall through to the booklet surface rather than showing a dedicated not-found/error route.
-- Feedback remains active; no feedback moved to processed because validation is inspection-only.
-
-Next:
-
-- In a network-enabled repo checkout or CI runner, run `npm install`, commit the regenerated `package-lock.json`, run `npm run check:composition`, run `npm run build`, then preview root, launcher, print, book, phone, one known `/ar/<slug>/`, one known `/debug/ar/<slug>/`, and one intentionally invalid `/ar/<bad-slug>/` route.
-
-### Feedback status repair sync turn
-
-Completed:
-
-- Selected Mode 2 — State Intelligence Sync.
-- Confirmed open PR search returned no open PRs targeting `main` before work.
-- Confirmed `agent/scheduled-turn-lock.md` was completed, not active.
-- Reconciled active feedback and feedback inbox status for the print-first tabletop/booklet implementation.
-- Updated product docs to distinguish source-backed implementation from validation-complete or processed feedback.
-- Kept `agent/pointer.md` unchanged on `prompts/004-ar-route-check.md` because command/browser/device route QA remains incomplete.
-
-Validation:
-
-- GitHub source/document inspection only.
-- No `src/`, `print/`, `scripts/`, or `.github/` files changed.
-- `npm install` was not run.
-- `npm run check:composition` was not run.
-- `npm run build` was not run.
-- Browser preview, deployed-route checks, phone checks, camera/WebXR checks, and AR launch checks were not run.
-
-Post-change audit:
-
-- Improved: feedback and docs now say tabletop/booklet work is source-backed but still unvalidated.
-- Improved: stale “not implemented” feedback status was corrected without moving feedback to processed.
-- Still needs review: dependency lockfile, build, browser, deployed routes, phone, AR launch, paper fallback, and final `/book/` treatment.
-
-Next:
-
-- Run dependency hygiene and QA in a network-enabled repo checkout or CI runner: `npm install`, regenerate and commit `package-lock.json`, run `npm run check:composition`, run `npm run build`, then preview root, launcher, print, book, phone, one known `/ar/<slug>/`, one known `/debug/ar/<slug>/`, and one intentionally invalid `/ar/<bad-slug>/` route.
