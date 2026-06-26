@@ -80,6 +80,7 @@ jobs:
             exit 0
           fi
           CONTENT="$(cat output.md 2>/dev/null || printf 'Lost Pages deployed.')"
+          export CONTENT
           python3 - <<'PY' > /tmp/lost-pages-payload.json
           import json
           import os
