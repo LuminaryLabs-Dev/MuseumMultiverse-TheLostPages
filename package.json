@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "nexusrealtime": "git+https://github.com/LuminaryLabs-Dev/NexusRealtime.git#0.0.1",
+    "nexusrealtime": "git+https://github.com/LuminaryLabs-Dev/NexusRealtime.git#ebd19e298d71bfbc51bf452394085ce1d909cb94",
     "qrcode": "^1.5.4",
     "three": "^0.184.0"
   },
