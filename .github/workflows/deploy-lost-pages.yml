@@ -19,82 +19,28 @@ jobs:
   build:
     name: Build Lost Pages
     runs-on: ubuntu-latest
-
-    outputs:
-      changes: ${{ steps.changes.outputs.summary }}
-      files: ${{ steps.changes.outputs.files }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
-
       - name: Configure GitHub Pages build paths
         run: |
           set -euo pipefail
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
           OWNER_LC="$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
-          {
-            echo "VITE_BASE_PATH=/$REPO_NAME/"
-            echo "VITE_PUBLIC_ORIGIN=https://$OWNER_LC.github.io/$REPO_NAME"
-          } >> "$GITHUB_ENV"
-
+          echo "VITE_BASE_PATH=/$REPO_NAME/" >> "$GITHUB_ENV"
+          echo "VITE_PUBLIC_ORIGIN=https://$OWNER_LC.github.io/$REPO_NAME" >> "$GITHUB_ENV"
       - name: Build site
         run: |
           set -euo pipefail
-          npm ci
+          npm install
           npm run build
           test -d dist
           touch dist/.nojekyll
-
-      - name: Summarize changes
-        id: changes
-        run: |
-          set -euo pipefail
-
-          BEFORE="${{ github.event.before || '' }}"
-          AFTER="${{ github.sha }}"
-
-          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-            if git rev-parse "$AFTER~10" >/dev/null 2>&1; then
-              RANGE="$AFTER~10..$AFTER"
-            else
-              RANGE="$AFTER"
-            fi
-          else
-            RANGE="$BEFORE..$AFTER"
-          fi
-
-          COMMITS="$(git log --pretty=format:'- %s (%h)' "$RANGE" || true)"
-          FILES="$(git diff --name-only "$RANGE" | sed 's/^/- /' | head -40 || true)"
-
-          if [ -z "$COMMITS" ]; then
-            COMMITS="- Manual deploy / no commit range found"
-          fi
-
-          if [ -z "$FILES" ]; then
-            FILES="- No changed files detected"
-          fi
-
-          {
-            echo "summary<<EOF"
-            echo "$COMMITS"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-          {
-            echo "files<<EOF"
-            echo "$FILES"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -104,132 +50,10 @@ jobs:
     name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
-    outputs:
-      page_url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
-
-  notify:
-    name: Notify Discord
-    needs:
-      - build
-      - deploy
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout notification source
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Send Discord message
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          python3 - <<'PY'
-          import json
-          import os
-          import time
-          import urllib.error
-          import urllib.request
-          from pathlib import Path
-
-          webhook = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
-          if not webhook:
-              print("No DISCORD_WEBHOOK_URL secret set; skipping Discord notification.")
-              raise SystemExit(0)
-
-          output_path = Path("output.md")
-          if output_path.exists():
-              content = output_path.read_text(encoding="utf-8").strip()
-              if not content:
-                  content = "output.md exists, but it is empty."
-          else:
-              content = "output.md was not found. Add output.md to control the Discord deploy message."
-
-          max_output_chars = 6500
-          if len(content) > max_output_chars:
-              content = (
-                  content[:max_output_chars].rstrip()
-                  + "\n\n…output.md truncated for Discord. See the repo file for the full message."
-              )
-
-          headers = {
-              "Content-Type": "application/json",
-              "Accept": "application/json",
-              "User-Agent": "LostPagesGitHubActions/1.0 (+https://github.com/LuminaryLabs-Dev/MuseumMultiverse-TheLostPages)",
-          }
-
-          def split_message(text, limit=1900):
-              text = text.strip()
-              chunks = []
-              while text:
-                  if len(text) <= limit:
-                      chunks.append(text)
-                      break
-                  cut = text.rfind("\n", 0, limit)
-                  if cut < limit // 2:
-                      cut = limit
-                  chunks.append(text[:cut].rstrip())
-                  text = text[cut:].lstrip()
-              return chunks or ["No deploy message content."]
-
-          def post_to_discord(message, chunk_index, chunk_count):
-              if chunk_count > 1:
-                  message = f"{message}\n\n_Part {chunk_index}/{chunk_count}_"
-              payload = {
-                  "content": message[:2000],
-                  "allowed_mentions": {"parse": []},
-              }
-              data = json.dumps(payload).encode("utf-8")
-              last_error = None
-
-              for attempt in range(1, 4):
-                  request = urllib.request.Request(
-                      webhook,
-                      data=data,
-                      headers=headers,
-                      method="POST",
-                  )
-
-                  try:
-                      with urllib.request.urlopen(request, timeout=20) as response:
-                          print(f"Discord response: {response.status} for part {chunk_index}/{chunk_count}")
-                          return True
-                  except urllib.error.HTTPError as exc:
-                      body = exc.read().decode("utf-8", errors="replace")
-                      last_error = f"HTTP {exc.code}: {body}"
-                      print(f"Discord webhook attempt {attempt} failed for part {chunk_index}: {last_error}")
-                      if exc.code in (429, 500, 502, 503, 504):
-                          retry_after = exc.headers.get("Retry-After")
-                          try:
-                              delay = float(retry_after) if retry_after else 2 * attempt
-                          except ValueError:
-                              delay = 2 * attempt
-                          time.sleep(delay)
-                          continue
-                      break
-                  except Exception as exc:
-                      last_error = repr(exc)
-                      print(f"Discord webhook attempt {attempt} failed for part {chunk_index}: {last_error}")
-                      time.sleep(2 * attempt)
-
-              print(f"::warning::Discord notification part {chunk_index} skipped after failure: {last_error}")
-              return False
-
-          chunks = split_message(content)
-          for index, chunk in enumerate(chunks, start=1):
-              if not post_to_discord(chunk, index, len(chunks)):
-                  break
-
-          raise SystemExit(0)
-          PY
