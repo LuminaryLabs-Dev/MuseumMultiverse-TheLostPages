@@ -21,11 +21,13 @@ Status: active
 - Background paper shader pass is source-backed but still needs build/browser validation.
 - Booklet reader pass is source-backed: `/print/` now has a title/opening beat, one active page at a time, and panel reveal controls.
 - Local service-kit pass is source-backed: launcher/print surfaces now mount NexusRealtime local kits for route mapping, paper, booklet navigation, and panel sequence state.
+- AR experience clarification: the AR experiences themselves are full 3D and should not include a book/booklet metaphor. The phone-facing AR route should be a consistent flat, glossy, sharp-edged landing page whose only job is to launch the full 3D AR experience.
 - Feedback intake rule: feedback-only turns update feedback docs on `main` and do not change app/source files unless implementation is explicit.
 
 ## Still Active After Source Pass
 
 - Validate `/print/` in build, browser preview, and deployed route review.
+- Validate `/ar/<slug>/` landing pages on phone-sized screens and confirm they launch the full 3D AR experience.
 - Regenerate `package-lock.json` for the pinned NexusRealtime commit.
 - Confirm the WebGL paper viewport falls back cleanly on older or constrained browsers.
 - Decide final `/book/` treatment: keep as legacy, redirect to `/print/`, or remove from public navigation/static paths.
