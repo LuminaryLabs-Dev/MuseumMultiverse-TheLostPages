@@ -1,3 +1,3 @@
-✅ Lost Pages booklet reader
+✅ Lost Pages booklet view
 
-Moved `/print/` toward a Nexus-backed comic booklet reader with local kits, page controls, and panel reveals.
+Made the booklet reader the default view with a sharp, glossy, vertical flipbook page stack.
