@@ -50,3 +50,15 @@ Changed:
 Reason:
 
 The repo had state drift after source changes collapsed public page entries into the shared booklet/print reader while older docs still described distinct public surfaces and incomplete dependency state.
+
+### Route QA source-inspection state update
+
+Changed:
+
+- Updated `agent/run-log.md` with source-inspection evidence for AR, debug, QR, static export, and deployment route assumptions.
+- Updated `agent/state-intelligence-ledger.md` with the same QA boundary and remaining route-validation risks.
+- Kept `agent/pointer.md` unchanged because route QA is not browser, phone, or AR complete.
+
+Reason:
+
+The active route-check pointer needed source-backed evidence without claiming build, deployed-route, device, camera, or AR validation.
