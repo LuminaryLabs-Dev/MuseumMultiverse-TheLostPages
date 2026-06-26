@@ -16,23 +16,25 @@ Status: active
 - Keep motion subtle and physical.
 - Avoid heavy sepia as the default visual tone.
 - Page surfaces should look like squared paper, not rounded cards.
-- `/print/` is the primary surface; `/book/` remains legacy until a final route decision.
-- The print view should keep tabletop/paper styling, grounded shadows, no cursor glow, and no stripe background.
-- Background paper shader pass is source-backed but still needs build/browser validation.
-- Booklet reader pass is source-backed: `/print/` now has a title/opening beat, one active page at a time, and panel reveal controls.
+- `/print/` is the primary non-AR review/presentation surface.
+- `/book/` currently remains available as a compatibility/static entry that falls through to the shared booklet/print reader; final treatment is still undecided.
+- The print/booklet surface should keep tabletop/paper styling, grounded shadows, no cursor glow, and no stripe background.
+- Background paper shader pass is source-backed but still needs build/browser/device fallback validation.
+- Booklet reader pass is source-backed: root, launcher, print, book, and phone entries now share the booklet/print reader with a title/opening beat, one active page at a time, and panel reveal controls.
 - Local service-kit pass is source-backed: launcher/print surfaces now mount NexusRealtime local kits for route mapping, paper, booklet navigation, and panel sequence state.
 - AR experience clarification: the AR experiences themselves are full 3D and should not include a book/booklet metaphor. The phone-facing AR route should be a consistent flat, glossy, sharp-edged landing page whose only job is to launch the full 3D AR experience.
 - Feedback intake rule: feedback-only turns update feedback docs on `main` and do not change app/source files unless implementation is explicit.
 
 ## Still Active After Source Pass
 
-- Validate `/print/` in build, browser preview, and deployed route review.
-- Validate `/ar/<slug>/` landing pages on phone-sized screens and confirm they launch the full 3D AR experience.
 - Regenerate `package-lock.json` for the pinned NexusRealtime commit.
+- Validate `/print/` and the shared booklet/print reader in build, browser preview, and deployed route review.
+- Confirm root, launcher, print, book, and phone paths all show the expected shared booklet/print reader surface.
+- Validate `/ar/<slug>/` landing pages on phone-sized screens and confirm they launch the full 3D AR experience.
 - Confirm the WebGL paper viewport falls back cleanly on older or constrained browsers.
-- Decide final `/book/` treatment: keep as legacy, redirect to `/print/`, or remove from public navigation/static paths.
-- Polish the physical opening transition after visual review.
-- Run route QA and print readiness after print-view direction is stable.
+- Decide final `/book/` treatment: keep as compatibility/legacy, redirect to `/print/`, hide from public navigation/static paths, or remove.
+- Polish the physical opening transition only after browser/device visual review.
+- Run route QA and QR/print readiness after dependency hygiene and route validation are complete.
 
 ## Handling Rule
 
