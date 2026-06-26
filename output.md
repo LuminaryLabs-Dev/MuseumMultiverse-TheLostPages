@@ -1,3 +1,3 @@
-✅ Lost Pages cover splash
+✅ Lost Pages page frames
 
-Removed the old title-card overlay and made the cover flow open automatically after the splash.
+Added a Three.js left/right page-frame canvas with overlay slots for placed content.
