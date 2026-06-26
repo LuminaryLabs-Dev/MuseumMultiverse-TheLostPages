@@ -1,3 +1,3 @@
-✅ Lost Pages cover splash
+✅ Lost Pages route QA evidence
 
-Shows the comic cover on app load and for one second when the tab is resumed, then fades automatically.
+Recorded source-backed AR/debug/static route evidence. Build, browser, phone, and AR launch validation still need a repo checkout or CI runner.
