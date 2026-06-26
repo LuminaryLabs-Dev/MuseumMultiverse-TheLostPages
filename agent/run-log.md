@@ -4,87 +4,56 @@
 
 Completed:
 
-- Added deploy chat posting from `output.md`.
-- Removed automatic metadata from deploy chat messages.
-- Added `output-rules.md` as the style/rules file.
-- Added the initial long-running agent operating structure under `agent/`.
-- Added long term goal and dependency files.
-- Added feedback intake files.
-- Added project docs under `docs/`.
-- Updated the build so static AR routes are exported for phone use.
-- Cleaned the launcher into simpler comic-book spreads.
-- Added light pointer and visibility animation for the launcher.
-- Added `agent/master-intention-plan.md` and `agent/cleanup-plan.md` for future visual passes.
-- Recorded feedback that the overall book/launcher direction should avoid a heavy sepia tone. No visual change was made for that feedback in this run.
-- Recorded workflow feedback about batching changes and making deploy output smarter.
-- Added `scripts/render-output-message.mjs` as the first smart output renderer.
-- Tightened workflow memory so `output.md` is updated once per completed batch.
-- Added the supporting content documentation scaffold under `docs/`.
-- Ran a user-directed paper page visual pass: launcher page cards now use square corners and layered paper texture; book/print page canvas textures now include procedural grain and square borders; WebGL book page surfaces now use a GLSL paper shader.
+- Added deploy output files, agent operating files, project docs, feedback files, route export work, launcher cleanup, subtle motion, paper page styling, and supporting content docs.
 
 Next:
 
-- Wire the deploy workflow to call the smart output renderer if the workflow file can be safely updated.
 - Run `prompts/004-ar-route-check.md`.
 
 Notes:
 
-- The requested hidden agent path could not be written by the current connector, so this repo uses `agent/` for the same operating model.
-- The paper page visual pass was code-reviewed through the connector, but npm build and browser/device QA were not run in this environment.
-- The active pointer remains on AR route QA because this visual pass did not complete `prompts/004-ar-route-check.md`.
+- The repo uses `agent/` as the active operating folder.
+- Build and device QA were not run in this environment.
 
 ## 2026-06-25
 
 Completed:
 
-- Implemented the State Intelligence Sync documentation and agent workflow system.
-- Added `agent/workflows/state-intelligence-sync-workflow.md`.
-- Added `agent/prompts/state-intelligence-sync.md`.
-- Added `agent/state-intelligence-ledger.md`.
-- Added `docs/STATE-ALIGNMENT-MAP.md`.
-- Updated agent workflow, memory, start-here, feedback rules, feedback inbox, and feedback log for state alignment and inference turns.
-- Mirrored active print-first and tabletop feedback into feedback inbox/log with explicit status language.
-- Aligned non-agent docs with active direction that `/print/` should become the primary non-AR presentation surface and `/book/` is pending route/product decision.
-- Updated style/QA/technical docs to distinguish pending product direction from implemented source behavior.
-- Added the Autonomous Bounded Turn reusable prompt as the top-level generic mode selector.
-- Updated `agent/start-here.md`, `agent/workflow.md`, and `agent/state-intelligence-ledger.md` so generic turns can read repo state, choose one bounded mode, update state, and stop.
-- Upgraded the Autonomous Bounded Turn prompt for scheduled use with maximum useful upgrade behavior, implementation pressure, scheduled-turn locking, post-change audit requirements, and concrete next-turn handoff.
-- Added `agent/scheduled-turn-lock.md`.
-- Updated `agent/start-here.md`, `agent/workflow.md`, and `agent/state-intelligence-ledger.md` so scheduled autonomous turns should push to `main`, avoid new PRs, prefer implementation after alignment, and audit implementation batches.
-- Applied the print-first tabletop UI/navigation implementation pass on `main`.
-- Split `/print/` into its own route type while keeping `/book/` as a legacy route.
-- Made `/print/` render a standalone tabletop print review surface instead of the 3D book scene.
-- Promoted Print view as the launcher primary CTA and demoted Book to a legacy link.
-- Removed the pointer-following glow element and the glow-position motion variables.
-- Preserved subtle physical tilt/parallax motion for launcher and print surfaces.
-- Added tabletop-style background, grounded paper shadows, and first-pass opening/settling transition for the print view.
-- Updated technical/style docs, feedback log, state intelligence ledger, and deploy output for the print-first source pass.
-- Added a cached Three.js paper background for launcher and print.
-- Added precomputed multi-octave paper maps for albedo, normal, and height/depth.
-- Changed the main background and hero surfaces away from the prior stripe treatment.
-- Kept text, QR, and controls in DOM while the paper surface renders behind them as a flat 2.5D layer.
-- Added non-striped CSS fallback styling for constrained browsers.
+- Implemented State Intelligence Sync, Autonomous Bounded Turn, scheduled turn policy, and supporting state ledgers.
+- Applied the print-first tabletop UI/navigation pass.
+- Split `/print/` from `/book/` and kept `/book/` as legacy.
+- Made `/print/` a tabletop print review surface.
+- Added cached Three.js paper background with precomputed albedo, normal, and depth maps.
+- Removed the prior stripe-style background treatment.
+- Pinned `nexusrealtime` in `package.json` to main commit `ebd19e298d71bfbc51bf452394085ce1d909cb94`.
+- Added local service-kit scaffolding under `src/kits/`.
+- Added local domain services under `src/domains/`.
+- Added `src/data/bookletPanels.js` and `scripts/check-print-composition.mjs`.
+- Reworked `/print/` into a one-page comic booklet reader with a title/opening beat, page controls, and panel-by-panel reveal state.
+- Wired launcher and print surfaces through a NexusRealtime `createRealtimeGame()` instance with local runtime kits and `engine.n.*` services.
+- Updated the deploy workflow to use `npm install` while this dependency migration is pending lockfile regeneration.
 
 Validation:
 
 - Open PR search returned no open PRs before these source batches.
 - Source files were inspected after update through the GitHub connector.
+- Added `npm run check:composition` into the build path.
 - Build and browser preview were not run from this connector environment.
+- `package-lock.json` was not regenerated in this environment.
 
 Post-change audit:
 
-- Improved: `/print/` is now a separate route and standalone tabletop surface.
-- Improved: `/book/` is still available as a direct legacy route but no longer promoted equally.
-- Improved: cursor glow was removed from launcher markup/CSS and motion no longer updates glow-position variables.
-- Improved: tabletop background, grounded page shadows, and a first-pass opening/settling transition are in source.
-- Improved: a cached WebGL paper background now supplies multi-octave noise and normal/depth shading without visible stripe layers.
-- Still needs review: visual density, paper feel, QR readability, animation timing, and fallback behavior must be judged in preview.
+- Improved: `/print/` is now a one-page-at-a-time booklet reader rather than an all-pages wall.
+- Improved: title/opening state and panel reveal controls are driven by local services.
+- Improved: route, paper surface, booklet reader, and panel sequence behavior now have local kit/service boundaries.
+- Improved: NexusRealtime main primitives are used for the mounted service graph.
+- Still needs review: browser build, deployed route behavior, readability, animation timing, and lower-end fallback.
+- Still needs follow-up: regenerate and commit `package-lock.json` in an environment with network access.
 - Still needs decision: final `/book/` route treatment remains unresolved.
 
 Next:
 
-- Run build and browser checks for `/launcher/`, `/print/`, `/book/`, one route page, and one debug route.
-- Confirm the cached paper shader renders on representative desktop/mobile browsers and fallback styling is acceptable.
-- If validation passes, move implemented print-first/tabletop/no-glow/paper-shader feedback to `processed-feedback.md` with evidence.
+- Run `npm install`, `npm run check:composition`, `npm run build`, and browser checks.
+- Regenerate and commit `package-lock.json` for the pinned NexusRealtime main commit.
 - Decide whether `/book` stays legacy/debug, redirects to `/print`, or is retired from public/static paths.
 - Run `agent/prompts/004-ar-route-check.md` after print navigation is validated.
