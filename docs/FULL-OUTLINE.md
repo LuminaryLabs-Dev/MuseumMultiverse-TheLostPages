@@ -47,7 +47,7 @@ Page 08: use the collected fragments to open the portal room
 - Print Markdown, launcher copy, route manifest, QR label, and page docs are checked for drift.
 - Final QR targets use the intended public deployment origin.
 - Each print page can stand alone as a magazine page without relying on the phone.
-- The main print view is treated as the primary non-AR review/presentation surface.
+- The shared booklet/print reader is treated as the primary non-AR review/presentation surface.
 
 ### Stage 5 — Final portal readiness
 
@@ -70,16 +70,22 @@ Page 08: use the collected fragments to open the portal room
 
 ## Current active direction
 
-Active feedback prefers the main print view over a dedicated 3D book view.
+Active feedback prefers the shared booklet/print reader over a dedicated 3D book view for public non-AR review and presentation.
 
-Pending implementation decisions:
+Source-backed implementation state:
 
-- whether `/book/` should be removed, redirected, hidden, or retained as legacy/debug/experimental
-- how `/print/` becomes the primary presentation route
-- how the physical tabletop background, grounded shadow, non-glow reactivity, and book-opening transition are implemented
+- root, launcher, print, book, and phone route entries currently share the booklet/print reader surface
+- `/book/` remains as a compatibility/static route entry, not as the preferred separate public review surface
+- tabletop/paper styling, grounded paper shadows, no pointer-following glow, subtle physical motion direction, and a first-pass opening/settling transition are source-backed
 
-Do not mark these decisions implemented until the source and route changes are made and validated.
+Pending validation and decisions:
+
+- run dependency hygiene, composition check, build, browser preview, deployed-route checks, phone/device checks, and AR launch checks
+- decide whether `/book/` should remain compatibility/legacy, redirect to `/print/`, hide from public navigation/static export, or be removed
+- judge the physical opening/settling transition in browser/device preview before polishing it further
+
+Do not mark these active feedback themes processed until implementation and validation evidence exist.
 
 ## Final outcome
 
-The finished repo should support a printed eight-page artifact, a phone-friendly launcher, a primary print review/presentation surface, direct AR routes for every QR code, desktop debug routes, short deploy messages, and durable agent handoff state.
+The finished repo should support a printed eight-page artifact, a phone-friendly launcher, a primary print/booklet review surface, direct AR routes for every QR code, desktop debug routes, short deploy messages, and durable agent handoff state.
