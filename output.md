@@ -1,3 +1,3 @@
-✅ Lost Pages Three.js hub
+✅ Lost Pages Three.js rail
 
-Made the public non-AR surface a Three.js portal launcher for the eight full 3D AR experiences.
+Made the public non-AR surface a vertical Bezier rail of floating comic-page cards for the eight AR experiences.
