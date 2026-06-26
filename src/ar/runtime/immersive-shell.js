@@ -1,3 +1,5 @@
+import './landing.css';
+
 function activeStep(runtimeState) {
   const experience = runtimeState.objective ?? runtimeState.experience ?? runtimeState;
   return experience.steps?.[experience.currentStepIndex] ?? experience.steps?.[0];
@@ -34,12 +36,23 @@ function renderHotspots(manifest, step) {
 export function renderImmersiveGate(experience, runtimeState = {}) {
   const selected = runtimeState.selectedMode ?? runtimeState.support ?? {};
   return `
-    <section class="immersive-gate" style="--accent:${experience.accent};--deep:${experience.deep};--glow:${experience.glow}">
-      <div class="immersive-gate__mark">${experience.number}</div>
-      <h1>${experience.title}</h1>
-      <p>${experience.prompt}</p>
-      <button class="immersive-gate__start" data-start-ar>Start AR</button>
-      <small>${selected.mode ?? selected.deviceClass ?? 'Detecting AR mode'} · camera permission required</small>
+    <section class="ar-landing immersive-gate" style="--accent:${experience.accent};--deep:${experience.deep};--glow:${experience.glow}">
+      <div class="ar-landing__card">
+        <div class="ar-landing__topline">
+          <span>Museum Multiverse</span>
+          <strong>Page ${experience.number}</strong>
+        </div>
+        <div class="ar-landing__mark">${experience.number}</div>
+        <p class="ar-landing__eyebrow">${experience.qrTitle}</p>
+        <h1>${experience.title}</h1>
+        <p class="ar-landing__copy">${experience.prompt}</p>
+        <div class="ar-landing__artifact">
+          <span>Reward</span>
+          <strong>${experience.collectible}</strong>
+        </div>
+        <button class="ar-landing__start immersive-gate__start" data-start-ar>Launch full 3D AR</button>
+        <small>${selected.mode ?? selected.deviceClass ?? 'Detecting AR mode'} · camera permission required</small>
+      </div>
     </section>
   `;
 }
