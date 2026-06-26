@@ -74,6 +74,10 @@ Completed:
 - Simplified the rail UI so the visible overlay is title-only.
 - Moved the page number, title, prompt, collectible label, and launch callout onto the generated comic-page card textures.
 - Rebalanced the Bezier rail, camera distance, card sizing, and card transform math so the active page is larger and nearby pages peel left/right/back instead of all facing the camera.
+- Added a custom page shader for paper grain, edge darkening, glossy highlights, halftone shadowing, and scroll-responsive page curl.
+- Added physical page side thickness, contact shadows, and a raymarch-like portal glow plane behind the focused page.
+- Added texture caching so generated comic-page textures are reused per slug.
+- Added idle snap-to-page behavior so the rail settles after scrolling.
 
 Validation:
 
@@ -85,7 +89,7 @@ Validation:
 Post-change audit:
 
 - Improved: the public non-AR surface is now centered on one Three.js scene that launches eight AR experiences.
-- Improved: cards look like comic pages and are positioned along a Bezier rail.
+- Improved: cards look more like physical comic pages with thickness, shader detail, contact shadows, and curl.
 - Improved: camera movement uses weighted softmax focus plus interpolation for smoother travel.
 - Improved: overlay UI no longer competes with the cards; the card textures carry the launch UI.
 - Still needs review: deployed browser behavior on desktop and phone.
