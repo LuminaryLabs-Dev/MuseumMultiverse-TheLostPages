@@ -1,21 +1,22 @@
 # Lost Pages State Intelligence Ledger
 
 Status: active
-Last updated: 2026-06-25
+Last updated: 2026-06-26
 
 ## Current True State
 
-- Root, launcher, print, and book paths now resolve to the booklet reader surface.
-- AR and debug routes remain separate.
-- The AR experiences themselves are full 3D experiences and should not use the book/booklet metaphor once launched.
-- Each AR route now starts with a consistent flat, glossy, sharp-edged landing page before launching the full 3D experience.
+- Root, launcher, print, book, and phone route entries resolve to the same shared booklet/print reader surface.
+- Experience and debug routes remain separate.
+- `src/app/routes/router.js` preserves `/ar/<slug>/`, `/ar/<slug>/?debug=1`, `/debug/ar/<slug>/`, and `?page=<slug>` before every other path falls through to `type: 'print'`.
+- `src/main.js` renders the non-experience path through `renderBookletSurface()`, which calls `renderPrintMarkup()`.
+- The route landing page for each experience is separate from the full 3D experience after launch.
 - The booklet reader is one page at a time, with a title/opening beat and panel reveal controls.
 - The booklet uses a flat glossy flipbook treatment with sharp page edges.
 - The cover turns first, then active pages flip vertically through a small visible stack.
 - Launcher and print surfaces create a NexusRealtime `createRealtimeGame()` instance.
 - Local runtime kits install services for route mapping, paper surface mounting, booklet navigation, and panel sequence state.
 - `package.json` is pinned to NexusRealtime commit `ebd19e298d71bfbc51bf452394085ce1d909cb94`.
-- `package-lock.json` still needs regeneration in a network-enabled environment.
+- `package-lock.json` still needs regeneration because it references the older dependency target.
 
 ## Mounted Local Services
 
@@ -40,30 +41,39 @@ src/kits/
 
 ## Active Feedback Still Open
 
-- Validate the booklet reader in build and preview.
-- Confirm root, launcher, print, and book paths all show the same booklet surface.
-- Validate `/ar/<slug>/` landing pages on phone-sized screens and confirm they launch full 3D AR.
+- Regenerate and commit `package-lock.json` for the pinned NexusRealtime commit.
+- Run `npm run check:composition` and `npm run build`.
+- Validate the booklet reader in browser preview.
+- Confirm root, launcher, print, book, and phone paths all show the same booklet surface.
+- Validate representative experience landing pages and debug routes.
 - Confirm the paper background and fallback behavior on representative browsers.
 - Keep DOM text, controls, and QR output readable.
-- Do not reintroduce cursor glow, stripe backgrounds, rounded-card page styling, or book metaphors inside launched AR.
+- Do not reintroduce cursor glow, stripe backgrounds, rounded-card page styling, or book metaphors inside launched experiences.
 
 ## Recently Implemented
 
-- Single default booklet surface for public non-AR paths.
+- Single default booklet surface for public non-experience paths.
 - Flat glossy flipbook styling.
 - Cover-turn-first treatment.
 - Vertical deck/page flip motion.
-- Consistent AR launch landing page.
+- Consistent experience launch landing page.
 - Local service kit scaffolding.
 - NexusRealtime game mounting for launcher/print surfaces.
 - Composition check script in the build path.
 
+## Alignment Completed This Turn
+
+- Reconciled docs that still described `/print/` and `/book/` as distinct public non-experience surfaces.
+- Recorded the source-backed route fallback: all non-experience public entries render the shared booklet/print reader.
+- Recorded the dependency mismatch between `package.json` and `package-lock.json`.
+- Kept feedback active because build, browser, route, device, and experience validation were not run.
+
 ## Validation Boundary
 
-- Source was pushed to `main`.
 - Source was inspected through the GitHub connector.
-- Build and browser preview were not run here.
+- Build, dependency installation, lockfile regeneration, browser preview, device testing, and experience testing were not run here.
+- No app/source files were changed in this State Intelligence Sync turn.
 
 ## Recommended Next Turn
 
-Run dependency hygiene and QA: `npm install`, regenerate `package-lock.json`, run `npm run check:composition`, run `npm run build`, preview root, launcher, print, book, and representative AR routes, then process feedback only after evidence passes.
+Run dependency hygiene and QA: `npm install`, regenerate `package-lock.json`, run `npm run check:composition`, run `npm run build`, preview root, launcher, print, book, phone, and representative experience/debug routes, then process feedback only after evidence passes.
