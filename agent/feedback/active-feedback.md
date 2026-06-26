@@ -11,26 +11,26 @@ Status: active
 - Add dependency notes for NexusRealtime.
 - Add prototype and overall workflows.
 - Add a feedback folder for durable user direction.
-- Make the Pages workflow export static routes so AR routes can open directly on a phone.
-- The launcher felt too overdone and PDF-like; clean it up into a simpler comic-book look.
-- Add light reactive animations with JavaScript while keeping motion subtle.
-- New feedback: the overall book/launcher direction should avoid the heavy sepia tone. Treat this as ongoing visual guidance.
-- New feedback: future agent runs must follow the workflow more reliably and avoid creating multiple deploy chat messages for one batch.
-- New feedback: output should become a smart message source with fields that can be rendered into a dynamic deploy chat message.
-- New feedback: page surfaces should look like squared paper, not rounded cards; use paper texture, shading, and GLSL shading for the WebGL book/print pages.
-- Print-first source pass applied: `/print/` is now routed separately and rendered as the primary tabletop print surface; `/book/` remains available as a de-emphasized legacy route pending final route decision.
-- Tabletop source pass applied: the print view now has tabletop styling, grounded paper shadows, no-glow motion, and subtle tilt/parallax in source. Build and visual validation are still pending.
-- Background shader pass applied: launcher and print backgrounds now mount a cached WebGL paper viewport with precomputed multi-octave noise, albedo, normal, and height maps. The previous striped background treatment was removed from the main background and hero surfaces.
-- Feedback intake rule: when the user gives Lost Pages feedback, append it to feedback docs on `main` only; do not make app/source changes unless the user explicitly asks for implementation.
-- Physical opening source pass applied: a first-pass opening-and-settling transition is now in the print view. Visual polish remains active pending preview.
+- Make the Pages workflow export static routes so direct routes can open from a phone.
+- Keep the launcher cleaner, simpler, and comic-book-like.
+- Keep motion subtle and physical.
+- Avoid heavy sepia as the default visual tone.
+- Page surfaces should look like squared paper, not rounded cards.
+- `/print/` is the primary surface; `/book/` remains legacy until a final route decision.
+- The print view should keep tabletop/paper styling, grounded shadows, no cursor glow, and no stripe background.
+- Background paper shader pass is source-backed but still needs build/browser validation.
+- Booklet reader pass is source-backed: `/print/` now has a title/opening beat, one active page at a time, and panel reveal controls.
+- Local service-kit pass is source-backed: launcher/print surfaces now mount NexusRealtime local kits for route mapping, paper, booklet navigation, and panel sequence state.
+- Feedback intake rule: feedback-only turns update feedback docs on `main` and do not change app/source files unless implementation is explicit.
 
 ## Still Active After Source Pass
 
 - Validate `/print/` in build, browser preview, and deployed route review.
+- Regenerate `package-lock.json` for the pinned NexusRealtime commit.
 - Confirm the WebGL paper viewport falls back cleanly on older or constrained browsers.
 - Decide final `/book/` treatment: keep as legacy, redirect to `/print/`, or remove from public navigation/static paths.
 - Polish the physical opening transition after visual review.
-- Run AR route QA and QR/print readiness after print-view direction is stable.
+- Run route QA and print readiness after print-view direction is stable.
 
 ## Handling Rule
 
