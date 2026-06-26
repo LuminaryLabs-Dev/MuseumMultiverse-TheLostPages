@@ -1,3 +1,3 @@
-✅ Lost Pages feedback status sync
+✅ Lost Pages cover splash
 
-Aligned feedback and docs so print/booklet work is source-backed but still unvalidated. Build, browser, phone, AR, lockfile, and `/book` final treatment remain next.
+Removed the old title-card overlay and made the cover flow open automatically after the splash.
