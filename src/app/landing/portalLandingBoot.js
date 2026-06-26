@@ -1,10 +1,12 @@
 import './embedCardBoot.js';
 import { installCardInputPatch } from './cardInputPatch.js';
+import { installStableRailAutoBoot } from './stableRailAutoBoot.js';
 import { enhancePortalLanding } from './portalLanding.js';
 
 let interval = 0;
 const seen = new WeakSet();
 let cleanupInput = null;
+let cleanupStable = null;
 
 function isEmbedded() {
   return window.self !== window.top || new URLSearchParams(window.location.search).has('embed');
@@ -22,10 +24,12 @@ function scanPortalScenes() {
 
 export function installPortalLandingObserver() {
   if (typeof window === 'undefined' || typeof document === 'undefined' || isEmbedded()) return () => {};
+  cleanupStable = installStableRailAutoBoot();
   interval = window.setInterval(scanPortalScenes, 250);
   window.requestAnimationFrame(scanPortalScenes);
   return () => {
     window.clearInterval(interval);
     cleanupInput?.();
+    cleanupStable?.();
   };
 }
