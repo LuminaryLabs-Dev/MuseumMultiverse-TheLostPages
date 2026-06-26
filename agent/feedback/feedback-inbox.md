@@ -14,9 +14,19 @@ Use this file for newly captured user feedback before it is fully resolved or im
 - `superseded`
 - `blocked`
 
+## 2026-06-26 — Status repair note
+
+Status: `aligned-to-docs`
+
+This inbox was reconciled after source-backed implementation passes landed on `main`.
+
+The print-first tabletop/booklet work is no longer purely pending implementation. Source inspection and run-log evidence show first-pass implementation exists for the shared booklet/print reader, tabletop paper styling, grounded paper shadows, no cursor glow, local service kits, and a first-pass opening/settling transition.
+
+The feedback remains active and unprocessed because dependency hygiene, build validation, browser preview, deployed-route review, phone/device checks, paper fallback review, and AR launch validation are still pending.
+
 ## 2026-06-24 — Prioritize main print view over book view
 
-Status: `aligned-to-docs`, `ready-for-implementation`, not implemented
+Status: `implemented` by source-backed pass, not validated, not processed
 
 Raw feedback:
 
@@ -27,24 +37,29 @@ Raw feedback:
 Context:
 
 - User provided screenshots showing the 3D book/page-turn view and the main print-style page view.
-- Feedback intake only. Implementation was not requested in this turn.
+- Feedback intake only. Implementation was not requested in the intake turn.
+- A later explicit implementation turn made the non-AR public entries share the booklet/print reader surface.
+
+Current source-backed state:
+
+- Root, launcher, print, book, and phone route entries fall through to the shared booklet/print reader surface.
+- `/book/` is still present as a compatibility/static entry, not a preferred separate public review surface.
+- Final `/book/` treatment is still undecided: keep as compatibility/legacy, redirect to `/print/`, hide from public navigation/static paths, or remove.
 
 Classification:
 
 - Product direction
 - Visual/navigation direction
-- Active feedback
-- Not yet implemented
+- Active feedback until validation and final `/book/` decision
 
 Recommended future action:
 
-- Plan a bounded visual/navigation pass that makes the main print view the primary surface.
-- Decide whether `/book/` should be removed, redirected, hidden, or retained only as an experimental/debug route.
-- Update route docs, launcher navigation, style guide, output message, and agent run log only if implementation occurs.
+- Run build/browser/deployed route QA for root, launcher, print, book, and phone.
+- Make a later bounded decision on whether `/book/` stays compatibility/legacy, redirects, hides, or is removed.
 
 ## 2026-06-24 — Tabletop print-view background direction
 
-Status: `aligned-to-docs`, `ready-for-implementation`, not implemented
+Status: `implemented` by source-backed pass, not validated, not processed
 
 Raw feedback:
 
@@ -56,22 +71,27 @@ Raw feedback:
 Context:
 
 - User provided a screenshot of the current main print-style view.
-- Feedback intake only. Implementation was not requested in this turn.
+- Feedback intake only. Implementation was not requested in the intake turn.
+- Later source passes added the tabletop/paper surface treatment and removed pointer-following glow behavior.
+
+Current source-backed state:
+
+- Shared booklet/print reader styling uses tabletop/paper treatment and grounded paper shadows.
+- Pointer-following glow remains removed.
+- Motion is intended to be subtle and physical.
+- The paper shader/fallback and visual quality still require build/browser/device review.
 
 Classification:
 
 - Visual direction
 - Print-view direction
 - Interaction/motion direction
-- Active feedback
-- Not yet implemented
+- Active feedback until visual validation passes
 
 Recommended future action:
 
-- Plan a bounded print-view visual pass.
-- Replace the flat digital/grid feeling with a tabletop-like background.
-- Add realistic drop shadowing under the page spread.
-- Keep any reactivity subtle and physical, not glow-based.
+- Validate `/print/` and the shared booklet/print reader in browser preview and deployed route review.
+- Confirm shader fallback behavior on constrained browsers/devices.
 
 ## 2026-06-24 — Feedback intake must stay feedback-only unless implementation is explicit
 
@@ -101,7 +121,7 @@ Recommended future action:
 
 ## 2026-06-24 — Physical book-opening transition into print layout
 
-Status: `captured`, `aligned-to-docs`, not implemented
+Status: `implemented` by first-pass source-backed transition, not validated, not processed
 
 Raw feedback:
 
@@ -113,6 +133,13 @@ Context:
 
 - This feedback extends the tabletop print-view direction.
 - Implementation was not requested at intake time.
+- Later source passes added a first-pass opening/settling transition into the shared booklet/print reader surface.
+
+Current source-backed state:
+
+- A first-pass physical opening/settling transition exists.
+- The transition has not been judged in browser, phone, or deployed preview.
+- Further polish should wait for visual review.
 
 Classification:
 
@@ -120,11 +147,9 @@ Classification:
 - Print-view direction
 - Interaction/motion direction
 - Product presentation direction
-- Active feedback
-- Not yet implemented
+- Active feedback until visual validation passes
 
 Recommended future action:
 
-- Before implementing, decide how `/book/` relates to `/print/`.
-- Plan a print-view visual/navigation pass that includes the physical transition.
-- Keep the direction documented as pending until implementation is evidenced.
+- Preview the opening/settling transition in browser and on a phone-sized viewport.
+- Only then decide whether a more literal or complex book-opening transition is warranted.
