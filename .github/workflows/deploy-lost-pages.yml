@@ -57,3 +57,32 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
+  notify:
+    name: Notify deploy channel
+    needs:
+      - build
+      - deploy
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout notification source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Send output message
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${DISCORD_WEBHOOK_URL:-}" ]; then
+            echo "No deploy channel secret set; skipping notification."
+            exit 0
+          fi
+          CONTENT="$(cat output.md 2>/dev/null || printf 'Lost Pages deployed.')"
+          python3 - <<'PY' > /tmp/lost-pages-payload.json
+          import json
+          import os
+          print(json.dumps({"content": os.environ.get("CONTENT", "Lost Pages deployed.")[:6500]}))
+          PY
+          curl -fsS -H "Content-Type: application/json" -d @/tmp/lost-pages-payload.json "$DISCORD_WEBHOOK_URL"
