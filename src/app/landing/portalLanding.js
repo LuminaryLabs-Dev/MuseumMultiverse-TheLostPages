@@ -4,11 +4,16 @@ import { pages } from '../../data/pages.js';
 import { withBasePath } from '../routes/basePath.js';
 
 const railControlPoints = [
-  new THREE.Vector3(-1.35, 4.3, -1.1),
-  new THREE.Vector3(2.1, 1.45, 0.35),
-  new THREE.Vector3(-2.15, -1.45, 0.2),
-  new THREE.Vector3(1.15, -4.2, -1.1)
+  new THREE.Vector3(-0.85, 3.15, -1.2),
+  new THREE.Vector3(1.45, 1.25, 0.2),
+  new THREE.Vector3(-1.45, -1.25, 0.2),
+  new THREE.Vector3(0.85, -3.15, -1.2)
 ];
+
+const CARD_SOFTNESS = 0.78;
+const CARD_SIDE_PUSH = 1.24;
+const CARD_DEPTH_PUSH = 1.54;
+const CAMERA_DISTANCE = 4.18;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -45,93 +50,104 @@ export function renderPortalLandingMarkup() {
     <section class="portal-landing" data-portal-landing aria-label="Museum Multiverse AR experience launcher">
       <div class="portal-landing__scene" data-portal-scene aria-hidden="true"></div>
       <div class="portal-landing__shade" aria-hidden="true"></div>
-      <div class="portal-landing__hud">
-        <header class="portal-landing__mast">
-          <p class="portal-landing__eyebrow">One page · Eight full 3D AR experiences</p>
-          <h1>Museum Multiverse</h1>
-          <p class="portal-landing__copy">A vertical Three.js rail of floating comic pages. Travel the curve, then open one page into its full 3D AR experience.</p>
-        </header>
-        <aside class="portal-landing__hint"><strong>Scroll the page rail.</strong><span>The camera follows a smooth softmax focus along the curve.</span></aside>
-        <nav class="portal-landing__routes" aria-label="AR experience routes">
-          ${pages.map((page, index) => `
-            <a class="portal-landing__route" href="${withBasePath(`/ar/${page.slug}`)}" data-nav data-rail-jump="${index}" style="--accent:${page.accent};--glow:${page.glow};--deep:${page.deep}">
-              <small>Page ${page.number}</small><strong>${page.title}</strong>
-            </a>
-          `).join('')}
-        </nav>
-      </div>
+      <header class="portal-landing__title" aria-label="Museum Multiverse">
+        <span>Museum Multiverse</span>
+        <small>The Lost Chapters</small>
+      </header>
     </section>
   `;
 }
 
-function makeCardTexture(page) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 640;
-  canvas.height = 900;
-  const ctx = canvas.getContext('2d');
-  const accent = page.accent || '#56dfff';
-  const glow = page.glow || '#fff2bd';
-  ctx.fillStyle = '#f6e5b7';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'rgba(27, 17, 10, 0.08)';
-  for (let y = 34; y < canvas.height; y += 34) ctx.fillRect(44, y, canvas.width - 88, 2);
-  ctx.fillStyle = 'rgba(255,255,255,0.28)';
-  ctx.beginPath();
-  ctx.moveTo(0, 0); ctx.lineTo(canvas.width, 0); ctx.lineTo(canvas.width * 0.74, canvas.height); ctx.lineTo(canvas.width * 0.42, canvas.height); ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle = '#17110d';
-  ctx.lineWidth = 16;
-  ctx.strokeRect(18, 18, canvas.width - 36, canvas.height - 36);
-  ctx.lineWidth = 4;
-  ctx.strokeRect(48, 48, canvas.width - 96, canvas.height - 96);
-  ctx.fillStyle = '#17110d';
-  ctx.font = '900 28px Arial Black, Impact, sans-serif';
-  ctx.letterSpacing = '2px';
-  ctx.fillText(`PAGE ${page.number}`, 70, 96);
-  ctx.textAlign = 'right';
-  ctx.fillText(page.collectible?.slice(0, 24) || 'AR FRAGMENT', canvas.width - 70, 96);
-  ctx.textAlign = 'left';
-  ctx.font = '900 84px Georgia, serif';
-  const titleWords = page.title.split(' ');
+function drawWrapped(ctx, text, x, y, width, lineHeight, maxLines = 4) {
+  const words = text.split(' ');
   let line = '';
-  let y = 210;
-  titleWords.forEach((word) => {
+  let lineCount = 0;
+  words.forEach((word) => {
+    if (lineCount >= maxLines) return;
     const test = `${line} ${word}`.trim();
-    if (ctx.measureText(test).width > canvas.width - 120 && line) {
-      ctx.fillText(line, 70, y);
-      y += 78;
+    if (ctx.measureText(test).width > width && line) {
+      ctx.fillText(line, x, y + lineCount * lineHeight);
       line = word;
+      lineCount += 1;
     } else {
       line = test;
     }
   });
-  if (line) ctx.fillText(line, 70, y);
-  ctx.fillStyle = accent;
-  ctx.fillRect(70, 470, canvas.width - 140, 164);
+  if (line && lineCount < maxLines) ctx.fillText(line, x, y + lineCount * lineHeight);
+}
+
+function makeCardTexture(page) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 768;
+  canvas.height = 1088;
+  const ctx = canvas.getContext('2d');
+  const accent = page.accent || '#56dfff';
+  const glow = page.glow || '#fff2bd';
+
+  ctx.fillStyle = '#f7e7ba';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = 'rgba(30, 18, 10, 0.07)';
+  for (let y = 44; y < canvas.height; y += 34) ctx.fillRect(58, y, canvas.width - 116, 2);
+  ctx.fillStyle = 'rgba(30, 18, 10, 0.035)';
+  for (let x = 0; x < canvas.width; x += 18) ctx.fillRect(x, 0, 1, canvas.height);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.26)';
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(canvas.width, 0);
+  ctx.lineTo(canvas.width * 0.72, canvas.height);
+  ctx.lineTo(canvas.width * 0.42, canvas.height);
+  ctx.closePath();
+  ctx.fill();
+
   ctx.strokeStyle = '#17110d';
-  ctx.lineWidth = 8;
-  ctx.strokeRect(70, 470, canvas.width - 140, 164);
-  ctx.fillStyle = 'rgba(0,0,0,0.22)';
-  ctx.fillRect(95, 498, canvas.width - 190, 18);
-  ctx.fillRect(95, 536, canvas.width - 230, 18);
-  ctx.fillRect(95, 574, canvas.width - 260, 18);
+  ctx.lineWidth = 18;
+  ctx.strokeRect(22, 22, canvas.width - 44, canvas.height - 44);
+  ctx.lineWidth = 4;
+  ctx.strokeRect(58, 58, canvas.width - 116, canvas.height - 116);
+
   ctx.fillStyle = '#17110d';
-  ctx.font = '700 30px Arial, sans-serif';
-  const prompt = page.prompt || page.description || 'Open the AR route.';
-  const promptLines = [prompt.slice(0, 35), prompt.slice(35, 70), prompt.slice(70, 105)].filter(Boolean);
-  promptLines.forEach((text, index) => ctx.fillText(text.trim(), 82, 704 + index * 38));
+  ctx.font = '900 30px Arial Black, Impact, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(`PAGE ${page.number}`, 82, 112);
+  ctx.textAlign = 'right';
+  ctx.fillText((page.collectible || 'AR FRAGMENT').slice(0, 26), canvas.width - 82, 112);
+
+  ctx.textAlign = 'left';
+  ctx.font = '900 98px Georgia, serif';
+  drawWrapped(ctx, page.title, 84, 240, canvas.width - 168, 88, 4);
+
+  ctx.fillStyle = accent;
+  ctx.fillRect(84, 522, canvas.width - 168, 180);
+  ctx.strokeStyle = '#17110d';
+  ctx.lineWidth = 10;
+  ctx.strokeRect(84, 522, canvas.width - 168, 180);
+  ctx.fillStyle = 'rgba(0,0,0,0.23)';
+  ctx.fillRect(116, 556, canvas.width - 232, 20);
+  ctx.fillRect(116, 600, canvas.width - 292, 20);
+  ctx.fillRect(116, 644, canvas.width - 334, 20);
+
+  ctx.fillStyle = '#17110d';
+  ctx.font = '900 34px Arial, sans-serif';
+  drawWrapped(ctx, page.prompt || page.description || 'Open the AR experience.', 92, 788, canvas.width - 184, 42, 3);
+
   ctx.fillStyle = glow;
   ctx.strokeStyle = '#17110d';
-  ctx.lineWidth = 6;
-  ctx.beginPath();
-  ctx.rect(canvas.width - 190, canvas.height - 190, 118, 118);
-  ctx.fill();
-  ctx.stroke();
+  ctx.lineWidth = 7;
+  ctx.fillRect(canvas.width - 230, canvas.height - 232, 150, 150);
+  ctx.strokeRect(canvas.width - 230, canvas.height - 232, 150, 150);
+  ctx.fillStyle = '#17110d';
+  ctx.font = '900 28px Arial Black, Impact, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('LAUNCH', canvas.width - 155, canvas.height - 150);
+  ctx.fillText('AR', canvas.width - 155, canvas.height - 112);
+
   ctx.fillStyle = '#17110d';
   ctx.font = '900 24px Arial Black, Impact, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('OPEN', canvas.width - 131, canvas.height - 122);
-  ctx.fillText('AR', canvas.width - 131, canvas.height - 88);
+  ctx.textAlign = 'left';
+  ctx.fillText('MUSEUM MULTIVERSE', 84, canvas.height - 108);
+
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 2;
@@ -144,35 +160,36 @@ function makeCard(page, index, total) {
   const position = curvePoint(t);
   const tangent = curveTangent(t);
   group.position.copy(position);
-  group.rotation.z = -tangent.x * 0.24;
+  group.rotation.z = -tangent.x * 0.18;
   group.userData.index = index;
   group.userData.slug = page.slug;
   group.userData.url = withBasePath(`/ar/${page.slug}`);
   group.userData.basePosition = position;
+  group.userData.baseRotationZ = -tangent.x * 0.18;
 
   const backing = new THREE.Mesh(
-    new THREE.BoxGeometry(1.72, 2.34, 0.075),
+    new THREE.BoxGeometry(2.04, 2.82, 0.075),
     new THREE.MeshStandardMaterial({ color: 0x1b120d, roughness: 0.55, metalness: 0.06 })
   );
   backing.position.z = -0.055;
   group.add(backing);
 
   const card = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.58, 2.22, 8, 12),
+    new THREE.PlaneGeometry(1.9, 2.65, 8, 12),
     new THREE.MeshStandardMaterial({ map: makeCardTexture(page), roughness: 0.58, metalness: 0.02 })
   );
   card.position.z = 0.02;
   group.add(card);
 
   const gloss = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.58, 2.22),
+    new THREE.PlaneGeometry(1.9, 2.65),
     new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08, depthWrite: false })
   );
   gloss.position.z = 0.035;
   group.add(gloss);
 
   const hit = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.85, 2.5),
+    new THREE.PlaneGeometry(2.18, 2.96),
     new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.001, depthWrite: false })
   );
   hit.position.z = 0.08;
@@ -190,7 +207,7 @@ function makeRailLine() {
   for (let i = 0; i <= 80; i += 1) points.push(curvePoint(i / 80));
   return new THREE.Line(
     new THREE.BufferGeometry().setFromPoints(points),
-    new THREE.LineBasicMaterial({ color: 0x5bdcff, transparent: true, opacity: 0.18 })
+    new THREE.LineBasicMaterial({ color: 0x5bdcff, transparent: true, opacity: 0.13 })
   );
 }
 
@@ -199,7 +216,7 @@ function softmaxFocus(cards, index) {
   let sum = 0;
   cards.forEach((card, i) => {
     const d = i - index;
-    const weight = Math.exp(-(d * d) / 0.9);
+    const weight = Math.exp(-(d * d) / CARD_SOFTNESS);
     focus.addScaledVector(card.userData.basePosition, weight);
     sum += weight;
   });
@@ -213,9 +230,9 @@ export function enhancePortalLanding(root) {
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x020307, 0.052);
-  const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 80);
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 80);
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.55));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.45));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   mount.appendChild(renderer.domElement);
 
@@ -238,6 +255,7 @@ export function enhancePortalLanding(root) {
   let hover = null;
   let frame = 0;
   let disposed = false;
+  let touchStartY = 0;
 
   function resize() {
     const width = Math.max(1, mount.clientWidth || window.innerWidth || 1);
@@ -260,46 +278,68 @@ export function enhancePortalLanding(root) {
     targetIndex = clamp(index, 0, pages.length - 1);
   }
 
+  function launchActive() {
+    const page = pages[Math.round(clamp(smoothIndex, 0, pages.length - 1))];
+    if (page) window.location.href = withBasePath(`/ar/${page.slug}`);
+  }
+
   function onWheel(event) {
     event.preventDefault();
-    jumpTo(targetIndex + event.deltaY * 0.0045);
+    jumpTo(targetIndex + event.deltaY * 0.0032);
   }
 
   function onKey(event) {
     if (event.key === 'ArrowDown' || event.key === 'PageDown') jumpTo(Math.ceil(targetIndex + 1));
     if (event.key === 'ArrowUp' || event.key === 'PageUp') jumpTo(Math.floor(targetIndex - 1));
+    if (event.key === 'Home') jumpTo(0);
+    if (event.key === 'End') jumpTo(pages.length - 1);
+    if (event.key === 'Enter' || event.key === ' ') launchActive();
+  }
+
+  function onTouchStart(event) {
+    touchStartY = event.touches?.[0]?.clientY ?? 0;
+  }
+
+  function onTouchEnd(event) {
+    const endY = event.changedTouches?.[0]?.clientY ?? touchStartY;
+    const delta = touchStartY - endY;
+    if (Math.abs(delta) > 36) jumpTo(Math.round(targetIndex + Math.sign(delta)));
   }
 
   function onClick() {
     if (hover?.userData?.url) window.location.href = hover.userData.url;
   }
 
-  root.querySelectorAll('[data-rail-jump]').forEach((link) => {
-    link.addEventListener('mouseenter', () => jumpTo(Number(link.getAttribute('data-rail-jump') || 0)));
-    link.addEventListener('focus', () => jumpTo(Number(link.getAttribute('data-rail-jump') || 0)));
-  });
-
   function animate(time = 0) {
     if (disposed) return;
     const t = time * 0.001;
     smoothIndex += (targetIndex - smoothIndex) * 0.085;
     const focus = softmaxFocus(cards, smoothIndex);
-    const cameraTarget = focus.clone().add(new THREE.Vector3(0, 0.05, 5.15));
+    const cameraTarget = focus.clone().add(new THREE.Vector3(0, 0.05, CAMERA_DISTANCE));
     camera.position.lerp(cameraTarget, 0.12);
     camera.lookAt(focus.x, focus.y, focus.z);
 
     cards.forEach((card, index) => {
-      const distance = Math.abs(index - smoothIndex);
-      const visible = distance < 3.2;
+      const d = index - smoothIndex;
+      const centeredness = Math.exp(-(d * d) / CARD_SOFTNESS);
+      const away = 1 - centeredness;
+      const side = d === 0 ? 0 : Math.sign(d);
+      const visible = Math.abs(d) < 2.75;
       card.visible = visible;
       if (!visible) return;
-      const scale = 1.08 - Math.min(distance, 2.5) * 0.12;
+      const base = card.userData.basePosition;
+      card.position.set(
+        base.x + side * away * CARD_SIDE_PUSH + Math.sin(t + index) * 0.018,
+        base.y + Math.cos(t * 0.7 + index) * 0.022,
+        base.z - away * CARD_DEPTH_PUSH
+      );
+      const scale = 1.2 - away * 0.34;
       card.scale.setScalar(scale);
-      card.position.copy(card.userData.basePosition).add(new THREE.Vector3(Math.sin(t + index) * 0.025, Math.cos(t * 0.8 + index) * 0.035, 0));
-      card.lookAt(camera.position);
-      card.rotateZ((index - smoothIndex) * 0.03);
+      card.rotation.x = -away * 0.05;
+      card.rotation.y = -side * away * 0.42;
+      card.rotation.z = card.userData.baseRotationZ + side * away * 0.08;
       card.userData.card.material.emissive = new THREE.Color(0x111111);
-      card.userData.card.material.emissiveIntensity = hover?.userData?.slug === card.userData.slug ? 0.22 : Math.max(0, 0.08 - distance * 0.02);
+      card.userData.card.material.emissiveIntensity = hover?.userData?.slug === card.userData.slug ? 0.24 : centeredness * 0.08;
     });
 
     renderer.render(scene, camera);
@@ -307,13 +347,15 @@ export function enhancePortalLanding(root) {
   }
 
   resize();
-  camera.position.copy(curvePoint(0)).add(new THREE.Vector3(0, 0.1, 5.2));
+  camera.position.copy(curvePoint(0)).add(new THREE.Vector3(0, 0.08, CAMERA_DISTANCE));
   animate();
   window.addEventListener('resize', resize, { passive: true });
   window.addEventListener('keydown', onKey);
   renderer.domElement.addEventListener('pointermove', updatePointer, { passive: true });
   renderer.domElement.addEventListener('wheel', onWheel, { passive: false });
   renderer.domElement.addEventListener('click', onClick);
+  renderer.domElement.addEventListener('touchstart', onTouchStart, { passive: true });
+  renderer.domElement.addEventListener('touchend', onTouchEnd, { passive: true });
 
   return () => {
     disposed = true;
@@ -323,6 +365,8 @@ export function enhancePortalLanding(root) {
     renderer.domElement.removeEventListener('pointermove', updatePointer);
     renderer.domElement.removeEventListener('wheel', onWheel);
     renderer.domElement.removeEventListener('click', onClick);
+    renderer.domElement.removeEventListener('touchstart', onTouchStart);
+    renderer.domElement.removeEventListener('touchend', onTouchEnd);
     scene.traverse((object) => {
       object.geometry?.dispose?.();
       object.material?.map?.dispose?.();
