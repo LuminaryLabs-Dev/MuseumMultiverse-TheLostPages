@@ -1,3 +1,3 @@
-✅ Lost Pages paper background
+✅ Lost Pages booklet reader
 
-Added a cached WebGL paper surface with non-striped multi-octave texture, normal depth, and fallback styling.
+Moved `/print/` toward a Nexus-backed comic booklet reader with local kits, page controls, and panel reveals.
