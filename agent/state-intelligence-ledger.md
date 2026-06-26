@@ -45,15 +45,16 @@ src/kits/
 - Regenerate and commit `package-lock.json` for the pinned NexusRealtime commit.
 - Run `npm run check:composition` and `npm run build`.
 - Validate the booklet reader in browser preview.
-- Confirm root, launcher, print, book, and phone paths all show the same booklet surface.
+- Confirm root, launcher, print, book, and phone paths all show the expected shared booklet/print reader surface.
 - Validate representative experience landing pages and debug routes.
 - Confirm the paper background and fallback behavior on representative browsers.
 - Keep DOM text, controls, and QR output readable.
 - Do not reintroduce cursor glow, stripe backgrounds, rounded-card page styling, or book metaphors inside launched experiences.
+- Decide the final `/book/` treatment: compatibility/legacy, redirect to `/print/`, hide from public navigation/static export, or remove.
 
-## Recently Implemented
+## Recently Implemented, Not Yet Validated
 
-- Single default booklet surface for public non-experience paths.
+- Single default booklet/print reader surface for public non-experience paths.
 - Flat glossy flipbook styling.
 - Cover-turn-first treatment.
 - Vertical deck/page flip motion.
@@ -61,31 +62,21 @@ src/kits/
 - Local service kit scaffolding.
 - NexusRealtime game mounting for launcher/print surfaces.
 - Composition check script in the build path.
+- Tabletop/paper visual treatment, grounded shadows, no pointer-following glow, and first-pass opening/settling transition.
 
-## Alignment Completed This Turn
+## State Intelligence Sync This Turn
 
-- Reconciled docs that still described `/print/` and `/book/` as distinct public non-experience surfaces.
-- Recorded the source-backed route fallback: all non-experience public entries render the shared booklet/print reader.
-- Recorded the dependency mismatch between `package.json` and `package-lock.json`.
-- Kept feedback active because build, browser, route, device, and experience validation were not run.
+- Selected Mode 2 — State Intelligence Sync.
+- Confirmed open PR search returned no open PRs targeting `main` before work.
+- Confirmed `agent/scheduled-turn-lock.md` was `completed`, not active.
+- Reconciled active feedback and feedback inbox entries that still described print-first tabletop/booklet direction as only pending implementation.
+- Updated product docs to say the shared booklet/print reader and first-pass physical presentation are source-backed but not validation-complete.
+- Kept feedback active and unprocessed because build, browser, deployed-route, phone/device, paper fallback, and AR launch validation are still pending.
+- Did not edit `src/`, `print/`, `scripts/`, or `.github/`.
+- Did not move `agent/pointer.md`; it remains on `prompts/004-ar-route-check.md` because route QA is still not command/browser/device complete.
 
-## QA / Validation Attempt This Turn
+## AR Route Source Evidence
 
-- Selected Mode 5 — QA / Validation.
-- Confirmed open PR search returned no open PRs targeting `main`.
-- Confirmed the scheduled-turn lock was not active before work.
-- Inspected dependency and route source files through the GitHub connector.
-- Confirmed the lockfile mismatch remains: `package.json` pins NexusRealtime commit `ebd19e298d71bfbc51bf452394085ce1d909cb94`, while `package-lock.json` still references `nexusrealtime` at `#0.0.1`.
-- Confirmed route-source shape by inspection only: route code still preserves `/ar/<slug>/`, `/ar/<slug>/?debug=1`, `/debug/ar/<slug>/`, and `?page=<slug>` before falling back to the shared booklet/print surface.
-- Blocker: this run did not have a repo checkout and network-enabled command runner, so dependency install, lockfile regeneration, build, preview, phone, camera, WebXR, and AR checks were not run.
-- Feedback remains active; do not move anything into processed feedback from this turn.
-
-## AR Route Source Evidence This Turn
-
-- Selected Mode 5 — QA / Validation.
-- Objective: inspect AR/debug/static route source evidence for the current `prompts/004-ar-route-check.md` pointer without changing app/source files.
-- Open PR search returned no open PRs targeting `main` before work.
-- `agent/scheduled-turn-lock.md` was `completed`, not active, before work.
 - `src/app/routes/router.js` strips the configured base path, normalizes trailing slashes, then checks `/debug/ar/<slug>/`, `/ar/<slug>/`, and `?page=<slug>` before returning the default print/booklet route.
 - `src/main.js` renders `experience-debug` routes with `renderDebugExperience()`, valid `experience` routes with `renderImmersiveRoute()`, and all remaining routes with `renderBookletSurface()`.
 - `src/ar/registry/experiences.js` imports and registers the eight expected experience modules.
@@ -98,10 +89,10 @@ src/kits/
 
 ## Validation Boundary
 
-- Source was inspected through the GitHub connector.
-- Build, dependency installation, lockfile regeneration, browser preview, deployed route checks, device testing, camera/WebXR testing, and AR launch testing were not run here.
-- No app/source files were changed in this QA / Validation turn.
-- `agent/pointer.md` remains on `prompts/004-ar-route-check.md` because route QA is source-inspected but not command/browser/device complete.
+- Source and documentation state were inspected through the GitHub connector.
+- Build, dependency installation, lockfile regeneration, browser preview, deployed route checks, phone checks, camera/WebXR checks, and AR launch testing were not run here.
+- No app/source files were changed in this State Intelligence Sync turn.
+- No feedback moved to processed because validation evidence is still missing.
 
 ## Recommended Next Turn
 
