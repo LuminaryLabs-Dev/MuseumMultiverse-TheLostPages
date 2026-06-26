@@ -7,8 +7,10 @@ Last updated: 2026-06-25
 
 - Root, launcher, print, and book paths now resolve to the booklet reader surface.
 - AR and debug routes remain separate.
+- The AR experiences themselves are full 3D experiences and should not use the book/booklet metaphor once launched.
+- Each AR route now starts with a consistent flat, glossy, sharp-edged landing page before launching the full 3D experience.
 - The booklet reader is one page at a time, with a title/opening beat and panel reveal controls.
-- The booklet now uses a flat glossy flipbook treatment with sharp page edges.
+- The booklet uses a flat glossy flipbook treatment with sharp page edges.
 - The cover turns first, then active pages flip vertically through a small visible stack.
 - Launcher and print surfaces create a NexusRealtime `createRealtimeGame()` instance.
 - Local runtime kits install services for route mapping, paper surface mounting, booklet navigation, and panel sequence state.
@@ -40,9 +42,10 @@ src/kits/
 
 - Validate the booklet reader in build and preview.
 - Confirm root, launcher, print, and book paths all show the same booklet surface.
+- Validate `/ar/<slug>/` landing pages on phone-sized screens and confirm they launch full 3D AR.
 - Confirm the paper background and fallback behavior on representative browsers.
 - Keep DOM text, controls, and QR output readable.
-- Do not reintroduce cursor glow or stripe backgrounds.
+- Do not reintroduce cursor glow, stripe backgrounds, rounded-card page styling, or book metaphors inside launched AR.
 
 ## Recently Implemented
 
@@ -50,6 +53,7 @@ src/kits/
 - Flat glossy flipbook styling.
 - Cover-turn-first treatment.
 - Vertical deck/page flip motion.
+- Consistent AR launch landing page.
 - Local service kit scaffolding.
 - NexusRealtime game mounting for launcher/print surfaces.
 - Composition check script in the build path.
@@ -62,4 +66,4 @@ src/kits/
 
 ## Recommended Next Turn
 
-Run dependency hygiene and QA: `npm install`, regenerate `package-lock.json`, run `npm run check:composition`, run `npm run build`, preview root, launcher, print, and book paths, then process feedback only after evidence passes.
+Run dependency hygiene and QA: `npm install`, regenerate `package-lock.json`, run `npm run check:composition`, run `npm run build`, preview root, launcher, print, book, and representative AR routes, then process feedback only after evidence passes.
