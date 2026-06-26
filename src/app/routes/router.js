@@ -7,18 +7,6 @@ export function routeFromLocation(location = window.location) {
   const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/g, '') : pathname;
   const params = new URLSearchParams(search);
 
-  if (normalizedPath === '/print') {
-    return { type: 'print' };
-  }
-
-  if (normalizedPath === '/book') {
-    return { type: 'book' };
-  }
-
-  if (normalizedPath === '/' || normalizedPath === '/launcher') {
-    return { type: 'launcher' };
-  }
-
   const debugMatch = normalizedPath.match(/^\/debug\/ar\/([^/]+)$/);
   if (debugMatch) {
     return { type: 'experience-debug', experience: getExperienceBySlug(debugMatch[1]) };
@@ -37,5 +25,5 @@ export function routeFromLocation(location = window.location) {
     return { type: 'experience', experience: getExperienceBySlug(searchPage) };
   }
 
-  return { type: 'launcher' };
+  return { type: 'print' };
 }
