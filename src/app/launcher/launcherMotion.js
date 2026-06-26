@@ -20,6 +20,7 @@ function enhanceBookletControls(root, composition) {
   const nextButton = root.querySelector('[data-booklet-next]');
   const prevButton = root.querySelector('[data-booklet-prev]');
   let flipTimer = 0;
+  let autoOpenTimer = 0;
 
   function renderPanelState(page) {
     if (!page) return;
@@ -64,6 +65,7 @@ function enhanceBookletControls(root, composition) {
   }
 
   function openBooklet() {
+    if (reader.snapshot().isOpen) return;
     pulseFlip('cover', () => reader.open());
   }
 
@@ -99,8 +101,13 @@ function enhanceBookletControls(root, composition) {
   prevButton?.addEventListener('click', previousPage);
   renderBookletState();
 
+  if (!openButton) {
+    autoOpenTimer = window.setTimeout(openBooklet, 900);
+  }
+
   return () => {
     window.clearTimeout(flipTimer);
+    window.clearTimeout(autoOpenTimer);
     openButton?.removeEventListener('click', openBooklet);
     revealButton?.removeEventListener('click', revealNext);
     nextButton?.removeEventListener('click', nextPage);
