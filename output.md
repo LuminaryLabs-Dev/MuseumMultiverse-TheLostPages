@@ -1,3 +1,3 @@
-✅ Lost Pages route QA evidence
+✅ Lost Pages feedback status sync
 
-Recorded source-backed AR/debug/static route evidence. Build, browser, phone, and AR launch validation still need a repo checkout or CI runner.
+Aligned feedback and docs so print/booklet work is source-backed but still unvalidated. Build, browser, phone, AR, lockfile, and `/book` final treatment remain next.
