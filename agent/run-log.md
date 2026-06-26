@@ -84,3 +84,35 @@ Post-change audit:
 Next:
 
 - Run dependency hygiene and QA in an environment with a repo checkout and network access: `npm install`, commit the regenerated `package-lock.json`, run `npm run check:composition`, run `npm run build`, and preview root, launcher, print, book, phone, one `/ar/<slug>/`, and one `/debug/ar/<slug>/` route.
+
+### AR route source-inspection QA turn
+
+Completed:
+
+- Confirmed open PR search returned no open PRs targeting `main` before work.
+- Confirmed `agent/scheduled-turn-lock.md` was not active before work.
+- Inspected `src/app/routes/router.js`, `src/main.js`, `src/ar/registry/experiences.js`, `src/data/pages.js`, `src/lib/origin.js`, `src/app/routes/basePath.js`, `scripts/export-static-routes.mjs`, `package.json`, `package-lock.json`, and `.github/workflows/deploy-lost-pages.yml`.
+- Source evidence: `/debug/ar/<slug>/`, `/ar/<slug>/`, `/ar/<slug>/?debug=1`, and `?page=<slug>` are matched before the default print/booklet fallback.
+- Source evidence: the static export script writes `launcher`, `book`, `print`, `ar`, `phone`, every `ar/<slug>`, and every `debug/ar/<slug>` route from the registry.
+- Source evidence: the registry currently imports eight experience modules and `src/data/pages.js` builds QR page URLs as `/ar/<slug>/` under the resolved public origin.
+- Source evidence: the GitHub Pages workflow sets `VITE_BASE_PATH` and `VITE_PUBLIC_ORIGIN`, runs `npm install`, then runs `npm run build`.
+
+Validation:
+
+- Source inspection through the GitHub connector only.
+- No app/source files were changed.
+- `npm install` was not run.
+- `npm run check:composition` was not run.
+- `npm run build` was not run.
+- Browser preview, deployed-route checks, phone checks, camera/WebXR checks, and AR launch checks were not run.
+
+Post-change audit:
+
+- Improved: route QA now has source-backed evidence for route parsing, QR route formation, static route export coverage, and deployment build intent.
+- Still needs review: actual command build, deployed route status, browser behavior, phone behavior, and AR/camera/WebXR launch.
+- Risk: unknown or misspelled AR slugs currently resolve to an experience route with no manifest, then fall through to the booklet surface rather than showing a dedicated not-found/error route.
+- Feedback remains active; no feedback moved to processed because validation is inspection-only.
+
+Next:
+
+- In a network-enabled repo checkout or CI runner, run `npm install`, commit the regenerated `package-lock.json`, run `npm run check:composition`, run `npm run build`, then preview root, launcher, print, book, phone, one known `/ar/<slug>/`, one known `/debug/ar/<slug>/`, and one intentionally invalid `/ar/<bad-slug>/` route.
