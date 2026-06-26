@@ -10,10 +10,10 @@ Changed:
 - Added dependency boundary notes.
 - Added feedback intake structure.
 - Added project docs for the repo.
-- Added static route export for phone-openable AR routes.
+- Added static route export work.
 - Added `agent/master-intention-plan.md`.
 - Added `agent/cleanup-plan.md`.
-- Advanced the pointer to AR route QA after the launcher cleanup pass.
+- Advanced the pointer after the launcher cleanup pass.
 
 Reason:
 
@@ -44,9 +44,9 @@ Changed:
 
 - Updated `agent/state-intelligence-ledger.md` with the inspected shared booklet/print route state.
 - Updated `agent/run-log.md` for the completed State Intelligence Sync turn.
-- Updated `docs/TECHNICAL-BUILD-MAP.md`, `docs/chatgpt-master-start-source.md`, and `README.md` to remove stale distinct `/print/` versus `/book/` assumptions.
-- Updated `agent/scheduled-turn-lock.md` and `output.md` for closeout.
+- Updated `docs/TECHNICAL-BUILD-MAP.md`, `docs/chatgpt-master-start-source.md`, and `README.md` to remove stale distinct public surface assumptions.
+- Updated `output.md` with a short state-sync message.
 
 Reason:
 
-The repo had state drift after source changes collapsed public non-experience routes into the shared booklet/print reader while older docs still described distinct non-AR surfaces and incomplete dependency state.
+The repo had state drift after source changes collapsed public page entries into the shared booklet/print reader while older docs still described distinct public surfaces and incomplete dependency state.
