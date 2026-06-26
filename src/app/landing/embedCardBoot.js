@@ -18,3 +18,5 @@ export function installEmbeddedCardBoot() {
   window.requestAnimationFrame(renderEmbeddedCard);
   return () => window.clearInterval(timer);
 }
+
+installEmbeddedCardBoot();
