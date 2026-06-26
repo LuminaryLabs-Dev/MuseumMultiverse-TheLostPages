@@ -17,6 +17,7 @@ Last updated: 2026-06-26
 - Local runtime kits install services for route mapping, paper surface mounting, booklet navigation, and panel sequence state.
 - `package.json` is pinned to NexusRealtime commit `ebd19e298d71bfbc51bf452394085ce1d909cb94`.
 - `package-lock.json` still needs regeneration because it references the older dependency target.
+- Command-based dependency hygiene and QA remain blocked in connector-only runs that cannot execute `npm install`, regenerate lockfiles, run the composition check, run the build, or open browser/phone/AR routes.
 
 ## Mounted Local Services
 
@@ -68,12 +69,23 @@ src/kits/
 - Recorded the dependency mismatch between `package.json` and `package-lock.json`.
 - Kept feedback active because build, browser, route, device, and experience validation were not run.
 
+## QA / Validation Attempt This Turn
+
+- Selected Mode 5 — QA / Validation.
+- Confirmed open PR search returned no open PRs targeting `main`.
+- Confirmed the scheduled-turn lock was not active before work.
+- Inspected dependency and route source files through the GitHub connector.
+- Confirmed the lockfile mismatch remains: `package.json` pins NexusRealtime commit `ebd19e298d71bfbc51bf452394085ce1d909cb94`, while `package-lock.json` still references `nexusrealtime` at `#0.0.1`.
+- Confirmed route-source shape by inspection only: route code still preserves experience/debug/search-param paths before falling back to the shared booklet/print surface.
+- Blocker: this run did not have a repo checkout and network-enabled command runner, so dependency install, lockfile regeneration, build, preview, phone, camera, WebXR, and AR checks were not run.
+- Feedback remains active; do not move anything into processed feedback from this turn.
+
 ## Validation Boundary
 
 - Source was inspected through the GitHub connector.
 - Build, dependency installation, lockfile regeneration, browser preview, device testing, and experience testing were not run here.
-- No app/source files were changed in this State Intelligence Sync turn.
+- No app/source files were changed in this QA / Validation turn.
 
 ## Recommended Next Turn
 
-Run dependency hygiene and QA: `npm install`, regenerate `package-lock.json`, run `npm run check:composition`, run `npm run build`, preview root, launcher, print, book, phone, and representative experience/debug routes, then process feedback only after evidence passes.
+Run dependency hygiene and QA in a network-enabled repo checkout or CI runner: `npm install`, regenerate and commit `package-lock.json`, run `npm run check:composition`, run `npm run build`, preview root, launcher, print, book, phone, one representative `/ar/<slug>/` route, and one representative `/debug/ar/<slug>/` route, then process feedback only after evidence passes.
