@@ -62,3 +62,17 @@ Changed:
 Reason:
 
 The active route-check pointer needed source-backed evidence without claiming build, deployed-route, device, camera, or AR validation.
+
+### Feedback status repair sync
+
+Changed:
+
+- Updated `agent/feedback/active-feedback.md` so current feedback distinguishes source-backed print/booklet work from validation-complete work.
+- Updated `agent/feedback/feedback-inbox.md` and `agent/feedback/feedback-log.md` to repair stale “not implemented” language for feedback that now has source-backed first-pass implementation.
+- Updated `agent/state-intelligence-ledger.md` with the latest State Intelligence Sync boundary and next-turn guidance.
+- Updated `docs/DNA.md` and `docs/FULL-OUTLINE.md` to reflect the current shared booklet/print reader state without claiming validation.
+- Updated `agent/run-log.md`, `agent/scheduled-turn-lock.md`, and `output.md` for turn closeout.
+
+Reason:
+
+Feedback and product docs needed to stop describing the print-first tabletop/booklet work as purely pending implementation while still keeping validation, paper fallback, AR route QA, lockfile regeneration, and final `/book/` treatment open.
