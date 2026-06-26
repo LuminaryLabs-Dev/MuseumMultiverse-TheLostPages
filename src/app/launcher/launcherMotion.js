@@ -1,6 +1,89 @@
 import './cleanLauncher.css';
 
-export function enhanceLauncherMotion(root) {
+function enhanceBookletControls(root, composition) {
+  const stage = root.querySelector('[data-booklet-reader]');
+  const reader = composition?.n?.bookletReader;
+  const panels = composition?.n?.comicPanel;
+  if (!stage || !reader || !panels) return () => {};
+
+  const pages = Array.from(root.querySelectorAll('[data-booklet-page]'));
+  const progress = root.querySelector('[data-booklet-progress]');
+  const openButton = root.querySelector('[data-booklet-open]');
+  const revealButton = root.querySelector('[data-booklet-reveal]');
+  const nextButton = root.querySelector('[data-booklet-next]');
+  const prevButton = root.querySelector('[data-booklet-prev]');
+
+  function renderPanelState(page) {
+    if (!page) return;
+    const slug = page.getAttribute('data-page-slug');
+    const state = panels.snapshot(slug);
+    page.querySelectorAll('[data-booklet-panel]').forEach((panel) => {
+      const index = Number(panel.getAttribute('data-panel-index') || 0);
+      panel.toggleAttribute('data-revealed', index < state.revealedCount);
+    });
+    if (revealButton) revealButton.disabled = state.complete;
+  }
+
+  function renderBookletState() {
+    const state = reader.snapshot();
+    stage.toggleAttribute('data-open', state.isOpen);
+    pages.forEach((page, index) => {
+      const active = index === state.activePageIndex;
+      page.hidden = !active;
+      page.toggleAttribute('data-active', active);
+      if (active) renderPanelState(page);
+    });
+    if (progress) {
+      progress.textContent = `Page ${String(state.activePageIndex + 1).padStart(2, '0')} of ${String(state.pageCount).padStart(2, '0')}`;
+    }
+    if (prevButton) prevButton.disabled = !state.canGoPrevious;
+    if (nextButton) nextButton.disabled = !state.canGoNext;
+  }
+
+  function openBooklet() {
+    reader.open();
+    renderBookletState();
+  }
+
+  function revealNext() {
+    const page = pages[reader.snapshot().activePageIndex];
+    const slug = page?.getAttribute('data-page-slug');
+    if (!slug) return;
+    const state = panels.revealNext(slug);
+    if (state.complete) {
+      composition.n.progress?.markPageRead?.(slug);
+      composition.n.progress?.claimFragment?.(slug);
+    }
+    renderBookletState();
+  }
+
+  function nextPage() {
+    const state = reader.nextPage();
+    const slug = pages[state.activePageIndex]?.getAttribute('data-page-slug');
+    if (slug) panels.resetPage(slug);
+    renderBookletState();
+  }
+
+  function previousPage() {
+    reader.previousPage();
+    renderBookletState();
+  }
+
+  openButton?.addEventListener('click', openBooklet);
+  revealButton?.addEventListener('click', revealNext);
+  nextButton?.addEventListener('click', nextPage);
+  prevButton?.addEventListener('click', previousPage);
+  renderBookletState();
+
+  return () => {
+    openButton?.removeEventListener('click', openBooklet);
+    revealButton?.removeEventListener('click', revealNext);
+    nextButton?.removeEventListener('click', nextPage);
+    prevButton?.removeEventListener('click', previousPage);
+  };
+}
+
+export function enhanceLauncherMotion(root, options = {}) {
   if (!root || typeof window === 'undefined') {
     return () => {};
   }
@@ -9,9 +92,10 @@ export function enhanceLauncherMotion(root) {
   const cards = Array.from(root.querySelectorAll('[data-comic-card]'));
   const spreads = Array.from(root.querySelectorAll('[data-comic-spread]'));
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const cleanupBooklet = enhanceBookletControls(root, options.composition);
 
   if (!stage || reducedMotion) {
-    return () => {};
+    return () => cleanupBooklet();
   }
 
   let frame = 0;
@@ -59,6 +143,7 @@ export function enhanceLauncherMotion(root) {
   applyPointer();
 
   return () => {
+    cleanupBooklet();
     if (frame) {
       window.cancelAnimationFrame(frame);
     }
