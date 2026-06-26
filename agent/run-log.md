@@ -83,3 +83,32 @@ Post-change audit:
 Next:
 
 - Run dependency hygiene and QA: `npm install`, regenerate `package-lock.json`, run `npm run check:composition`, run `npm run build`, and preview root, launcher, print, book, phone, and representative experience/debug routes.
+
+### QA / Validation bounded turn
+
+Completed:
+
+- Confirmed there were no open PRs targeting `main` before work.
+- Confirmed the scheduled-turn lock was not active.
+- Inspected `package.json` and `package-lock.json`; dependency hygiene is still blocked because the lockfile still references `nexusrealtime` at `#0.0.1` while `package.json` pins `ebd19e298d71bfbc51bf452394085ce1d909cb94`.
+- Inspected `src/app/routes/router.js` and `src/main.js`; route source still preserves `/ar/<slug>/`, `/ar/<slug>/?debug=1`, `/debug/ar/<slug>/`, and `?page=<slug>` before falling back to the shared booklet/print surface.
+- Recorded that command-based QA could not be completed in this connector-only run.
+
+Validation:
+
+- GitHub source inspection only.
+- `npm install` was not run.
+- `package-lock.json` was not regenerated.
+- `npm run check:composition` was not run.
+- `npm run build` was not run.
+- Browser preview, phone route checks, camera/WebXR, and AR testing were not run.
+
+Post-change audit:
+
+- Improved: the blocker is now explicitly recorded as a QA/dependency-runner blocker, not a product decision blocker.
+- Still needs review: command validation in a network-enabled repo checkout or CI runner.
+- Still needs follow-up: regenerate and commit `package-lock.json`, then run composition/build and representative route previews before processing active feedback.
+
+Next:
+
+- Run dependency hygiene and QA in an environment with a repo checkout and network access: `npm install`, commit the regenerated `package-lock.json`, run `npm run check:composition`, run `npm run build`, and preview root, launcher, print, book, phone, one `/ar/<slug>/`, and one `/debug/ar/<slug>/` route.
