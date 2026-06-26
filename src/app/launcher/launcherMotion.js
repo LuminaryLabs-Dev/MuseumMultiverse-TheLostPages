@@ -1,5 +1,12 @@
 import './cleanLauncher.css';
 
+function deckRoleFor(distance) {
+  if (distance === 0) return 'active';
+  if (distance === 1) return 'next-1';
+  if (distance === 2) return 'next-2';
+  return 'off';
+}
+
 function enhanceBookletControls(root, composition) {
   const stage = root.querySelector('[data-booklet-reader]');
   const reader = composition?.n?.bookletReader;
@@ -12,6 +19,7 @@ function enhanceBookletControls(root, composition) {
   const revealButton = root.querySelector('[data-booklet-reveal]');
   const nextButton = root.querySelector('[data-booklet-next]');
   const prevButton = root.querySelector('[data-booklet-prev]');
+  let flipTimer = 0;
 
   function renderPanelState(page) {
     if (!page) return;
@@ -28,10 +36,13 @@ function enhanceBookletControls(root, composition) {
     const state = reader.snapshot();
     stage.toggleAttribute('data-open', state.isOpen);
     pages.forEach((page, index) => {
-      const active = index === state.activePageIndex;
-      page.hidden = !active;
-      page.toggleAttribute('data-active', active);
-      if (active) renderPanelState(page);
+      const distance = index - state.activePageIndex;
+      const role = deckRoleFor(distance);
+      const visible = role !== 'off';
+      page.hidden = !visible;
+      page.dataset.deck = role;
+      page.toggleAttribute('data-active', role === 'active');
+      if (role === 'active') renderPanelState(page);
     });
     if (progress) {
       progress.textContent = `Page ${String(state.activePageIndex + 1).padStart(2, '0')} of ${String(state.pageCount).padStart(2, '0')}`;
@@ -40,9 +51,20 @@ function enhanceBookletControls(root, composition) {
     if (nextButton) nextButton.disabled = !state.canGoNext;
   }
 
-  function openBooklet() {
-    reader.open();
+  function pulseFlip(direction, action) {
+    window.clearTimeout(flipTimer);
+    stage.dataset.flip = direction;
+    stage.dataset.shuffle = 'true';
+    action();
     renderBookletState();
+    flipTimer = window.setTimeout(() => {
+      delete stage.dataset.flip;
+      delete stage.dataset.shuffle;
+    }, 460);
+  }
+
+  function openBooklet() {
+    pulseFlip('cover', () => reader.open());
   }
 
   function revealNext() {
@@ -58,15 +80,17 @@ function enhanceBookletControls(root, composition) {
   }
 
   function nextPage() {
-    const state = reader.nextPage();
-    const slug = pages[state.activePageIndex]?.getAttribute('data-page-slug');
-    if (slug) panels.resetPage(slug);
-    renderBookletState();
+    if (!reader.snapshot().canGoNext) return;
+    pulseFlip('forward', () => {
+      const state = reader.nextPage();
+      const slug = pages[state.activePageIndex]?.getAttribute('data-page-slug');
+      if (slug) panels.resetPage(slug);
+    });
   }
 
   function previousPage() {
-    reader.previousPage();
-    renderBookletState();
+    if (!reader.snapshot().canGoPrevious) return;
+    pulseFlip('backward', () => reader.previousPage());
   }
 
   openButton?.addEventListener('click', openBooklet);
@@ -76,6 +100,7 @@ function enhanceBookletControls(root, composition) {
   renderBookletState();
 
   return () => {
+    window.clearTimeout(flipTimer);
     openButton?.removeEventListener('click', openBooklet);
     revealButton?.removeEventListener('click', revealNext);
     nextButton?.removeEventListener('click', nextPage);
@@ -120,6 +145,7 @@ export function enhanceLauncherMotion(root, options = {}) {
     const viewportY = clampedY * window.innerHeight;
 
     cards.forEach((card) => {
+      if (card.hidden) return;
       const rect = card.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
