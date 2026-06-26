@@ -4,12 +4,12 @@ An AR companion magazine for Museum Multiverse.
 
 ## What is in the repo
 
-- `src/` contains the browser app, page data, routes, and route surfaces.
+- `src/` contains the browser app, page data, routes, route surfaces, and authored experiences.
 - `print/magazine-pages/` contains the copy source for each printed page.
 - `/ar/:slug` routes launch page-specific experiences.
-- `/debug/ar/:slug` and `/ar/:slug?debug=1` keep the desktop debug surface.
-- `/print` is now the primary tabletop print review/presentation route.
-- `/book` still renders the legacy composition-book/reference route, but it is de-emphasized in public navigation.
+- `/debug/ar/:slug` and `/ar/:slug?debug=1` keep the desktop/debug surface.
+- `/`, `/launcher`, `/print`, `/book`, and `/phone` currently fall through to the same shared booklet/print reader surface.
+- `/book` is retained as a compatibility/static entry, not the preferred separate public review surface.
 - `docs/` contains project docs.
 - `agent/` contains long-running repo-local operating state.
 
@@ -23,6 +23,8 @@ An AR companion magazine for Museum Multiverse.
 - `docs/feedback-loop.md`
 - `docs/agent-operating-model.md`
 - `docs/STATE-ALIGNMENT-MAP.md`
+- `docs/TECHNICAL-BUILD-MAP.md`
+- `docs/QA-ACCEPTANCE.md`
 
 ## Run locally
 
@@ -37,7 +39,9 @@ npm run dev -- --host 0.0.0.0 --port 4176
 npm run build
 ```
 
-The build runs Vite and exports static route copies into `dist/` so direct phone routes can open on GitHub Pages.
+The build runs the composition check, Vite, and static route export so direct routes can open on GitHub Pages.
+
+`package.json` is pinned to a specific NexusRealtime commit. `package-lock.json` still needs regeneration in a network-enabled environment so it matches that dependency target.
 
 ## Static routes
 
@@ -45,6 +49,7 @@ The build runs Vite and exports static route copies into `dist/` so direct phone
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/launcher/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/print/
+https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/book/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/ar/<slug>/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/debug/ar/<slug>/
 ```
@@ -53,9 +58,9 @@ Static route export is handled by `scripts/export-static-routes.mjs`.
 
 ## Current non-AR review direction
 
-The main print view is now the primary review/presentation surface. It should read as a physical tabletop surface with grounded paper shadows, squared paper pages, subtle physical reactivity, and no pointer-following glow effect.
+The shared booklet/print reader is the current source-backed non-AR surface for root, launcher, print, book, and phone route entries. It should read as a physical tabletop surface with grounded paper shadows, squared paper pages, subtle physical reactivity, and no pointer-following glow effect.
 
-The existing `/book` route is available as a legacy composition-book reference, not the preferred public review path. A later pass should decide whether it stays legacy/debug, redirects to `/print`, or is removed from public/static paths.
+A later pass may decide whether `/book` stays as a compatibility/legacy route, redirects to `/print`, or is removed from public/static paths.
 
 ## Deploy
 
@@ -96,5 +101,5 @@ agent/prompts/state-intelligence-sync.md
 ## Notes
 
 - QR codes must point at a LAN/public HTTPS origin.
-- Device-specific AR mode selection lives in `NexusRealtime`; Lost Pages owns copy, routes, QR, and experience manifests.
+- Device-specific experience mode selection lives in NexusRealtime; Lost Pages owns copy, routes, QR, and experience manifests.
 - Feedback-only turns should update feedback docs and should not change app code unless implementation is explicitly requested.
