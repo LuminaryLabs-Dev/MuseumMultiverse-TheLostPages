@@ -1,3 +1,4 @@
+import './embedCardBoot.js';
 import { enhancePortalLanding } from './portalLanding.js';
 
 let interval = 0;
