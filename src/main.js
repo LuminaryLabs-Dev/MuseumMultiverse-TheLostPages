@@ -128,27 +128,18 @@ async function renderImmersiveRoute(experience) {
   }, { once: true });
 }
 
+async function renderBookletSurface() {
+  setTitle(`${cover.title} - Booklet`);
+  app.innerHTML = renderPrintMarkup(origin);
+  surfaceGame = createLostPagesSurfaceGame(app);
+  surfaceGame.n.paperSurface.mount(app);
+  await renderPrintQrCodes(app, origin);
+  launcherCleanup = enhanceLauncherMotion(app, { composition: surfaceGame });
+}
+
 async function render() {
   cleanupCurrentSurface();
   const route = routeFromLocation();
-
-  if (route.type === 'print') {
-    setTitle(`${cover.title} - Print`);
-    app.innerHTML = renderPrintMarkup(origin);
-    surfaceGame = createLostPagesSurfaceGame(app);
-    surfaceGame.n.paperSurface.mount(app);
-    await renderPrintQrCodes(app, origin);
-    launcherCleanup = enhanceLauncherMotion(app, { composition: surfaceGame });
-    return;
-  }
-
-  if (route.type === 'book') {
-    setTitle(`${cover.title} - Legacy Book`);
-    app.innerHTML = renderBookMarkup();
-    bookCleanup = enhanceBookScene(app, { origin });
-    await renderBookQrCodes(app, origin);
-    return;
-  }
 
   if (route.type === 'experience-debug' && route.experience) {
     await renderDebugExperience(route.experience);
@@ -160,12 +151,7 @@ async function render() {
     return;
   }
 
-  setTitle(cover.title);
-  app.innerHTML = renderLauncherMarkup(origin);
-  surfaceGame = createLostPagesSurfaceGame(app);
-  surfaceGame.n.paperSurface.mount(app);
-  await renderLauncherQrCodes(app, origin);
-  launcherCleanup = enhanceLauncherMotion(app, { composition: surfaceGame });
+  await renderBookletSurface();
 }
 
 window.addEventListener('popstate', render);
