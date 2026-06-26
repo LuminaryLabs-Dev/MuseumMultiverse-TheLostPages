@@ -56,3 +56,30 @@ Next:
 - Run `npm install`, `npm run check:composition`, `npm run build`, and browser checks.
 - Regenerate and commit `package-lock.json` for the pinned NexusRealtime main commit.
 - Validate root, launcher, print, book, one AR route, and one debug route.
+
+## 2026-06-26
+
+Completed:
+
+- Ran one State Intelligence Sync turn to reconcile docs with current inspected source behavior.
+- Confirmed there were no open PRs targeting `main` before the turn.
+- Confirmed the scheduled-turn lock was not active.
+- Inspected `package.json`, `package-lock.json`, `src/app/routes/router.js`, `src/main.js`, `src/app/launcher/renderPrint.js`, and `scripts/export-static-routes.mjs`.
+- Aligned route docs around the current shared booklet/print reader fallback for root, launcher, print, book, and phone route entries.
+- Recorded that `package.json` is pinned to the NexusRealtime commit while `package-lock.json` still needs regeneration.
+
+Validation:
+
+- Source inspection through the GitHub connector only.
+- Build, dependency install, lockfile regeneration, browser preview, deployed-route checks, device checks, and experience runtime checks were not run.
+- No app/source files were changed.
+
+Post-change audit:
+
+- Improved: README, technical map, master start source, and state ledger now describe the shared booklet/print route behavior consistently.
+- Still needs review: actual build and preview proof for the shared booklet route and representative experience/debug routes.
+- Still needs follow-up: regenerate and commit `package-lock.json` in a network-enabled environment.
+
+Next:
+
+- Run dependency hygiene and QA: `npm install`, regenerate `package-lock.json`, run `npm run check:composition`, run `npm run build`, and preview root, launcher, print, book, phone, and representative experience/debug routes.
