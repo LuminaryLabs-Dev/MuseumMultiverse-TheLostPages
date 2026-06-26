@@ -3,7 +3,7 @@
 Status: active master starting source  
 Repository: `LuminaryLabs-Dev/MuseumMultiverse-TheLostPages`  
 Primary branch: `main`  
-Last synthesized: 2026-06-25  
+Last synthesized: 2026-06-26  
 Primary audience: future ChatGPT / agent runs, project operators, and contributors
 
 ## 1. What this document is
@@ -12,37 +12,17 @@ This is the master starting source for ChatGPT work on **Museum Multiverse: Lost
 
 Use it as the first orientation document before editing the repo, planning the next run, updating the custom ChatGPT project context, or explaining the state of Lost Pages to a collaborator.
 
-This document consolidates the current repository state across:
-
-- product purpose
-- route and QR structure
-- eight-page AR experience map
-- print source structure
-- runtime/dependency boundary
-- build and deployment path
-- active agent workflow
-- state intelligence sync workflow
-- active feedback and known gaps
-- recommended next work
-
-This document does not replace the repo's operating files. It points to the files that remain the source of truth.
+This document summarizes product purpose, route and QR structure, the eight-page map, print source structure, runtime/dependency boundaries, build/deployment state, active agent workflow, active feedback, known gaps, and recommended next work. It does not replace the repo operating files.
 
 ## 2. Current one-sentence state
 
-Lost Pages is an active Vite-based AR companion magazine prototype with eight authored QR-launched AR page modules, a launcher/print/book route structure, GitHub Pages deployment, NexusRealtime-backed runtime adapters, print copy sources, supporting docs, and a repo-local `agent/` operating system. Active product direction now prefers the main print view as the primary non-AR review/presentation surface, while the dedicated 3D book route is pending demotion, removal, redirect, or legacy/debug treatment. AR route QA is still pending.
+Lost Pages is an active Vite-based AR companion magazine prototype with eight authored page modules, direct route exports, NexusRealtime-backed runtime adapters, print copy sources, supporting docs, and a repo-local `agent/` operating system. Current source inspection shows root, launcher, print, book, and phone route entries all fall through to the shared booklet/print reader surface, while `/ar/<slug>/` and `/debug/ar/<slug>/` remain separate experience routes. Build, browser, route, device, and lockfile validation are still pending.
 
 ## 3. Product definition
 
 **Museum Multiverse: Lost Pages** is an eight-page AR companion magazine.
 
 The target product is a printed artifact where each page includes one QR code. Each QR code opens a public static route on a phone. That route launches a page-specific web, debug, or AR experience.
-
-Core audience:
-
-- people holding the printed magazine
-- people scanning or opening routes on a phone
-- reviewers using desktop debug routes
-- future agents and contributors continuing the project
 
 The repo must support:
 
@@ -59,49 +39,31 @@ The repo must support:
 
 Active feedback currently says:
 
-- main print view should become the primary non-AR review/presentation surface
-- dedicated 3D book view should be removed, hidden, redirected, or demoted unless deliberately retained as legacy/debug/experimental
-- print-view background should feel like a tabletop or physical surface
+- the main print/booklet reader should be the primary non-AR review and presentation surface
+- the dedicated book route should be removed, hidden, redirected, or demoted unless deliberately retained as a compatibility, debug, experimental, or legacy entry
+- the print-view background should feel like a tabletop or physical surface
 - page layout should have grounded drop shadows
 - page layout may have subtle physical orientation/parallax
-- pointer-following glow should be removed
-- background should avoid dense digital-grid feeling
-- future visual direction should explore a physical book-opening transition into the page layout
+- pointer-following glow should stay removed
+- the background should avoid dense digital-grid feeling
+- a physical opening transition into the page layout is desirable
 
-These are active directions, not necessarily implemented source behavior. Do not claim route, visual, or runtime implementation until source changes and validation evidence exist.
+Do not claim build, browser, phone, camera, WebXR, deployed-route, or AR proof unless it was actually tested.
 
 ## 5. Repository shape
 
 | Area | Purpose |
 |---|---|
-| `src/` | Browser app, route resolution, AR runtime integration, page data, launcher/print/book UI, AR rendering surfaces, and authored experiences. |
-| `src/experiences/` | Eight page-specific experience modules. Each experience has `copy.js`, `level.js`, `tuning.js`, and `index.js`. |
-| `src/ar/registry/experiences.js` | The experience registry. Source of truth for active AR slugs and route generation. |
-| `print/magazine-pages/` | Print-facing Markdown copy for each magazine page. |
+| `src/` | Browser app, route resolution, runtime integration, page data, route surfaces, and authored experiences. |
+| `src/experiences/` | Eight page-specific experience modules. |
+| `src/ar/registry/experiences.js` | Source of truth for active slugs and route generation. |
+| `print/magazine-pages/` | Print-facing Markdown copy for each page. |
 | `docs/` | Product, design, QA, technical, state-alignment, and supporting-content documentation. |
-| `agent/` | Repo-local long-running operating state for future ChatGPT/agent work. |
-| `scripts/` | Build/deploy/static export and deploy message helpers. |
+| `agent/` | Repo-local long-running operating state. |
+| `scripts/` | Build, static export, deploy, and composition helpers. |
 | `.github/workflows/deploy-lost-pages.yml` | GitHub Actions workflow for build, Pages deploy, and deploy chat notification. |
 | `output.md` | Current short deploy chat message source. |
 | `output-rules.md` | Deploy chat style rules. |
-
-Important docs include:
-
-1. `docs/project-overview.md`
-2. `docs/eight-pages-qr-structure.md`
-3. `docs/repository-map.md`
-4. `docs/nexusrealtime-dependencies.md`
-5. `docs/deployment-and-discord.md`
-6. `docs/feedback-loop.md`
-7. `docs/agent-operating-model.md`
-8. `docs/prototype-workflow.md`
-9. `docs/DNA.md`
-10. `docs/FULL-OUTLINE.md`
-11. `docs/STYLE-GUIDE.md`
-12. `docs/TECHNICAL-BUILD-MAP.md`
-13. `docs/QA-ACCEPTANCE.md`
-14. `docs/STATE-ALIGNMENT-MAP.md`
-15. `docs/chatgpt-master-start-source.md`
 
 ## 6. Build, dependency, and deployment state
 
@@ -112,14 +74,15 @@ Current package commands:
 ```bash
 npm install
 npm run dev -- --host 0.0.0.0 --port 4176
+npm run check:composition
 npm run build
 npm run preview
 ```
 
-Current build command:
+Current build command path:
 
 ```bash
-vite build && node scripts/export-static-routes.mjs
+npm run check:composition && vite build && node scripts/export-static-routes.mjs
 ```
 
 Production/luminary command path also exists:
@@ -129,17 +92,11 @@ npm run build:luminary
 npm run deploy:luminary
 ```
 
-Runtime dependencies:
+Current inspected dependency state:
 
-- `nexusrealtime` from `git+https://github.com/LuminaryLabs-Dev/NexusRealtime.git#0.0.1`
-- `qrcode`
-- `three`
-
-Dev dependency:
-
-- `vite`
-
-GitHub Pages deployment runs from `main`. The workflow builds the site, exports static route copies, uploads the Pages artifact, deploys to Pages, and attempts to send a deploy chat message from `output.md`.
+- `package.json` pins `nexusrealtime` to commit `ebd19e298d71bfbc51bf452394085ce1d909cb94`.
+- `package-lock.json` still references the older `0.0.1` target.
+- A network-enabled dependency hygiene turn should run `npm install`, regenerate `package-lock.json`, and then run the available checks.
 
 Expected GitHub Pages root:
 
@@ -163,22 +120,23 @@ https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/ar/<slug>/
 
 The app resolves routes in `src/app/routes/router.js`.
 
-Current route families:
+Current inspected route behavior:
 
 | Route | Current meaning |
 |---|---|
-| `/` | Launcher. |
-| `/launcher/` | Launcher. |
-| `/print/` | Print review route; active direction says this should become the primary non-AR presentation/review surface. |
-| `/book/` | Current composition-book/reference route; active direction says it is pending demotion, hiding, redirect, removal, or legacy/debug treatment. |
-| `/ar/<slug>/` | QR-launched immersive AR route. |
-| `/ar/<slug>/?debug=1` | Debug route for the same slug. |
-| `/debug/ar/<slug>/` | Desktop debug surface. |
+| `/` | Shared booklet/print reader surface. |
+| `/launcher/` | Shared booklet/print reader surface. |
+| `/print/` | Shared booklet/print reader surface. |
+| `/book/` | Shared booklet/print reader surface, retained as a compatibility/static entry. |
+| `/phone/` | Shared booklet/print reader surface. |
+| `/ar/<slug>/` | Experience route. |
+| `/ar/<slug>/?debug=1` | Debug version of same slug. |
+| `/debug/ar/<slug>/` | Desktop debug route. |
 | `?page=<slug>` | Legacy/search-param route into an experience. |
 
-Static route export is handled by `scripts/export-static-routes.mjs`. The current export list has included launcher, book, print, ar, phone, every `/ar/<slug>/`, and every `/debug/ar/<slug>/`.
+Static route export is handled by `scripts/export-static-routes.mjs`. The export list includes launcher, book, print, ar, phone, every `/ar/<slug>/`, and every `/debug/ar/<slug>/`.
 
-Do not remove `/book/` from docs or route assumptions until implementation actually removes, redirects, or hides it.
+`src/app/launcher/bookScene.js` still exists as legacy source, but it is not the current default public non-experience route path.
 
 ## 8. Experience registry and eight-page map
 
@@ -201,17 +159,6 @@ It currently registers eight experiences:
 | 07 | `monster-behind-canvas` | The Monster Behind the Canvas | Scan, But Don't Blink | Shadow Exhibit Fragment | Reveal and seal the canvas. |
 | 08 | `secret-portal-room` | The Secret Portal Room | Scan to Unlock the Lost Room | Final Portal Key | Light eight sockets and unlock the final portal. |
 
-Each experience module follows this pattern:
-
-```text
-src/experiences/<slug>/copy.js
-src/experiences/<slug>/level.js
-src/experiences/<slug>/tuning.js
-src/experiences/<slug>/index.js
-```
-
-The manifest factory is `src/experiences/authoring.js`. The shared reward dataset is `src/experiences/shared/rewards.js`.
-
 ## 9. Print source map
 
 Print copy exists under:
@@ -233,29 +180,13 @@ print/magazine-pages/07-monster-behind-canvas.md
 print/magazine-pages/08-secret-portal-room.md
 ```
 
-Important risk: print Markdown duplicates copy that also exists in `src/experiences/<slug>/copy.js`. Before printing, run a copy-sync check so printed copy, launcher copy, QR labels, collectibles, and AR route manifests do not drift apart.
+Important risk: print Markdown duplicates copy that also exists in `src/experiences/<slug>/copy.js`. Before printing, run a copy-sync check so printed copy, launcher copy, QR labels, collectibles, and route manifests do not drift apart.
 
 ## 10. Runtime and NexusRealtime boundary
 
-Lost Pages should own:
+Lost Pages should own magazine copy, route slugs, page data, QR targets, AR experience manifests, Museum Multiverse content and tone, print presentation, and deploy chat output.
 
-- magazine copy
-- route slugs
-- page data
-- QR targets
-- AR experience manifests
-- Museum Multiverse content and tone
-- print presentation
-- deploy chat output
-
-NexusRealtime should own:
-
-- reusable runtime systems
-- AR/XR runtime patterns
-- session behavior
-- device behavior
-- generic input/rendering abstractions
-- simulator/runtime capabilities that could serve other Museum Multiverse apps
+NexusRealtime should own reusable runtime systems, AR/XR runtime patterns, session behavior, device behavior, generic input/rendering abstractions, and simulator/runtime capabilities that could serve other Museum Multiverse apps.
 
 Boundary rule:
 
@@ -267,29 +198,29 @@ Runtime adapter file:
 src/ar/runtime/session.js
 ```
 
-Do not claim phone, camera, WebXR, or headset proof unless it was actually tested on that device/path.
-
 ## 11. Launcher, print, book, and visual direction
 
-The app has user-facing non-AR surfaces:
+Current source-backed public non-experience behavior sends root, launcher, print, book, and phone route entries to the same booklet/print reader surface.
 
-| Surface | Files | Current / pending direction |
+Relevant files:
+
+| Area | Files | Current direction |
 |---|---|---|
-| Launcher | `src/app/launcher/renderLauncher.js`, `src/app/launcher/cleanLauncher.css`, `src/app/launcher/launcherMotion.js` | Simpler comic-book spread launcher with subtle reactive motion. |
-| Print | `src/app/launcher/renderPrint.js`, `src/app/launcher/pageTextures.js` | Active direction says this should be the primary non-AR review/presentation surface. |
-| Book | `src/app/launcher/bookScene.js`, `src/app/launcher/pageTextures.js` | Current route exists, but active direction says it is pending demotion/removal/redirect/legacy treatment. |
+| Route resolution | `src/app/routes/router.js` | Experience routes are preserved; all other paths fall through to the print/booklet surface. |
+| Top-level rendering | `src/main.js` | Non-experience routes render through `renderBookletSurface()`. |
+| Booklet/print reader | `src/app/launcher/renderPrint.js` | Shared reader markup, page controls, and QR rendering. |
+| Styling and motion | `src/app/launcher/cleanLauncher.css`, `src/app/launcher/launcherMotion.js` | Tabletop/paper styling and subtle physical motion. |
+| Legacy book source | `src/app/launcher/bookScene.js`, `src/app/launcher/pageTextures.js` | Legacy source remains but is not the default public non-experience route path. |
 
 Visual direction:
 
 - avoid heavy sepia as default
-- squared paper page surfaces, not rounded cards
-- tabletop/physical surface for main print view
-- grounded shadows under the page layout
-- subtle physical parallax/orientation if reactive motion is used
-- remove pointer-following glow
-- explore a physical book-opening transition into the page layout
-
-Do not make visual implementation claims from docs alone.
+- keep squared paper page surfaces, not rounded cards
+- maintain tabletop/physical surface treatment
+- keep grounded shadows under page layout
+- keep reactivity subtle and physical
+- do not reintroduce pointer-following glow
+- judge the opening/booklet transition in browser/device preview before further motion polish
 
 ## 12. Agent operating system
 
@@ -313,7 +244,7 @@ Next prompt if complete: prompts/005-qr-print-readiness.md
 
 Pointer reason:
 
-The launcher cleanup pass is complete. The next best run should check AR route behavior and confirm phone-openable route assumptions. A user may explicitly trigger `agent/prompts/state-intelligence-sync.md` before implementation when docs and agent state need alignment.
+The launcher cleanup pass is complete. The next best run should check route behavior and confirm phone-openable route assumptions. Keep the pointer in place until route QA is actually run or blocked.
 
 ## 13. State Intelligence Sync system
 
@@ -344,33 +275,26 @@ Purpose:
 
 ## 14. Active feedback and current gaps
 
-Current known gaps / next checks:
+Current known gaps and next checks:
 
-1. AR route QA is pending.
-2. QR print readiness is next after AR route QA.
-3. Device proof is not established by docs alone.
-4. Smart deploy output is only partially started.
-5. Copy can drift between print Markdown and JS copy files.
-6. Visual/product direction has unresolved feedback around print-first presentation and book-view demotion.
-7. Print-view direction needs a bounded implementation pass.
-8. Deployment messages can drift from actual changes unless `output.md` is updated once at the end of a completed batch.
+1. Dependency hygiene is pending: regenerate `package-lock.json` for the pinned NexusRealtime commit.
+2. Build validation is pending: run `npm run check:composition` and `npm run build`.
+3. Browser preview is pending for root, launcher, print, book, phone, one AR route, and one debug route.
+4. Phone/device proof is not established by docs alone.
+5. AR route QA is pending.
+6. QR print readiness comes after route QA and stable print-view direction.
+7. Copy can drift between print Markdown and JS copy files.
+8. Feedback should remain active until implementation and validation evidence are recorded.
 
 ## 15. Recommended next runs
 
-Recommended documentation/intelligence run:
+Recommended next turn:
 
 ```text
-agent/workflows/state-intelligence-sync-workflow.md
-agent/prompts/state-intelligence-sync.md
+Run dependency hygiene and QA: npm install, regenerate package-lock.json, run npm run check:composition, run npm run build, and preview root, launcher, print, book, phone, one /ar/<slug>/ route, and one /debug/ar/<slug>/ route. Record evidence before processing feedback.
 ```
 
-Recommended implementation planning run:
-
-```text
-Plan a print-view visual/navigation implementation pass for /print primary, /book treatment, tabletop background, grounded shadows, subtle non-glow reactivity, and physical opening transition.
-```
-
-Recommended QA run still pending:
+Recommended QA pointer still pending:
 
 ```text
 agent/workflows/ar-qa-workflow.md
@@ -396,20 +320,6 @@ agent/prompts/004-ar-route-check.md
 
 ## 17. Update policy for this document
 
-Update this document when any of these change:
-
-- route families
-- experience slugs
-- experience count
-- print source naming
-- deployment target
-- NexusRealtime dependency boundary
-- current pointer structure
-- agent operating model
-- core product goal
-- QR/phone validation status
-- major visual direction
-- state intelligence workflow
-- primary non-AR review surface direction
+Update this document when route families, experience slugs, experience count, print source naming, deployment target, dependency boundary, current pointer structure, agent operating model, core product goal, validation status, major visual direction, state intelligence workflow, or primary non-AR review surface direction changes.
 
 Keep this file as the high-level master source. Do not turn it into a run log. Detailed execution history belongs in `agent/run-log.md`; durable instructions belong in `agent/memory.md`; active work belongs in `agent/pointer.md`.
