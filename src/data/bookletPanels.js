@@ -1,1 +1,1 @@
-export const bookletPanelKinds = ['title', 'story', 'mission', 'scan', 'collectible'];
+export const bookletPanelKinds = ['title', 'story', 'mission', 'link', 'collectible'];
