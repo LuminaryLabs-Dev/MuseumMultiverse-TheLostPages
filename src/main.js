@@ -1,6 +1,7 @@
 import './styles.css';
 
-import { cover, getPageUrl } from './data/pages.js';
+import { createRealtimeGame } from 'nexusrealtime';
+import { cover, pages, getPageUrl } from './data/pages.js';
 import { createLostPagesImmersiveRuntime, createLostPagesRuntime } from './ar/runtime/session.js';
 import { renderExperienceStage } from './ar/runtime/placement.js';
 import { getSurfaceLabel } from './ar/runtime/plane-detection.js';
@@ -15,14 +16,17 @@ import { renderDebugExperienceShell } from './ar/runtime/debug-shell.js';
 import { renderImmersiveExperience, renderImmersiveGate } from './ar/runtime/immersive-shell.js';
 import { enhanceBookScene } from './app/launcher/bookScene.js';
 import { enhanceLauncherMotion } from './app/launcher/launcherMotion.js';
-import { enhancePaperSurface } from './app/launcher/paperSurface.js';
+import { createRouteQrKit } from './kits/routeQrKit.js';
+import { createBookletReaderKit } from './kits/bookletReaderKit.js';
+import { createComicPanelSequenceKit } from './kits/panelSequenceKit.js';
+import { createPaperSurfaceKit } from './kits/paperSurfaceKit.js';
 
 const app = document.querySelector('#app');
 const origin = resolvePublicOrigin();
 let activeRuntime = null;
 let bookCleanup = null;
 let launcherCleanup = null;
-let paperCleanup = null;
+let surfaceGame = null;
 
 function cleanupCurrentSurface() {
   activeRuntime?.renderer?.dispose?.();
@@ -32,8 +36,20 @@ function cleanupCurrentSurface() {
   bookCleanup = null;
   launcherCleanup?.();
   launcherCleanup = null;
-  paperCleanup?.();
-  paperCleanup = null;
+  surfaceGame?.n?.paperSurface?.dispose?.();
+  surfaceGame = null;
+}
+
+function createLostPagesSurfaceGame(root) {
+  return createRealtimeGame({
+    root,
+    kits: [
+      createRouteQrKit({ pages, origin }),
+      createPaperSurfaceKit({ quality: 'adaptive' }),
+      createBookletReaderKit({ pageCount: pages.length }),
+      createComicPanelSequenceKit({ pages })
+    ]
+  });
 }
 
 function installStaticAssetVariables() {
@@ -119,9 +135,10 @@ async function render() {
   if (route.type === 'print') {
     setTitle(`${cover.title} - Print`);
     app.innerHTML = renderPrintMarkup(origin);
-    paperCleanup = enhancePaperSurface(app);
+    surfaceGame = createLostPagesSurfaceGame(app);
+    surfaceGame.n.paperSurface.mount(app);
     await renderPrintQrCodes(app, origin);
-    launcherCleanup = enhanceLauncherMotion(app);
+    launcherCleanup = enhanceLauncherMotion(app, { composition: surfaceGame });
     return;
   }
 
@@ -145,9 +162,10 @@ async function render() {
 
   setTitle(cover.title);
   app.innerHTML = renderLauncherMarkup(origin);
-  paperCleanup = enhancePaperSurface(app);
+  surfaceGame = createLostPagesSurfaceGame(app);
+  surfaceGame.n.paperSurface.mount(app);
   await renderLauncherQrCodes(app, origin);
-  launcherCleanup = enhanceLauncherMotion(app);
+  launcherCleanup = enhanceLauncherMotion(app, { composition: surfaceGame });
 }
 
 window.addEventListener('popstate', render);
