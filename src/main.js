@@ -64,6 +64,11 @@ function installStaticAssetVariables() {
   });
 }
 
+function canLaunchNormalArRoute() {
+  const coarsePointer = window.matchMedia?.('(any-pointer: coarse)')?.matches ?? false;
+  return coarsePointer || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+}
+
 function setTitle(text) {
   document.title = text;
 }
@@ -113,8 +118,9 @@ async function renderDebugExperience(experience) {
 }
 
 async function renderImmersiveRoute(experience) {
+  const canLaunch = canLaunchNormalArRoute();
   setTitle(`${experience.number} - ${experience.title}`);
-  app.innerHTML = renderImmersiveGate(experience, {});
+  app.innerHTML = renderImmersiveGate(experience, {}, { canLaunch });
 
   activeRuntime = await createLostPagesImmersiveRuntime({
     root: app,
@@ -122,7 +128,9 @@ async function renderImmersiveRoute(experience) {
     renderExperience: renderImmersiveExperience
   });
 
-  app.innerHTML = renderImmersiveGate(experience, activeRuntime.getState());
+  app.innerHTML = renderImmersiveGate(experience, activeRuntime.getState(), { canLaunch });
+  if (!canLaunch) return;
+
   app.querySelector('[data-start-ar]')?.addEventListener('click', async () => {
     await activeRuntime.start();
   }, { once: true });
