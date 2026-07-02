@@ -33,8 +33,16 @@ function renderHotspots(manifest, step) {
   }).join('');
 }
 
-export function renderImmersiveGate(experience, runtimeState = {}) {
+export function renderImmersiveGate(experience, runtimeState = {}, options = {}) {
   const selected = runtimeState.selectedMode ?? runtimeState.support ?? {};
+  const canLaunch = options.canLaunch !== false;
+  const launchControl = canLaunch
+    ? '<button class="ar-landing__start immersive-gate__start" data-start-ar>Launch full 3D AR</button>'
+    : '<div class="ar-landing__start immersive-gate__start" aria-disabled="true">Open on mobile to launch AR</div>';
+  const launchNote = canLaunch
+    ? `${selected.mode ?? selected.deviceClass ?? 'Detecting AR mode'} · camera permission required`
+    : 'This page is intended for QR or direct phone access. Use the debug route for desktop review.';
+
   return `
     <section class="ar-landing immersive-gate" style="--accent:${experience.accent};--deep:${experience.deep};--glow:${experience.glow}">
       <div class="ar-landing__card">
@@ -50,8 +58,8 @@ export function renderImmersiveGate(experience, runtimeState = {}) {
           <span>Reward</span>
           <strong>${experience.collectible}</strong>
         </div>
-        <button class="ar-landing__start immersive-gate__start" data-start-ar>Launch full 3D AR</button>
-        <small>${selected.mode ?? selected.deviceClass ?? 'Detecting AR mode'} · camera permission required</small>
+        ${launchControl}
+        <small>${launchNote}</small>
       </div>
     </section>
   `;
