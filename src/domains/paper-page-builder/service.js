@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createPagePivotService } from '../page-pivot/service.js';
 import { createPlaneMeshCreatorService } from '../plane-mesh-creator/service.js';
 
 function drawWrapped(ctx, text, x, y, width, lineHeight, maxLines) {
@@ -24,13 +25,17 @@ export function createPaperPageBuilderService({
   textureHeight = 2176,
   faceWidth = 1.95,
   faceHeight = 2.72,
+  cardWidth = 2.42,
+  cardHeight = 3.14,
   segmentsX = 10,
   segmentsY = 10,
   origin = 'bottom-left',
-  planeMeshCreator = null
+  planeMeshCreator = null,
+  pagePivot = null
 } = {}) {
   const textureCache = new Map();
   const localPlaneMeshCreator = planeMeshCreator ?? createPlaneMeshCreatorService();
+  const localPagePivot = pagePivot ?? createPagePivotService({ anchor: origin, pivot: 'center' });
   const ownsPlaneMeshCreator = !planeMeshCreator;
   const state = {
     textureWidth,
@@ -132,7 +137,7 @@ export function createPaperPageBuilderService({
     side.position.z = -0.1;
 
     const shadow = new THREE.Mesh(
-      plane({ width: 2.42, height: 3.14, segmentsX: 1, segmentsY: 1 }),
+      plane({ width: cardWidth, height: cardHeight, segmentsX: 1, segmentsY: 1 }),
       new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.2, depthWrite: false })
     );
     shadow.position.set(0.18, -0.2, -0.22);
@@ -159,7 +164,21 @@ export function createPaperPageBuilderService({
     hit.userData.slug = page.slug;
     hit.userData.index = index;
 
-    group.add(side, shadow, face, shine, hit);
+    const pivot = localPagePivot.wrap({
+      children: [side, shadow, face, shine, hit],
+      width: cardWidth,
+      height: cardHeight,
+      name: `page-${page.slug ?? index}-pivot`
+    });
+    group.add(pivot.pivotGroup);
+    group.userData.pivot = pivot.pivotGroup;
+    group.userData.visual = pivot.visualGroup;
+    group.userData.pagePivot = {
+      anchor: pivot.anchor,
+      pivot: pivot.pivot,
+      pivotOffset: pivot.pivotOffset,
+      visualOffset: pivot.visualOffset
+    };
     group.userData.hit = hit;
     group.userData.shine = shine;
     group.userData.shadow = shadow;
@@ -195,6 +214,7 @@ export function createPaperPageBuilderService({
   function snapshot() {
     return {
       ...state,
+      pagePivot: localPagePivot.snapshot?.(),
       planeMeshCreator: localPlaneMeshCreator.snapshot?.()
     };
   }
