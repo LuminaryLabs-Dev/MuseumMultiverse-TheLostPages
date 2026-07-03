@@ -9,6 +9,7 @@ export function createPaperPageBuilderKit(config = {}) {
     createService({ engine } = {}) {
       return createPaperPageBuilderService({
         ...config,
+        pagePivot: config.pagePivot ?? engine?.n?.pagePivot,
         planeMeshCreator: config.planeMeshCreator ?? engine?.n?.planeMeshCreator
       });
     }
