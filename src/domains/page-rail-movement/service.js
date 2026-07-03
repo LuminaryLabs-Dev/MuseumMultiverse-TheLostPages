@@ -2,14 +2,16 @@ const DEFAULT_ANIMATION = {
   id: 'top-down-mouse-spiral',
   description: 'A vertical spiral of pages. Pages descend from the top, rotate around the rail axis, and mouse movement twists the spiral.',
   path: 'spiral',
-  radius: 1.18,
-  radiusStep: 0.08,
-  verticalSpacing: 0.58,
-  depthPush: 1.38,
-  depthStep: 0.16,
-  rotationStep: 1.08,
-  mouseTwist: 0.72,
-  mouseLift: 0.16
+  radius: 1.05,
+  radiusStep: 0.045,
+  verticalSpacing: 0.52,
+  depthPush: 1.18,
+  depthStep: 0.11,
+  zOrbit: 0.24,
+  rotationStep: 0.92,
+  mouseTwist: 0.48,
+  mouseLift: 0.12,
+  pageTurnAmount: 0.82
 };
 
 const DEFAULT_CONFIG = {
@@ -34,11 +36,12 @@ function signOrZero(value) {
 }
 
 function createSpiralDescriptor({ index, distance, focus, away, side, renderOrder, visible, animation, mouse }) {
-  const angle = distance * animation.rotationStep + mouse.x * animation.mouseTwist;
+  const angle = -distance * animation.rotationStep + mouse.x * animation.mouseTwist;
+  const orbit = Math.sin(angle);
   const radius = animation.radius + Math.abs(distance) * animation.radiusStep;
-  const x = Math.sin(angle) * radius;
+  const x = orbit * radius;
   const y = -distance * animation.verticalSpacing + mouse.y * animation.mouseLift;
-  const z = -away * animation.depthPush - Math.abs(distance) * animation.depthStep + Math.cos(angle) * 0.08;
+  const z = -away * animation.depthPush - Math.abs(distance) * animation.depthStep + Math.cos(angle) * animation.zOrbit;
 
   return {
     index,
@@ -51,10 +54,10 @@ function createSpiralDescriptor({ index, distance, focus, away, side, renderOrde
     railPosition: { x, y, z },
     railRotation: {
       x: -away * 0.025 + mouse.y * 0.035,
-      y: -Math.sin(angle) * 0.9,
-      z: Math.sin(angle) * 0.16 + side * away * 0.04
+      y: orbit * animation.pageTurnAmount,
+      z: orbit * -0.12 + side * away * 0.035
     },
-    railScale: animation.activeScale ? animation.activeScale - away * 0.24 : 1.24 - away * 0.24
+    railScale: 1.24 - away * 0.24
   };
 }
 
