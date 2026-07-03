@@ -17,6 +17,7 @@ import { renderImmersiveExperience, renderImmersiveGate } from './ar/runtime/imm
 import { enhanceBookScene } from './app/launcher/bookScene.js';
 import { enhanceStableRail } from './app/landing/stableRailLanding.js';
 import { createRouteQrKit } from './kits/routeQrKit.js';
+import { createPlaneMeshCreatorKit } from './kits/planeMeshCreatorKit.js';
 import { createLostPageKit } from './kits/lostPageKit.js';
 import { createPageRailMovementKit } from './kits/pageRailMovementKit.js';
 import { createViewportFitKit } from './kits/viewportFitKit.js';
@@ -47,11 +48,14 @@ function createLostPagesSurfaceGame(root) {
     root,
     kits: [
       createRouteQrKit({ pages, origin }),
+      createPlaneMeshCreatorKit(),
       createLostPageKit({
         pages,
         origin,
         paper: {
-          skin: 'lost-pages-stable-rail'
+          skin: 'lost-pages-stable-rail',
+          segmentsX: 10,
+          segmentsY: 10
         }
       }),
       createPageRailMovementKit({ pageCount: pages.length }),
