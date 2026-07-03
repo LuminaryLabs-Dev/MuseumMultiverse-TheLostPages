@@ -18,6 +18,7 @@ import { enhanceBookScene } from './app/launcher/bookScene.js';
 import { enhanceStableRail } from './app/landing/stableRailLanding.js';
 import { createRouteQrKit } from './kits/routeQrKit.js';
 import { createPlaneMeshCreatorKit } from './kits/planeMeshCreatorKit.js';
+import { createPagePivotKit } from './kits/pagePivotKit.js';
 import { createPaperPageBuilderKit } from './kits/paperPageBuilderKit.js';
 import { createLostPageKit } from './kits/lostPageKit.js';
 import { createPageRailMovementKit } from './kits/pageRailMovementKit.js';
@@ -49,6 +50,7 @@ function createLostPagesSurfaceGame(root) {
     kits: [
       createRouteQrKit({ pages, origin }),
       createPlaneMeshCreatorKit(),
+      createPagePivotKit({ anchor: 'bottom-left', pivot: 'center' }),
       createPaperPageBuilderKit({ segmentsX: 10, segmentsY: 10 }),
       createLostPageKit({
         pages,
