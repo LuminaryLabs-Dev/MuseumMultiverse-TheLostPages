@@ -4,7 +4,9 @@ import { createLostPageService } from '../../domains/lost-page/service.js';
 import { createPageRailMovementService } from '../../domains/page-rail-movement/service.js';
 import './portalLanding.css';
 
+const CAMERA_Y = 0.42;
 const CAMERA_Z = 4.15;
+const CAMERA_LOOK_Y = 0.16;
 
 export function renderStableRailMarkup() {
   return `
@@ -109,8 +111,8 @@ export function enhanceStableRail(root, options = {}) {
     if (disposed) return;
     const railState = pageRail.tick();
     lostPages.focus(railState.activeIndex);
-    camera.position.lerp(new THREE.Vector3(0, 0.02, CAMERA_Z), 0.04);
-    camera.lookAt(0, 0, 0);
+    camera.position.lerp(new THREE.Vector3(0, CAMERA_Y, CAMERA_Z), 0.04);
+    camera.lookAt(0, CAMERA_LOOK_Y, 0);
     cards.forEach((card, index) => {
       paperSkinnedMesh.applyCardSkin(card, {
         ...railState.cards[index],
@@ -123,7 +125,7 @@ export function enhanceStableRail(root, options = {}) {
   }
 
   resize();
-  camera.position.set(0, 0.05, CAMERA_Z);
+  camera.position.set(0, CAMERA_Y, CAMERA_Z);
   animate();
   window.addEventListener('resize', resize, { passive: true });
   window.addEventListener('keydown', key);
