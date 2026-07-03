@@ -1,7 +1,14 @@
 import * as THREE from 'three';
 
-function keyFor({ width, height, segmentsX, segmentsY }) {
-  return `${width}:${height}:${segmentsX}:${segmentsY}`;
+function keyFor({ width, height, segmentsX, segmentsY, origin }) {
+  return `${width}:${height}:${segmentsX}:${segmentsY}:${origin}`;
+}
+
+function applyOrigin(geometry, descriptor) {
+  if (descriptor.origin === 'bottom-left') {
+    geometry.translate(descriptor.width / 2, descriptor.height / 2, 0);
+  }
+  return geometry;
 }
 
 export function createPlaneMeshCreatorService() {
@@ -11,12 +18,13 @@ export function createPlaneMeshCreatorService() {
     reusedGeometryCount: 0
   };
 
-  function getPlane({ width = 1, height = 1, segmentsX = 1, segmentsY = 1 } = {}) {
+  function getPlane({ width = 1, height = 1, segmentsX = 1, segmentsY = 1, origin = 'center' } = {}) {
     const descriptor = {
       width: Number(width) || 1,
       height: Number(height) || 1,
       segmentsX: Math.max(1, Math.round(Number(segmentsX) || 1)),
-      segmentsY: Math.max(1, Math.round(Number(segmentsY) || 1))
+      segmentsY: Math.max(1, Math.round(Number(segmentsY) || 1)),
+      origin
     };
     const key = keyFor(descriptor);
     if (geometryCache.has(key)) {
@@ -24,12 +32,12 @@ export function createPlaneMeshCreatorService() {
       return geometryCache.get(key);
     }
 
-    const geometry = new THREE.PlaneGeometry(
+    const geometry = applyOrigin(new THREE.PlaneGeometry(
       descriptor.width,
       descriptor.height,
       descriptor.segmentsX,
       descriptor.segmentsY
-    );
+    ), descriptor);
     geometry.userData.planeMeshCreator = descriptor;
     geometryCache.set(key, geometry);
     state.createdGeometryCount = geometryCache.size;
