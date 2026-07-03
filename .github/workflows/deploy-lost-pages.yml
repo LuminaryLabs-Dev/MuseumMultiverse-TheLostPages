@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: lost-pages-deploy
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -34,6 +34,8 @@ jobs:
           OWNER_LC="$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
           echo "VITE_BASE_PATH=/$REPO_NAME/" >> "$GITHUB_ENV"
           echo "VITE_PUBLIC_ORIGIN=https://$OWNER_LC.github.io/$REPO_NAME" >> "$GITHUB_ENV"
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
       - name: Build site
         run: |
           set -euo pipefail
