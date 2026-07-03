@@ -1,14 +1,25 @@
 const DEFAULT_S_CURVE_POINTS = [
-  { t: -2.8, x: -1.6, y: 1.1, z: -1.55, rotationX: -0.02, rotationY: 0.72, rotationZ: -0.11, scale: 0.88 },
-  { t: -1.4, x: 1.25, y: 0.52, z: -1.0, rotationX: -0.015, rotationY: -0.54, rotationZ: 0.08, scale: 0.98 },
+  { t: -2.8, x: -1.6, y: 0, z: -1.55, rotationX: -0.02, rotationY: 0.72, rotationZ: -0.11, scale: 0.88 },
+  { t: -1.4, x: 1.25, y: 0, z: -1.0, rotationX: -0.015, rotationY: -0.54, rotationZ: 0.08, scale: 0.98 },
   { t: 0, x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotationZ: 0, scale: 1.24 },
-  { t: 1.4, x: -1.25, y: -0.52, z: -1.0, rotationX: -0.015, rotationY: 0.54, rotationZ: -0.08, scale: 0.98 },
-  { t: 2.8, x: 1.6, y: -1.1, z: -1.55, rotationX: -0.02, rotationY: -0.72, rotationZ: 0.11, scale: 0.88 }
+  { t: 1.4, x: -1.25, y: 0, z: -1.0, rotationX: -0.015, rotationY: 0.54, rotationZ: -0.08, scale: 0.98 },
+  { t: 2.8, x: 1.6, y: 0, z: -1.55, rotationX: -0.02, rotationY: -0.72, rotationZ: 0.11, scale: 0.88 }
 ];
 
+const DEFAULT_ANIMATION = {
+  id: 'flat-s-curve-coverflow',
+  description: 'A fixed-height S rail animation. Pages move left/right and forward/back only; y stays locked.',
+  yMode: 'locked',
+  yPosition: 0,
+  points: DEFAULT_S_CURVE_POINTS
+};
+
 const DEFAULT_CONFIG = {
+  animation: DEFAULT_ANIMATION,
   path: 's-curve',
   points: DEFAULT_S_CURVE_POINTS,
+  lockY: true,
+  yPosition: 0,
   softness: 0.72,
   sidePush: 1.55,
   depthPush: 1.45,
@@ -41,11 +52,15 @@ function sortedPoints(points) {
   return [...points].sort((a, b) => Number(a.t ?? 0) - Number(b.t ?? 0));
 }
 
-function samplePoint(points, distance) {
+function lockedY(config, candidateY = 0) {
+  return config.lockY ? config.yPosition : candidateY;
+}
+
+function samplePoint(points, distance, config) {
   if (!points.length) return null;
-  if (distance <= points[0].t) return points[0];
+  if (distance <= points[0].t) return { ...points[0], y: lockedY(config, points[0].y) };
   const last = points[points.length - 1];
-  if (distance >= last.t) return last;
+  if (distance >= last.t) return { ...last, y: lockedY(config, last.y) };
 
   for (let index = 0; index < points.length - 1; index += 1) {
     const a = points[index];
@@ -56,7 +71,7 @@ function samplePoint(points, distance) {
     return {
       t: distance,
       x: lerp(a.x, b.x, amount),
-      y: lerp(a.y, b.y, amount),
+      y: lockedY(config, lerp(a.y, b.y, amount)),
       z: lerp(a.z, b.z, amount),
       rotationX: lerp(a.rotationX ?? 0, b.rotationX ?? 0, amount),
       rotationY: lerp(a.rotationY ?? 0, b.rotationY ?? 0, amount),
@@ -65,12 +80,13 @@ function samplePoint(points, distance) {
     };
   }
 
-  return last;
+  return { ...last, y: lockedY(config, last.y) };
 }
 
 export function createPageRailMovementService({ pageCount = 0, rail = {} } = {}) {
   const config = { ...DEFAULT_CONFIG, ...rail };
-  const points = sortedPoints(config.points ?? []);
+  const animation = { ...DEFAULT_ANIMATION, ...(config.animation ?? {}) };
+  const points = sortedPoints(config.points ?? animation.points ?? []);
   const state = {
     pageCount: Math.max(0, Number(pageCount) || 0),
     activeIndex: 0,
@@ -125,7 +141,7 @@ export function createPageRailMovementService({ pageCount = 0, rail = {} } = {})
     const side = signOrZero(distance);
     const visible = Math.abs(distance) < config.visibleDistance;
     const renderOrder = Math.round(1000 - Math.abs(distance) * 50);
-    const point = config.path === 's-curve' ? samplePoint(points, distance) : null;
+    const point = config.path === 's-curve' ? samplePoint(points, distance, config) : null;
 
     return {
       index,
@@ -137,11 +153,11 @@ export function createPageRailMovementService({ pageCount = 0, rail = {} } = {})
       renderOrder,
       railPosition: point ? {
         x: point.x,
-        y: point.y,
+        y: lockedY(config, point.y),
         z: point.z
       } : {
         x: side * away * config.sidePush,
-        y: distance * 0.04,
+        y: lockedY(config, distance * 0.04),
         z: -away * config.depthPush
       },
       railRotation: point ? {
@@ -183,7 +199,10 @@ export function createPageRailMovementService({ pageCount = 0, rail = {} } = {})
       frame: state.frame,
       rail: {
         path: config.path,
-        points
+        animation,
+        points,
+        lockY: config.lockY,
+        yPosition: config.yPosition
       },
       cards: Array.from({ length: state.pageCount }, (_, index) => descriptorFor(index))
     };
