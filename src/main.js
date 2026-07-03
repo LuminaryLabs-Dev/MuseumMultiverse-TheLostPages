@@ -15,11 +15,11 @@ import { resolvePublicOrigin } from './lib/origin.js';
 import { renderDebugExperienceShell } from './ar/runtime/debug-shell.js';
 import { renderImmersiveExperience, renderImmersiveGate } from './ar/runtime/immersive-shell.js';
 import { enhanceBookScene } from './app/launcher/bookScene.js';
-import { enhanceLauncherMotion } from './app/launcher/launcherMotion.js';
+import { enhanceStableRail } from './app/landing/stableRailLanding.js';
 import { createRouteQrKit } from './kits/routeQrKit.js';
+import { createLostPageKit } from './kits/lostPageKit.js';
 import { createBookletReaderKit } from './kits/bookletReaderKit.js';
 import { createComicPanelSequenceKit } from './kits/panelSequenceKit.js';
-import { createPaperSurfaceKit } from './kits/paperSurfaceKit.js';
 
 const app = document.querySelector('#app');
 const origin = resolvePublicOrigin();
@@ -36,7 +36,7 @@ function cleanupCurrentSurface() {
   bookCleanup = null;
   launcherCleanup?.();
   launcherCleanup = null;
-  surfaceGame?.n?.paperSurface?.dispose?.();
+  surfaceGame?.n?.lostPages?.dispose?.();
   surfaceGame = null;
 }
 
@@ -45,7 +45,13 @@ function createLostPagesSurfaceGame(root) {
     root,
     kits: [
       createRouteQrKit({ pages, origin }),
-      createPaperSurfaceKit({ quality: 'adaptive' }),
+      createLostPageKit({
+        pages,
+        origin,
+        paper: {
+          skin: 'lost-pages-stable-rail'
+        }
+      }),
       createBookletReaderKit({ pageCount: pages.length }),
       createComicPanelSequenceKit({ pages })
     ]
@@ -140,9 +146,8 @@ async function renderBookletSurface() {
   setTitle(`${cover.title} - Booklet`);
   app.innerHTML = renderPrintMarkup(origin);
   surfaceGame = createLostPagesSurfaceGame(app);
-  surfaceGame.n.paperSurface.mount(app);
   await renderPrintQrCodes(app, origin);
-  launcherCleanup = enhanceLauncherMotion(app, { composition: surfaceGame });
+  launcherCleanup = enhanceStableRail(app, { composition: surfaceGame });
 }
 
 async function render() {
