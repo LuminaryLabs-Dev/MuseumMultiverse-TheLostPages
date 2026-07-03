@@ -1,5 +1,5 @@
 import { withBasePath } from '../../app/routes/basePath.js';
-import { createPaperRendererService } from '../paper-renderer/service.js';
+import { createPaperPageBuilderService } from '../paper-page-builder/service.js';
 import { createPaperSkinnedMeshService } from '../paper-skinned-mesh/service.js';
 
 function normalizePage(page, index, origin) {
@@ -23,10 +23,13 @@ function normalizePage(page, index, origin) {
   };
 }
 
-export function createLostPageService({ pages = [], origin = '', paper = {} } = {}) {
-  const paperRenderer = createPaperRendererService({
+export function createLostPageService({ pages = [], origin = '', paper = {}, planeMeshCreator = null } = {}) {
+  const paperPageBuilder = createPaperPageBuilderService({
     textureWidth: paper.textureWidth,
-    textureHeight: paper.textureHeight
+    textureHeight: paper.textureHeight,
+    segmentsX: paper.segmentsX ?? 10,
+    segmentsY: paper.segmentsY ?? 10,
+    planeMeshCreator
   });
   const paperSkinnedMesh = createPaperSkinnedMeshService({
     skin: paper.skin ?? 'lost-pages-stable-rail'
@@ -63,10 +66,14 @@ export function createLostPageService({ pages = [], origin = '', paper = {} } = 
     return getPage(state.activeIndex);
   }
 
+  function loadPageCards() {
+    return paperPageBuilder.loadPages(state.pages);
+  }
+
   function createPageCard(index) {
     const page = state.pages[index];
     if (!page) return null;
-    return paperRenderer.createCard(page, index);
+    return paperPageBuilder.createCard(page, index);
   }
 
   function snapshot() {
@@ -75,21 +82,24 @@ export function createLostPageService({ pages = [], origin = '', paper = {} } = 
       pageCount: state.pages.length,
       activePage: getActivePage(),
       pages: getPages(),
-      paperRenderer: paperRenderer.snapshot(),
+      paperPageBuilder: paperPageBuilder.snapshot(),
+      paperRenderer: paperPageBuilder.snapshot(),
       paperSkinnedMesh: paperSkinnedMesh.snapshot()
     };
   }
 
   function dispose() {
-    paperRenderer.dispose?.();
+    paperPageBuilder.dispose?.();
   }
 
   return Object.freeze({
-    paperRenderer,
+    paperPageBuilder,
+    paperRenderer: paperPageBuilder,
     paperSkinnedMesh,
     getPages,
     getPage,
     getActivePage,
+    loadPageCards,
     createPageCard,
     focus,
     next,
