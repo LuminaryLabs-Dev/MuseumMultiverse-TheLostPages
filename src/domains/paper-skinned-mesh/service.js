@@ -12,15 +12,20 @@ export function createPaperSkinnedMeshService({ skin = 'lost-pages-stable-rail' 
     const position = descriptor.railPosition ?? { x: 0, y: 0, z: 0 };
     const rotation = descriptor.railRotation ?? { x: 0, y: 0, z: 0 };
     const scale = Number(descriptor.railScale ?? 1);
+    const pivot = card.userData.pivot ?? card;
 
     card.visible = visible;
     if (!visible) return { visible, focus, away };
 
     card.position.set(position.x, position.y, position.z);
-    card.scale.setScalar(scale);
-    card.rotation.x = rotation.x;
-    card.rotation.y = rotation.y;
-    card.rotation.z = rotation.z;
+    card.rotation.set(0, 0, 0);
+    card.scale.setScalar(1);
+
+    pivot.scale.setScalar(scale);
+    pivot.rotation.x = rotation.x;
+    pivot.rotation.y = rotation.y;
+    pivot.rotation.z = rotation.z;
+
     card.renderOrder = Number(descriptor.renderOrder ?? 0);
     card.traverse((object) => {
       object.renderOrder = card.renderOrder;
