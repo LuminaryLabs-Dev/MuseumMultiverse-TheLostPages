@@ -26,6 +26,7 @@ export function createPaperPageBuilderService({
   faceHeight = 2.72,
   segmentsX = 10,
   segmentsY = 10,
+  origin = 'bottom-left',
   planeMeshCreator = null
 } = {}) {
   const textureCache = new Map();
@@ -34,12 +35,17 @@ export function createPaperPageBuilderService({
   const state = {
     textureWidth,
     textureHeight,
+    origin,
     createdTextures: 0,
     createdCards: 0,
     loaded: false,
     loadedPageCount: 0
   };
   let loadedCards = [];
+
+  function plane(options) {
+    return localPlaneMeshCreator.getPlane({ origin, ...options });
+  }
 
   function textureFor(page) {
     const key = page.slug ?? page.id ?? String(page.number ?? textureCache.size);
@@ -117,34 +123,35 @@ export function createPaperPageBuilderService({
     group.userData.index = index;
     group.userData.slug = page.slug;
     group.userData.url = page.routeHref ?? page.route ?? `/ar/${page.slug}`;
+    group.userData.origin = origin;
 
     const side = new THREE.Mesh(
-      localPlaneMeshCreator.getPlane({ width: 2.12, height: 2.9, segmentsX: 1, segmentsY: 1 }),
+      plane({ width: 2.12, height: 2.9, segmentsX: 1, segmentsY: 1 }),
       new THREE.MeshStandardMaterial({ color: 0x30251d, roughness: 0.68, metalness: 0.04 })
     );
     side.position.z = -0.1;
 
     const shadow = new THREE.Mesh(
-      localPlaneMeshCreator.getPlane({ width: 2.42, height: 3.14, segmentsX: 1, segmentsY: 1 }),
+      plane({ width: 2.42, height: 3.14, segmentsX: 1, segmentsY: 1 }),
       new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.2, depthWrite: false })
     );
     shadow.position.set(0.18, -0.2, -0.22);
 
     const face = new THREE.Mesh(
-      localPlaneMeshCreator.getPlane({ width: faceWidth, height: faceHeight, segmentsX, segmentsY }),
+      plane({ width: faceWidth, height: faceHeight, segmentsX, segmentsY }),
       new THREE.MeshStandardMaterial({ map: textureFor(page), roughness: 0.5, metalness: 0.01 })
     );
     face.position.z = 0.02;
-    face.userData.paperGrid = { segmentsX, segmentsY };
+    face.userData.paperGrid = { segmentsX, segmentsY, origin };
 
     const shine = new THREE.Mesh(
-      localPlaneMeshCreator.getPlane({ width: faceWidth, height: faceHeight, segmentsX: 1, segmentsY: 1 }),
+      plane({ width: faceWidth, height: faceHeight, segmentsX: 1, segmentsY: 1 }),
       new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.1, depthWrite: false })
     );
     shine.position.z = 0.045;
 
     const hit = new THREE.Mesh(
-      localPlaneMeshCreator.getPlane({ width: 2.25, height: 3.05, segmentsX: 1, segmentsY: 1 }),
+      plane({ width: 2.25, height: 3.05, segmentsX: 1, segmentsY: 1 }),
       new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.001, depthWrite: false })
     );
     hit.position.z = 0.08;
