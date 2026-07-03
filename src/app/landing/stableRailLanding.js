@@ -29,7 +29,7 @@ export function enhanceStableRail(root, options = {}) {
   if (!mount || typeof window === 'undefined') return () => {};
 
   const lostPages = options.composition?.n?.lostPages ?? createFallbackLostPageService();
-  const paperRenderer = lostPages.paperRenderer ?? options.composition?.n?.paperRenderer;
+  const paperPageBuilder = lostPages.paperPageBuilder ?? options.composition?.n?.paperPageBuilder ?? lostPages.paperRenderer ?? options.composition?.n?.paperRenderer;
   const paperSkinnedMesh = lostPages.paperSkinnedMesh ?? options.composition?.n?.paperSkinnedMesh;
   const railPages = lostPages.getPages();
   const pageRail = options.composition?.n?.pageRail ?? createPageRailMovementService({ pageCount: railPages.length });
@@ -48,7 +48,7 @@ export function enhanceStableRail(root, options = {}) {
   light.position.set(0, 1.4, 4.2);
   scene.add(light);
 
-  const cards = railPages.map((page, index) => paperRenderer.createCard(page, index));
+  const cards = lostPages.loadPageCards?.() ?? paperPageBuilder.loadPages(railPages);
   cards.forEach((card) => scene.add(card));
   const hits = cards.map((card) => card.userData.hit);
   const raycaster = new THREE.Raycaster();
