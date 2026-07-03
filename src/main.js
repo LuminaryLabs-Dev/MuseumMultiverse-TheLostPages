@@ -18,6 +18,7 @@ import { enhanceBookScene } from './app/launcher/bookScene.js';
 import { enhanceStableRail } from './app/landing/stableRailLanding.js';
 import { createRouteQrKit } from './kits/routeQrKit.js';
 import { createLostPageKit } from './kits/lostPageKit.js';
+import { createPageRailMovementKit } from './kits/pageRailMovementKit.js';
 import { createBookletReaderKit } from './kits/bookletReaderKit.js';
 import { createComicPanelSequenceKit } from './kits/panelSequenceKit.js';
 
@@ -52,6 +53,7 @@ function createLostPagesSurfaceGame(root) {
           skin: 'lost-pages-stable-rail'
         }
       }),
+      createPageRailMovementKit({ pageCount: pages.length }),
       createBookletReaderKit({ pageCount: pages.length }),
       createComicPanelSequenceKit({ pages })
     ]
