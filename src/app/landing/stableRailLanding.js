@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { pages } from '../../data/pages.js';
 import { createLostPageService } from '../../domains/lost-page/service.js';
+import { createPageRailMovementService } from '../../domains/page-rail-movement/service.js';
 import './portalLanding.css';
 
 const CAMERA_Z = 4.15;
@@ -32,6 +33,7 @@ export function enhanceStableRail(root, options = {}) {
   const paperRenderer = lostPages.paperRenderer ?? options.composition?.n?.paperRenderer;
   const paperSkinnedMesh = lostPages.paperSkinnedMesh ?? options.composition?.n?.paperSkinnedMesh;
   const railPages = lostPages.getPages();
+  const pageRail = options.composition?.n?.pageRail ?? createPageRailMovementService({ pageCount: railPages.length });
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x020307, 0.055);
@@ -51,13 +53,10 @@ export function enhanceStableRail(root, options = {}) {
   const hits = cards.map((card) => card.userData.hit);
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
-  let target = lostPages.snapshot().activeIndex;
-  let smooth = target;
   let hover = null;
   let frame = 0;
   let disposed = false;
   let startY = 0;
-  let lastInput = 0;
 
   function resize() {
     const w = Math.max(1, mount.clientWidth || window.innerWidth || 1);
@@ -67,22 +66,16 @@ export function enhanceStableRail(root, options = {}) {
     renderer.setSize(w, h, false);
   }
 
-  function jump(value) {
-    target = paperSkinnedMesh.clampIndex(value, railPages.length);
-    lostPages.focus(Math.round(target));
-  }
-
   function wheel(event) {
     event.preventDefault();
-    lastInput = performance.now();
-    jump(target + event.deltaY * 0.0032);
+    pageRail.scroll(event.deltaY);
   }
 
   function key(event) {
-    if (event.key === 'ArrowDown' || event.key === 'PageDown') jump(Math.ceil(target + 1));
-    if (event.key === 'ArrowUp' || event.key === 'PageUp') jump(Math.floor(target - 1));
+    if (event.key === 'ArrowDown' || event.key === 'PageDown') pageRail.next();
+    if (event.key === 'ArrowUp' || event.key === 'PageUp') pageRail.previous();
     if (event.key === 'Enter' || event.key === ' ') {
-      const card = cards[Math.round(paperSkinnedMesh.clampIndex(smooth, railPages.length))];
+      const card = cards[pageRail.snapshot().activeIndex];
       if (card?.userData?.url) window.location.href = card.userData.url;
     }
   }
@@ -106,20 +99,21 @@ export function enhanceStableRail(root, options = {}) {
 
   function touchEnd(event) {
     const dy = startY - (event.changedTouches?.[0]?.clientY ?? startY);
-    if (Math.abs(dy) > 36) {
-      lastInput = performance.now();
-      jump(Math.round(target + Math.sign(dy)));
-    }
+    if (Math.abs(dy) > 36) pageRail.step(Math.sign(dy));
   }
 
   function animate() {
     if (disposed) return;
-    if (performance.now() - lastInput > 260) target = paperSkinnedMesh.settleTarget(target);
-    smooth = paperSkinnedMesh.smoothTarget(target, smooth);
+    const railState = pageRail.tick();
+    lostPages.focus(railState.activeIndex);
     camera.position.lerp(new THREE.Vector3(0, 0.02, CAMERA_Z), 0.04);
     camera.lookAt(0, 0, 0);
     cards.forEach((card, index) => {
-      paperSkinnedMesh.applyCardSkin(card, { index, smooth, hoverHit: hover });
+      paperSkinnedMesh.applyCardSkin(card, {
+        ...railState.cards[index],
+        smoothIndex: railState.smoothIndex,
+        hovered: hover === card.userData.hit
+      });
     });
     renderer.render(scene, camera);
     frame = window.requestAnimationFrame(animate);
