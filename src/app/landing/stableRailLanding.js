@@ -89,6 +89,7 @@ export function enhanceStableRail(root, options = {}) {
     const rect = renderer.domElement.getBoundingClientRect();
     pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    pageRail.pointer?.(pointer.x, pointer.y);
     raycaster.setFromCamera(pointer, camera);
     hover = raycaster.intersectObjects(hits, false)[0]?.object ?? null;
     renderer.domElement.style.cursor = hover ? 'pointer' : 'default';
