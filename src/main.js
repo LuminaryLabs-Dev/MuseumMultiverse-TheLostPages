@@ -21,7 +21,6 @@ import { createPlaneMeshCreatorKit } from './kits/planeMeshCreatorKit.js';
 import { createPaperPageBuilderKit } from './kits/paperPageBuilderKit.js';
 import { createLostPageKit } from './kits/lostPageKit.js';
 import { createPageRailMovementKit } from './kits/pageRailMovementKit.js';
-import { createViewportFitKit } from './kits/viewportFitKit.js';
 import { createBookletReaderKit } from './kits/bookletReaderKit.js';
 import { createComicPanelSequenceKit } from './kits/panelSequenceKit.js';
 
@@ -61,7 +60,6 @@ function createLostPagesSurfaceGame(root) {
         }
       }),
       createPageRailMovementKit({ pageCount: pages.length }),
-      createViewportFitKit(),
       createBookletReaderKit({ pageCount: pages.length }),
       createComicPanelSequenceKit({ pages })
     ]
