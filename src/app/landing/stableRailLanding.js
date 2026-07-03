@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import { pages } from '../../data/pages.js';
 import { createLostPageService } from '../../domains/lost-page/service.js';
 import { createPageRailMovementService } from '../../domains/page-rail-movement/service.js';
-import { createViewportFitService } from '../../domains/viewport-fit/service.js';
 import './portalLanding.css';
+
+const CAMERA_Z = 4.15;
 
 export function renderStableRailMarkup() {
   return `
@@ -24,6 +25,10 @@ function createFallbackLostPageService() {
   });
 }
 
+function openCardUrl(url) {
+  if (url) window.location.assign(url);
+}
+
 export function enhanceStableRail(root, options = {}) {
   const mount = root?.querySelector('[data-stable-rail-scene]');
   if (!mount || typeof window === 'undefined') return () => {};
@@ -33,7 +38,6 @@ export function enhanceStableRail(root, options = {}) {
   const paperSkinnedMesh = lostPages.paperSkinnedMesh ?? options.composition?.n?.paperSkinnedMesh;
   const railPages = lostPages.getPages();
   const pageRail = options.composition?.n?.pageRail ?? createPageRailMovementService({ pageCount: railPages.length });
-  const viewportFit = options.composition?.n?.viewportFit ?? createViewportFitService();
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x020307, 0.055);
@@ -57,12 +61,10 @@ export function enhanceStableRail(root, options = {}) {
   let frame = 0;
   let disposed = false;
   let startY = 0;
-  let viewport = { width: 1, height: 1 };
 
   function resize() {
     const w = Math.max(1, mount.clientWidth || window.innerWidth || 1);
     const h = Math.max(1, mount.clientHeight || window.innerHeight || 1);
-    viewport = { width: w, height: h };
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
@@ -77,8 +79,7 @@ export function enhanceStableRail(root, options = {}) {
     if (event.key === 'ArrowDown' || event.key === 'PageDown') pageRail.next();
     if (event.key === 'ArrowUp' || event.key === 'PageUp') pageRail.previous();
     if (event.key === 'Enter' || event.key === ' ') {
-      const card = cards[pageRail.snapshot().activeIndex];
-      if (card?.userData?.url) window.location.href = card.userData.url;
+      openCardUrl(cards[pageRail.snapshot().activeIndex]?.userData?.url);
     }
   }
 
@@ -92,7 +93,7 @@ export function enhanceStableRail(root, options = {}) {
   }
 
   function click() {
-    if (hover?.userData?.url) window.location.href = hover.userData.url;
+    openCardUrl(hover?.userData?.url);
   }
 
   function touchStart(event) {
@@ -107,18 +108,9 @@ export function enhanceStableRail(root, options = {}) {
   function animate() {
     if (disposed) return;
     const railState = pageRail.tick();
-    const fit = viewportFit.fit({
-      viewport,
-      cards: railState.cards,
-      cameraFov: camera.fov
-    });
     lostPages.focus(railState.activeIndex);
-    camera.position.lerp(new THREE.Vector3(
-      fit.cameraPosition.x,
-      fit.cameraPosition.y,
-      fit.cameraPosition.z
-    ), fit.cameraLerp);
-    camera.lookAt(fit.lookAt.x, fit.lookAt.y, fit.lookAt.z);
+    camera.position.lerp(new THREE.Vector3(0, 0.02, CAMERA_Z), 0.04);
+    camera.lookAt(0, 0, 0);
     cards.forEach((card, index) => {
       paperSkinnedMesh.applyCardSkin(card, {
         ...railState.cards[index],
@@ -131,10 +123,9 @@ export function enhanceStableRail(root, options = {}) {
   }
 
   resize();
-  camera.position.set(0, 0.05, 4.15);
+  camera.position.set(0, 0.05, CAMERA_Z);
   animate();
   window.addEventListener('resize', resize, { passive: true });
-  window.addEventListener('orientationchange', resize, { passive: true });
   window.addEventListener('keydown', key);
   window.addEventListener('wheel', wheel, { passive: false });
   renderer.domElement.addEventListener('pointermove', move, { passive: true });
@@ -146,7 +137,6 @@ export function enhanceStableRail(root, options = {}) {
     disposed = true;
     if (frame) window.cancelAnimationFrame(frame);
     window.removeEventListener('resize', resize);
-    window.removeEventListener('orientationchange', resize);
     window.removeEventListener('keydown', key);
     window.removeEventListener('wheel', wheel);
     renderer.domElement.removeEventListener('pointermove', move);
