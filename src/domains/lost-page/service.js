@@ -4,6 +4,8 @@ import { createPaperSkinnedMeshService } from '../paper-skinned-mesh/service.js'
 
 function normalizePage(page, index, origin) {
   const routeHref = withBasePath(`/ar/${page.slug}`);
+  const cleanOrigin = String(origin || '').replace(/\/+$/, '');
+  const qrTarget = cleanOrigin ? `${cleanOrigin}/ar/${page.slug}/` : routeHref;
   return {
     id: page.slug,
     slug: page.slug,
@@ -18,6 +20,7 @@ function normalizePage(page, index, origin) {
     deep: page.deep,
     glow: page.glow,
     routeHref,
+    qrTarget,
     origin,
     source: page
   };

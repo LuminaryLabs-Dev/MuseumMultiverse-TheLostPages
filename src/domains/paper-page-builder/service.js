@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import QRCode from 'qrcode';
 import { createPagePivotService } from '../page-pivot/service.js';
 import { createPlaneMeshCreatorService } from '../plane-mesh-creator/service.js';
 
@@ -18,6 +19,33 @@ function drawWrapped(ctx, text, x, y, width, lineHeight, maxLines) {
     }
   });
   if (line && row < maxLines) ctx.fillText(line, x, y + row * lineHeight);
+}
+
+function drawQr(ctx, url, x, y, size) {
+  if (!url) {
+    ctx.fillStyle = '#14100d';
+    ctx.font = '900 34px Arial Black, Impact, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('SET PUBLIC', x + size / 2, y + size / 2 - 18);
+    ctx.fillText('ORIGIN', x + size / 2, y + size / 2 + 28);
+    return;
+  }
+
+  const qr = QRCode.create(url, { errorCorrectionLevel: 'M', margin: 1 });
+  const cells = qr.modules.size;
+  const cell = size / cells;
+
+  ctx.fillStyle = '#f8f0de';
+  ctx.fillRect(x, y, size, size);
+  ctx.fillStyle = '#14100d';
+
+  for (let row = 0; row < cells; row += 1) {
+    for (let col = 0; col < cells; col += 1) {
+      if (qr.modules.get(row, col)) {
+        ctx.fillRect(x + col * cell, y + row * cell, Math.ceil(cell), Math.ceil(cell));
+      }
+    }
+  }
 }
 
 export function createPaperPageBuilderService({
@@ -104,16 +132,15 @@ export function createPaperPageBuilderService({
     ctx.font = '800 56px Arial, sans-serif';
     drawWrapped(ctx, page.prompt || page.description, 122, 1692, canvas.width - 448, 72, 3);
 
+    const qrX = canvas.width - 386;
+    const qrY = canvas.height - 386;
+    const qrSize = 260;
     ctx.fillStyle = glow;
-    ctx.fillRect(canvas.width - 386, canvas.height - 376, 248, 236);
+    ctx.fillRect(qrX - 16, qrY - 16, qrSize + 32, qrSize + 32);
     ctx.strokeStyle = '#1b1714';
     ctx.lineWidth = 12;
-    ctx.strokeRect(canvas.width - 386, canvas.height - 376, 248, 236);
-    ctx.fillStyle = '#14100d';
-    ctx.font = '900 50px Arial Black, Impact, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('LAUNCH', canvas.width - 262, canvas.height - 250);
-    ctx.fillText('AR', canvas.width - 262, canvas.height - 178);
+    ctx.strokeRect(qrX - 16, qrY - 16, qrSize + 32, qrSize + 32);
+    drawQr(ctx, page.qrTarget || page.routeUrl || page.routeHref, qrX, qrY, qrSize);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
