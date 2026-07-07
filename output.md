@@ -1,3 +1,3 @@
-✅ Lost Pages horizontal rail
+Lost Pages rail updated.
 
-Switched the public launcher to a stable horizontal Three.js comic-page shuffle with title-only overlay and parent-controlled scroll.
+The public rail now uses one floating page, larger turn motion, edge glow, rear depth, and a controlled light effect.
