@@ -1,9 +1,22 @@
-import upscaledCoverPayload from '../../../lost-pages-cover-upscaled.jpg?raw';
 import './focusCoverSplash.css';
 
-const SHOW_MS = 1200;
+const SHOW_MS = 3200;
 const FADE_MS = 360;
-const UPSCALED_COVER_IMAGE = `url('data:image/jpeg;${'base64'},${upscaledCoverPayload.replace(/\s+/g, '')}')`;
+const COVER_PAYLOAD_URL = 'https://cdn.jsdelivr.net/gh/LuminaryLabs-Dev/MuseumMultiverse-TheLostPages@main/lost-pages-cover-upscaled.jpg?v=4';
+
+let coverPromise;
+
+function getCoverImage() {
+  if (!coverPromise) {
+    coverPromise = fetch(COVER_PAYLOAD_URL, { cache: 'no-store' })
+      .then((response) => (response.ok ? response.text() : ''))
+      .then((payload) => payload.replace(/\s+/g, ''))
+      .then((payload) => (payload.startsWith('/9j/') ? `url('data:image/jpeg;${'base64'},${payload}')` : ''))
+      .catch(() => '');
+  }
+
+  return coverPromise;
+}
 
 function makeSplash() {
   const el = document.createElement('div');
@@ -26,10 +39,6 @@ export function installFocusCoverSplash() {
 
   const splash = makeSplash();
   const cover = splash.querySelector('.focus-cover-splash__cover');
-  if (cover) {
-    cover.style.backgroundImage = UPSCALED_COVER_IMAGE;
-  }
-
   let showTimer = 0;
   let fadeTimer = 0;
   let wasAway = false;
@@ -47,6 +56,15 @@ export function installFocusCoverSplash() {
     showTimer = window.setTimeout(fadeOut, SHOW_MS);
   }
 
+  function loadThenShow() {
+    getCoverImage().then((backgroundImage) => {
+      if (backgroundImage && cover && cover.isConnected) {
+        cover.style.backgroundImage = backgroundImage;
+      }
+      show();
+    });
+  }
+
   function markAway() {
     wasAway = true;
   }
@@ -54,7 +72,7 @@ export function installFocusCoverSplash() {
   function maybeShow() {
     if (!wasAway || document.visibilityState === 'hidden') return;
     wasAway = false;
-    show();
+    loadThenShow();
   }
 
   function onVisibility() {
@@ -65,7 +83,7 @@ export function installFocusCoverSplash() {
   window.addEventListener('blur', markAway);
   window.addEventListener('focus', maybeShow);
   document.addEventListener('visibilitychange', onVisibility);
-  window.requestAnimationFrame(show);
+  window.requestAnimationFrame(loadThenShow);
 
   return () => {
     window.clearTimeout(showTimer);
