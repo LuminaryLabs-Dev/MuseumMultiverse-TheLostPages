@@ -2,7 +2,7 @@ import './focusCoverSplash.css';
 
 const SHOW_MS = 3200;
 const FADE_MS = 360;
-const COVER_PAYLOAD_URL = 'https://cdn.jsdelivr.net/gh/LuminaryLabs-Dev/MuseumMultiverse-TheLostPages@main/lost-pages-cover-upscaled.jpg?v=4';
+const COVER_PAYLOAD_URL = 'https://raw.githubusercontent.com/LuminaryLabs-Dev/MuseumMultiverse-TheLostPages/main/lost-pages-cover-upscaled.jpg';
 
 let coverPromise;
 
