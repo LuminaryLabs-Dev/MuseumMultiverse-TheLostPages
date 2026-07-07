@@ -1,3 +1,3 @@
-Lost Pages cover updated.
+Lost Pages cover resolution improved.
 
-The app splash now uses the JR vs The Shadow comic cover art with the correct portrait aspect.
+The splash cover now uses scalable vector-style CSS artwork instead of a fixed embedded raster JPEG.
