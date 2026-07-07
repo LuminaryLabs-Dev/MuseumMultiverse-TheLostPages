@@ -12,6 +12,7 @@ export function renderStableRailMarkup() {
   return `
     <section class="portal-landing" data-stable-rail aria-label="Museum Multiverse AR comic rail">
       <div class="portal-landing__scene" data-stable-rail-scene aria-hidden="true"></div>
+      <div class="portal-landing__turn-flash" data-stable-rail-flash aria-hidden="true"></div>
       <div class="portal-landing__shade" aria-hidden="true"></div>
       <header class="portal-landing__title" aria-label="Museum Multiverse"><span>Museum Multiverse</span><small>The Lost Chapters</small></header>
     </section>
@@ -31,8 +32,27 @@ function openCardUrl(url) {
   if (url) window.location.assign(url);
 }
 
+function addEdgeGlow(card, page) {
+  if (!card?.userData?.face || card.userData.edgeGlow) return;
+  const edgeGlow = new THREE.LineSegments(
+    new THREE.EdgesGeometry(card.userData.face.geometry),
+    new THREE.LineBasicMaterial({
+      color: page?.glow || 0xfff2bd,
+      transparent: true,
+      opacity: 0.18,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    })
+  );
+  edgeGlow.position.copy(card.userData.face.position);
+  edgeGlow.position.z += 0.055;
+  card.userData.visual?.add(edgeGlow);
+  card.userData.edgeGlow = edgeGlow;
+}
+
 export function enhanceStableRail(root, options = {}) {
   const mount = root?.querySelector('[data-stable-rail-scene]');
+  const flashLayer = root?.querySelector('[data-stable-rail-flash]');
   if (!mount || typeof window === 'undefined') return () => {};
 
   const lostPages = options.composition?.n?.lostPages ?? createFallbackLostPageService();
@@ -42,20 +62,27 @@ export function enhanceStableRail(root, options = {}) {
   const pageRail = options.composition?.n?.pageRail ?? createPageRailMovementService({ pageCount: railPages.length });
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x020307, 0.055);
+  scene.fog = new THREE.FogExp2(0x020307, 0.052);
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 80);
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.4));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   mount.appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0x8a8fff, 0.84));
-  const light = new THREE.PointLight(0x9defff, 1.8, 16);
+  scene.add(new THREE.AmbientLight(0x8a8fff, 0.74));
+  const light = new THREE.PointLight(0x9defff, 1.65, 16);
   light.position.set(0, 1.4, 4.2);
   scene.add(light);
 
+  const flashLight = new THREE.PointLight(0xfff1b8, 0, 9);
+  flashLight.position.set(0.8, 0.72, 2.45);
+  scene.add(flashLight);
+
   const cards = paperPageBuilder.loadPages(railPages);
-  cards.forEach((card) => scene.add(card));
+  cards.forEach((card, index) => {
+    addEdgeGlow(card, railPages[index]);
+    scene.add(card);
+  });
   const hits = cards.map((card) => card.userData.hit);
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
@@ -111,9 +138,15 @@ export function enhanceStableRail(root, options = {}) {
   function animate() {
     if (disposed) return;
     const railState = pageRail.tick();
+    const flash = Math.max(0, Math.min(1, railState.turn?.flashIntensity ?? 0));
     lostPages.focus(railState.activeIndex);
     camera.position.lerp(new THREE.Vector3(0, CAMERA_Y, CAMERA_Z), 0.04);
     camera.lookAt(0, CAMERA_LOOK_Y, 0);
+    light.intensity = 1.65 + flash * 0.55;
+    flashLight.intensity = flash * 3.2;
+    if (flashLayer) {
+      flashLayer.style.opacity = String(Math.min(0.34, flash * 0.32));
+    }
     cards.forEach((card, index) => {
       paperSkinnedMesh.applyCardSkin(card, {
         ...railState.cards[index],
