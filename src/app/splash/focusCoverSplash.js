@@ -2,16 +2,26 @@ import './focusCoverSplash.css';
 
 const SHOW_MS = 3200;
 const FADE_MS = 360;
-const COVER_PAYLOAD_URL = 'https://raw.githubusercontent.com/LuminaryLabs-Dev/MuseumMultiverse-TheLostPages/main/lost-pages-cover-upscaled.jpg';
+const BASE_PATH = import.meta.env.BASE_URL || '/';
+const COVER_PAYLOAD_URL = `${BASE_PATH.replace(/\/$/, '/') }lost-pages-cover-upscaled.b64`;
+const RAW_COVER_PAYLOAD_URL = 'https://raw.githubusercontent.com/LuminaryLabs-Dev/MuseumMultiverse-TheLostPages/main/lost-pages-cover-upscaled.jpg';
 
 let coverPromise;
 
+function makeDataImage(payload) {
+  const cleanPayload = String(payload || '').replace(/\s+/g, '');
+  return cleanPayload.startsWith('/9j/') ? `url('data:image/jpeg;base64,${cleanPayload}')` : '';
+}
+
+function fetchCoverPayload(url) {
+  return fetch(url, { cache: 'force-cache' }).then((response) => (response.ok ? response.text() : ''));
+}
+
 function getCoverImage() {
   if (!coverPromise) {
-    coverPromise = fetch(COVER_PAYLOAD_URL, { cache: 'no-store' })
-      .then((response) => (response.ok ? response.text() : ''))
-      .then((payload) => payload.replace(/\s+/g, ''))
-      .then((payload) => (payload.startsWith('/9j/') ? `url('data:image/jpeg;${'base64'},${payload}')` : ''))
+    coverPromise = fetchCoverPayload(COVER_PAYLOAD_URL)
+      .then(makeDataImage)
+      .then((backgroundImage) => backgroundImage || fetchCoverPayload(RAW_COVER_PAYLOAD_URL).then(makeDataImage))
       .catch(() => '');
   }
 
