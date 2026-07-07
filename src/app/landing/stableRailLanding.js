@@ -34,8 +34,18 @@ function openCardUrl(url) {
 
 function addEdgeGlow(card, page) {
   if (!card?.userData?.face || card.userData.edgeGlow) return;
-  const edgeGlow = new THREE.LineSegments(
-    new THREE.EdgesGeometry(card.userData.face.geometry),
+  const faceDescriptor = card.userData.face.geometry?.userData?.planeMeshCreator ?? {};
+  const width = Number(faceDescriptor.width) || 1.95;
+  const height = Number(faceDescriptor.height) || 2.72;
+  const geometry = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(width, 0, 0),
+    new THREE.Vector3(width, height, 0),
+    new THREE.Vector3(0, height, 0),
+    new THREE.Vector3(0, 0, 0)
+  ]);
+  const edgeGlow = new THREE.Line(
+    geometry,
     new THREE.LineBasicMaterial({
       color: page?.glow || 0xfff2bd,
       transparent: true,
