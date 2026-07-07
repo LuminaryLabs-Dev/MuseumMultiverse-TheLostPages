@@ -1,1 +1,57 @@
-@import url('https://cdn.jsdelivr.net/gh/LuminaryLabs-Dev/MuseumMultiverse-TheLostPages@edd0c5f2664e1ef03d5bf04f7b19b99b14c9fefd/src/app/splash/focusCoverSplash.css');
+.focus-cover-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  background: #030307;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 360ms ease, visibility 360ms ease;
+}
+
+.focus-cover-splash[data-visible='true'] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.focus-cover-splash__cover {
+  position: relative;
+  width: min(100vw, calc((100dvh - 28px) * 0.707));
+  height: auto;
+  aspect-ratio: 1448 / 2048;
+  max-width: 920px;
+  max-height: calc(100dvh - 28px);
+  overflow: hidden;
+  background-color: #020207;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: auto;
+  box-shadow: 0 32px 110px rgba(0, 0, 0, 0.72);
+}
+
+.focus-cover-splash__title,
+.focus-cover-splash__subtitle,
+.focus-cover-splash__frames,
+.focus-cover-splash__hero {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .focus-cover-splash {
+    padding: 8px;
+  }
+
+  .focus-cover-splash__cover {
+    width: min(100vw, calc((100dvh - 16px) * 0.707));
+    max-height: calc(100dvh - 16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focus-cover-splash {
+    transition: none;
+  }
+}
