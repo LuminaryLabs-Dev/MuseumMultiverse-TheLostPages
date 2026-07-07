@@ -1,3 +1,3 @@
-Lost Pages cover art restored.
+Lost Pages cover repaired.
 
-The splash is back to the original generated comic cover art source instead of the incorrect CSS redraw.
+The splash now uses a local binary JPEG instead of the remote CSS import.

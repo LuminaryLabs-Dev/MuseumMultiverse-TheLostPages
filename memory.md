@@ -34,4 +34,6 @@ Conventions:
 - Production static deployment targets `https://luminarylabs.dev/apps/lost-pages/`; build with `npm run build:luminary` and deploy generated output to `Website/apps/lost-pages` with `npm run deploy:luminary`.
 - Use a parchment/ink/brass visual palette with distinct per-page accent colors.
 - Imported MM_GDoC art lives under `public/assets/mmgdoc/`; keep web copies optimized and treat converted models as reusable staged assets, not a new metadata source of truth.
+- The focus cover splash now uses a local binary JPEG in `src/app/splash/` instead of the remote CDN CSS data URI.
+- `lost-pages-cover-upscaled.jpg` was repaired back into a valid JPEG with the original comic-cover art.
 - Prefer additive changes; do not introduce a second source of truth for experience metadata.
