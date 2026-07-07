@@ -1,3 +1,3 @@
-Lost Pages rail updated.
+Lost Pages cover updated.
 
-The public rail now uses one floating page, larger turn motion, edge glow, rear depth, and a controlled light effect.
+The app splash now uses the JR vs The Shadow comic cover art with the correct portrait aspect.
