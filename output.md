@@ -1,3 +1,3 @@
-Lost Pages cover visibility restored.
+Lost Pages cover loader corrected.
 
-The splash keeps the original cover visible while the preserved upscaled cover is applied by the app.
+The splash now reads the committed cover payload from raw GitHub, converts it to a JPEG data URL, and applies it before showing the frame.
