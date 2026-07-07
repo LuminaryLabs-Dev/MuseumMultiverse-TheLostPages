@@ -1,3 +1,3 @@
-Lost Pages cover image upgraded.
+Lost Pages cover visibility restored.
 
-The splash now bundles the preserved upscaled original cover directly into the app so the low-resolution fallback no longer flashes first.
+The splash keeps the original cover visible while the preserved upscaled cover is applied by the app.
