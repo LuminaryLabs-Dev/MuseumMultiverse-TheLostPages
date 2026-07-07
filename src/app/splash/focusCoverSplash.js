@@ -2,6 +2,7 @@ import './focusCoverSplash.css';
 
 const SHOW_MS = 1000;
 const FADE_MS = 360;
+const UPSCALED_COVER_URL = '/MuseumMultiverse-TheLostPages/lost-pages-cover-upscaled.jpg';
 
 function makeSplash() {
   const el = document.createElement('div');
@@ -23,6 +24,11 @@ export function installFocusCoverSplash() {
   if (typeof window === 'undefined' || typeof document === 'undefined') return () => {};
 
   const splash = makeSplash();
+  const cover = splash.querySelector('.focus-cover-splash__cover');
+  if (cover) {
+    cover.style.backgroundImage = `url('${UPSCALED_COVER_URL}')`;
+  }
+
   let showTimer = 0;
   let fadeTimer = 0;
   let wasAway = false;
