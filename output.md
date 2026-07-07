@@ -1,3 +1,3 @@
-Lost Pages cover resolution improved.
+Lost Pages cover art restored.
 
-The splash cover now uses scalable vector-style CSS artwork instead of a fixed embedded raster JPEG.
+The splash is back to the original generated comic cover art source instead of the incorrect CSS redraw.
