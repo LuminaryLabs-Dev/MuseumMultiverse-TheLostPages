@@ -1,22 +1,9 @@
+import upscaledCoverPayload from '../../../lost-pages-cover-upscaled.jpg?raw';
 import './focusCoverSplash.css';
 
-const SHOW_MS = 1000;
+const SHOW_MS = 1200;
 const FADE_MS = 360;
-const UPSCALED_COVER_PAYLOAD_URL = 'https://cdn.jsdelivr.net/gh/LuminaryLabs-Dev/MuseumMultiverse-TheLostPages@main/lost-pages-cover-upscaled.jpg';
-
-let coverPayloadPromise;
-
-function getCoverPayload() {
-  if (!coverPayloadPromise) {
-    coverPayloadPromise = fetch(UPSCALED_COVER_PAYLOAD_URL, { cache: 'force-cache' })
-      .then((response) => (response.ok ? response.text() : ''))
-      .then((payload) => payload.split(/\s+/).join(''))
-      .then((payload) => (payload ? `url('data:image/jpeg;${'base64'},${payload}')` : ''))
-      .catch(() => '');
-  }
-
-  return coverPayloadPromise;
-}
+const UPSCALED_COVER_IMAGE = `url('data:image/jpeg;${'base64'},${upscaledCoverPayload.replace(/\s+/g, '')}')`;
 
 function makeSplash() {
   const el = document.createElement('div');
@@ -39,12 +26,9 @@ export function installFocusCoverSplash() {
 
   const splash = makeSplash();
   const cover = splash.querySelector('.focus-cover-splash__cover');
-
-  getCoverPayload().then((backgroundImage) => {
-    if (backgroundImage && cover && cover.isConnected) {
-      cover.style.backgroundImage = backgroundImage;
-    }
-  });
+  if (cover) {
+    cover.style.backgroundImage = UPSCALED_COVER_IMAGE;
+  }
 
   let showTimer = 0;
   let fadeTimer = 0;
