@@ -1,3 +1,3 @@
 Lost Pages cover image upgraded.
 
-The splash now loads the preserved upscaled original cover payload instead of the low-resolution embedded fallback.
+The splash now bundles the preserved upscaled original cover directly into the app so the low-resolution fallback no longer flashes first.
