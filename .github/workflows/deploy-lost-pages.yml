@@ -42,6 +42,7 @@ jobs:
           npm install
           npm run build
           test -d dist
+          cp lost-pages-cover-upscaled.jpg dist/lost-pages-cover-upscaled.b64
           touch dist/.nojekyll
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
