@@ -29,63 +29,13 @@
   border: 0;
   border-radius: 0;
   background-color: #020207;
-  background-image:
-    radial-gradient(ellipse at 50% 52%, rgba(57, 106, 243, 0.82) 0 32%, rgba(128, 48, 190, 0.72) 33% 48%, rgba(8, 8, 22, 0) 62%),
-    radial-gradient(ellipse at 55% 60%, #03040b 0 13%, transparent 13.3%),
-    radial-gradient(ellipse at 49% 56%, #fff08d 0 1.5%, transparent 1.65%),
-    radial-gradient(ellipse at 60% 55.5%, #fff08d 0 1.45%, transparent 1.6%),
-    radial-gradient(ellipse at 55% 64%, #fff08d 0 2.2%, transparent 2.35%),
-    linear-gradient(101deg, transparent 0 10%, #2a1737 10.3% 10.9%, #e8ddb9 11.2% 27%, #2a1737 27.3% 28%, transparent 28.3%),
-    linear-gradient(79deg, transparent 0 70%, #2a1737 70.3% 71%, #eadfc2 71.2% 88%, #2a1737 88.4% 89.1%, transparent 89.4%),
-    linear-gradient(82deg, transparent 0 5%, #2a1737 5.3% 6%, #eadfc2 6.2% 32%, #2a1737 32.4% 33%, transparent 33.3%),
-    linear-gradient(98deg, transparent 0 67%, #2a1737 67.3% 68%, #e8ddb9 68.2% 93%, #2a1737 93.4% 94%, transparent 94.3%),
-    repeating-radial-gradient(circle at 50% 52%, rgba(255, 231, 70, 0.18) 0 2px, transparent 2px 34px),
-    linear-gradient(180deg, #2e164d 0%, #160d30 55%, #020207 100%);
-  background-size: 100% 100%;
+  background-image: url('/MuseumMultiverse-TheLostPages/assets/lost-pages-cover-upscaled.jpg');
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   image-rendering: auto;
   box-shadow: 0 32px 110px rgba(0, 0, 0, 0.72);
   transform: translateZ(0);
-}
-
-.focus-cover-splash__cover::before,
-.focus-cover-splash__cover::after {
-  position: absolute;
-  pointer-events: none;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
-  text-transform: uppercase;
-  color: #ffe72e;
-  -webkit-text-stroke: 0.045em #250829;
-  text-shadow: 0 0.035em 0 rgba(0, 0, 0, 0.75), 0 0 28px rgba(255, 231, 46, 0.28);
-}
-
-.focus-cover-splash__cover::before {
-  content: 'Museum Multiverse\A Lost\A Pages';
-  white-space: pre;
-  top: 4.2%;
-  font-size: clamp(2.4rem, 8.2vw, 7.4rem);
-  line-height: 0.86;
-  letter-spacing: 0.03em;
-}
-
-.focus-cover-splash__cover::after {
-  content: 'Scan the Artifact • Open the Portal\A Eight Augmented Reality Exhibits';
-  bottom: 6.2%;
-  margin: 0 6.2%;
-  padding: 0.7em 0.4em 0.45em;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #fff07b, #f7cf28);
-  color: #140d29;
-  -webkit-text-stroke: 0;
-  font-family: 'Arial Black', Impact, sans-serif;
-  font-size: clamp(0.95rem, 2.15vw, 2.35rem);
-  line-height: 1.95;
-  letter-spacing: 0.035em;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.58), 0 12px 36px rgba(0, 0, 0, 0.55);
 }
 
 .focus-cover-splash__title,
@@ -103,12 +53,6 @@
   .focus-cover-splash__cover {
     width: min(100vw, calc((100dvh - 16px) * 0.707));
     max-height: calc(100dvh - 16px);
-  }
-
-  .focus-cover-splash__cover::after {
-    bottom: 5.5%;
-    margin-inline: 5%;
-    font-size: clamp(0.78rem, 3.2vw, 1.15rem);
   }
 }
 
