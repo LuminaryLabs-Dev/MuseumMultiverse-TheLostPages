@@ -12,11 +12,11 @@ Primary verb: align
 
 ## DNA
 
-Page 02 proves that the museum's art is not static. The frame breathes, the canvas listens, and the reader learns that a printed page can be an activation ritual.
+Page 02 proves that the museum's art is not static. The comic page itself becomes the activation ritual: four panels of rising wonder, with the QR sealed over a central burst.
 
 ## Design doc
 
-The print page should center a formal painting frame with subtle impossible motion cues: shifted borders, breath marks, and glyph anchors. The QR should feel like a seal attached to the frame, but it must remain clean and scannable.
+The print page should read as a four-panel comic beat, not a static poster. The QR sits over a central burst circle, stays clean and scannable, and lets the page feel like JR's imagination is breaking through the paper.
 
 ## Projected assets
 
@@ -24,6 +24,7 @@ The print page should center a formal painting frame with subtle impossible moti
 |---|---|---|
 | breathing frame illustration | planned | print and scene identity |
 | three alignment glyphs | needed | puzzle targets |
+| center burst QR badge | needed | page two print composition |
 | opened canvas portal state | needed | reveal moment |
 | Canvas Whisper collectible icon | needed | reward UI |
 | frame inhale/exhale particles | optional | atmosphere |
@@ -32,10 +33,11 @@ The print page should center a formal painting frame with subtle impossible moti
 
 1. Reader scans the painting page.
 2. Start gate explains the frame must be opened.
-3. Three glyphs appear misaligned around or within the frame.
-4. Reader aligns the glyphs.
-5. The painting opens or breathes outward.
-6. The Canvas Whisper appears as the page reward.
+3. Four comic panels establish JR's awe and the museum's first shift.
+4. The center burst QR is revealed and scanned.
+5. Three glyphs appear misaligned around or within the frame.
+6. Reader aligns the glyphs and the painting opens.
+7. The Canvas Whisper appears as the page reward.
 
 ## Experience structure
 

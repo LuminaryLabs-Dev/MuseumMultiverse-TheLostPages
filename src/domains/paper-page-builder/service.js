@@ -188,6 +188,47 @@ function drawColorBurst(ctx, x, y, w, h, accent, glow) {
   ctx.restore();
 }
 
+function drawCenterBurst(ctx, x, y, size, accent, glow) {
+  const radius = size * 0.5;
+  const cx = x + radius;
+  const cy = y + radius;
+
+  ctx.save();
+  ctx.translate(cx, cy);
+
+  const halo = ctx.createRadialGradient(0, 0, radius * 0.1, 0, 0, radius);
+  halo.addColorStop(0, 'rgba(255,255,255,0.24)');
+  halo.addColorStop(0.5, glow);
+  halo.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = halo;
+  ctx.beginPath();
+  ctx.arc(0, 0, radius * 0.96, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = Math.max(6, size * 0.032);
+  ctx.beginPath();
+  ctx.arc(0, 0, radius * 0.62, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(23,17,13,0.22)';
+  ctx.lineWidth = Math.max(4, size * 0.02);
+  for (let i = 0; i < 12; i += 1) {
+    const angle = (Math.PI * 2 * i) / 12;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(angle) * radius * 0.18, Math.sin(angle) * radius * 0.18);
+    ctx.lineTo(Math.cos(angle) * radius * 0.92, Math.sin(angle) * radius * 0.92);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = 'rgba(255,255,255,0.16)';
+  ctx.beginPath();
+  ctx.arc(0, 0, radius * 0.22, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
 function drawComicPage(ctx, page, canvas) {
   const pageMarginY = Math.round(canvas.height * 0.032);
   const pageHeight = canvas.height - pageMarginY * 2;
@@ -215,12 +256,14 @@ function drawComicPage(ctx, page, canvas) {
   const lift = opening ? '#e8d9bd' : page.accent || '#56dfff';
   const glow = opening ? page.glow || '#ecd2a0' : page.glow || '#fff2bd';
   const accent = page.accent || '#56dfff';
-  const panelCopy = [
-    shortText(page.description || page.pitch || page.title, 11),
-    shortText(page.pitch || page.description || page.prompt, 11),
-    shortText(page.prompt || page.collectible || page.qrTitle, 10),
-    shortText(page.completeText || page.collectible || page.qrTitle, 10)
-  ];
+  const panelCopy = Array.isArray(page.panels) && page.panels.length === 4
+    ? page.panels.map((panel) => shortText(panel, 14))
+    : [
+        shortText(page.description || page.pitch || page.title, 11),
+        shortText(page.pitch || page.description || page.prompt, 11),
+        shortText(page.prompt || page.collectible || page.qrTitle, 10),
+        shortText(page.completeText || page.collectible || page.qrTitle, 10)
+      ];
 
   ctx.fillStyle = '#050508';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -270,8 +313,12 @@ function drawComicPage(ctx, page, canvas) {
   drawKidFigure(ctx, leftX + leftW * 0.42, bottomY + bottomH * 0.58, Math.max(0.8, Math.min(leftW, bottomH) / 290), ink, accent);
   drawColorBurst(ctx, rightX + 24, bottomY + 24, Math.max(120, rightW - 48), Math.max(120, bottomH - captionH - 54), accent, glow);
 
-  ctx.fillStyle = '#fcf5e6';
-  ctx.fillRect(qrX, qrY, qrSize, qrSize);
+  if (page.qrBurst) {
+    drawCenterBurst(ctx, qrX, qrY, qrSize, accent, glow);
+  } else {
+    ctx.fillStyle = '#fcf5e6';
+    ctx.fillRect(qrX, qrY, qrSize, qrSize);
+  }
   ctx.strokeStyle = ink;
   ctx.lineWidth = 10;
   ctx.strokeRect(qrX, qrY, qrSize, qrSize);
