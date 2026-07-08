@@ -1,5 +1,3 @@
-Lost Pages first comic page repaired.
+Lost Pages comic placeholders updated.
 
-The sleeping-gallery page now uses the generated comic reference image as direct cover art with the existing QR overlayed in the center.
-
-The QR overlay now follows the generated art's middle burst-circle coordinates.
+The booklet now renders the first three generated JR comic pages as placeholders with live QR overlays for their current AR routes.
