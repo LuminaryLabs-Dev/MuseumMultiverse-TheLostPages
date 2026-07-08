@@ -61,6 +61,77 @@ function addEdgeGlow(card, page) {
   card.userData.edgeGlow = edgeGlow;
 }
 
+function sharpenCanvas(ctx, width, height) {
+  const source = ctx.getImageData(0, 0, width, height);
+  const input = source.data;
+  const output = new Uint8ClampedArray(input);
+  const amount = 0.42;
+
+  for (let y = 1; y < height - 1; y += 1) {
+    for (let x = 1; x < width - 1; x += 1) {
+      const i = (y * width + x) * 4;
+      const north = i - width * 4;
+      const south = i + width * 4;
+      const west = i - 4;
+      const east = i + 4;
+
+      for (let c = 0; c < 3; c += 1) {
+        const edge = input[i + c] * 4 - input[north + c] - input[south + c] - input[west + c] - input[east + c];
+        output[i + c] = Math.max(0, Math.min(255, input[i + c] + edge * amount));
+      }
+    }
+  }
+
+  source.data.set(output);
+  ctx.putImageData(source, 0, 0);
+}
+
+function upgradeLowResolutionComicTexture(card) {
+  const face = card?.userData?.face;
+  const material = face?.material;
+  const texture = material?.map;
+  const image = texture?.image;
+
+  if (!face || !material || !texture || !image || card.userData.hiResComicTexture) return;
+
+  const applyUpgrade = () => {
+    const sourceWidth = image.naturalWidth || image.videoWidth || image.width || 0;
+    const sourceHeight = image.naturalHeight || image.videoHeight || image.height || 0;
+    if (!sourceWidth || !sourceHeight || sourceWidth >= 720) return;
+
+    const targetWidth = 1024;
+    const targetHeight = Math.round(targetWidth * (sourceHeight / sourceWidth));
+    const canvas = document.createElement('canvas');
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) return;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.filter = 'contrast(1.13) saturate(1.08)';
+    ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+    ctx.filter = 'none';
+    sharpenCanvas(ctx, targetWidth, targetHeight);
+
+    const upgradedTexture = new THREE.CanvasTexture(canvas);
+    upgradedTexture.colorSpace = THREE.SRGBColorSpace;
+    upgradedTexture.minFilter = THREE.LinearFilter;
+    upgradedTexture.magFilter = THREE.LinearFilter;
+    upgradedTexture.generateMipmaps = false;
+    upgradedTexture.anisotropy = 8;
+    material.map = upgradedTexture;
+    material.needsUpdate = true;
+    card.userData.hiResComicTexture = upgradedTexture;
+  };
+
+  if (image.complete || image.width || image.naturalWidth) {
+    applyUpgrade();
+  } else if (typeof image.addEventListener === 'function') {
+    image.addEventListener('load', applyUpgrade, { once: true });
+  }
+}
+
 export function enhanceStableRail(root, options = {}) {
   const mount = root?.querySelector('[data-stable-rail-scene]');
   const flashLayer = root?.querySelector('[data-stable-rail-flash]');
@@ -76,7 +147,7 @@ export function enhanceStableRail(root, options = {}) {
   scene.fog = new THREE.FogExp2(0x020307, 0.052);
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 80);
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.4));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   mount.appendChild(renderer.domElement);
 
@@ -92,6 +163,7 @@ export function enhanceStableRail(root, options = {}) {
   const cards = paperPageBuilder.loadPages(railPages);
   cards.forEach((card, index) => {
     addEdgeGlow(card, railPages[index]);
+    upgradeLowResolutionComicTexture(card);
     scene.add(card);
   });
   const hits = cards.map((card) => card.userData.hit);
