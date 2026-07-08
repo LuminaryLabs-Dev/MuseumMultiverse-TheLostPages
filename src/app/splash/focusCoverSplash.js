@@ -1,4 +1,5 @@
 import './focusCoverSplash.css';
+import coverArt from './focusCoverSplash-cover.png';
 
 const SHOW_MS = 3200;
 const FADE_MS = 360;
@@ -9,6 +10,7 @@ function makeSplash() {
   el.setAttribute('aria-hidden', 'true');
   el.innerHTML = `
     <div class="focus-cover-splash__cover">
+      <img class="focus-cover-splash__art" src="${coverArt}" alt="" aria-hidden="true" />
       <div class="focus-cover-splash__title"><span>Museum</span><span>Multiverse</span></div>
       <div class="focus-cover-splash__subtitle">The Lost Chapters</div>
       <div class="focus-cover-splash__frames"><span></span><span></span><span></span></div>
@@ -58,6 +60,8 @@ export function installFocusCoverSplash() {
   window.addEventListener('blur', markAway);
   window.addEventListener('focus', maybeShow);
   document.addEventListener('visibilitychange', onVisibility);
+  window.addEventListener('load', show, { once: true });
+  window.setTimeout(show, 0);
   window.requestAnimationFrame(show);
 
   return () => {

@@ -1,3 +1,3 @@
-Lost Pages cover art updated.
+Lost Pages pages centered.
 
-The splash now uses the generated local PNG with JR redesigned as Black with an afro.
+The stable rail now centers the floating pages, and the splash still hands off reliably to the booklet view.

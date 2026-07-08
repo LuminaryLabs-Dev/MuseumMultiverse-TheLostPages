@@ -36,4 +36,7 @@ Conventions:
 - Imported MM_GDoC art lives under `public/assets/mmgdoc/`; keep web copies optimized and treat converted models as reusable staged assets, not a new metadata source of truth.
 - The focus cover splash now uses a local PNG cover asset in `src/app/splash/` instead of the remote CDN payload path.
 - The current cover art source shows JR with an afro and Black appearance.
+- The focus cover splash now centers the art as an image element and uses redundant reveal triggers so it reliably hands off to the page view.
+- The portal landing page curve was narrowed so the floating pages stay centered in the reveal view.
+- The stable rail page pivot now uses centered visual offsets so the floating pages sit in the frame instead of pinning to the bottom-left corner.
 - Prefer additive changes; do not introduce a second source of truth for experience metadata.

@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
-function offsetFor({ width, height, pivot }) {
-  if (pivot === 'center') return { x: width / 2, y: height / 2, z: 0 };
-  if (pivot === 'left-spine') return { x: 0, y: height / 2, z: 0 };
+function visualOffsetFor({ width, height, pivot }) {
+  if (pivot === 'center') return { x: -width / 2, y: -height / 2, z: 0 };
+  if (pivot === 'left-spine') return { x: 0, y: -height / 2, z: 0 };
   return { x: 0, y: 0, z: 0 };
 }
 
@@ -14,14 +14,15 @@ export function createPagePivotService({ anchor = 'bottom-left', pivot = 'center
   };
 
   function wrap({ children = [], width = 1, height = 1, name = 'page-pivot' } = {}) {
-    const pivotOffset = offsetFor({ width, height, pivot });
+    const pivotOffset = { x: 0, y: 0, z: 0 };
+    const visualOffset = visualOffsetFor({ width, height, pivot });
     const pivotGroup = new THREE.Group();
     const visualGroup = new THREE.Group();
 
     pivotGroup.name = name;
     visualGroup.name = `${name}-visual`;
     pivotGroup.position.set(pivotOffset.x, pivotOffset.y, pivotOffset.z);
-    visualGroup.position.set(-pivotOffset.x, -pivotOffset.y, -pivotOffset.z);
+    visualGroup.position.set(visualOffset.x, visualOffset.y, visualOffset.z);
 
     children.forEach((child) => visualGroup.add(child));
     pivotGroup.add(visualGroup);
@@ -31,7 +32,7 @@ export function createPagePivotService({ anchor = 'bottom-left', pivot = 'center
       width,
       height,
       pivotOffset,
-      visualOffset: { x: -pivotOffset.x, y: -pivotOffset.y, z: -pivotOffset.z }
+      visualOffset
     };
     visualGroup.userData.pagePivotVisual = true;
     state.createdPivotCount += 1;
@@ -42,7 +43,7 @@ export function createPagePivotService({ anchor = 'bottom-left', pivot = 'center
       pivotGroup,
       visualGroup,
       pivotOffset,
-      visualOffset: { x: -pivotOffset.x, y: -pivotOffset.y, z: -pivotOffset.z }
+      visualOffset
     };
   }
 
