@@ -1,4 +1,5 @@
 import './landing.css';
+import mobileHandoffArt from './mobile-handoff-scan-phone.png';
 
 function activeStep(runtimeState) {
   const experience = runtimeState.objective ?? runtimeState.experience ?? runtimeState;
@@ -36,6 +37,17 @@ function renderHotspots(manifest, step) {
 export function renderImmersiveGate(experience, runtimeState = {}, options = {}) {
   const selected = runtimeState.selectedMode ?? runtimeState.support ?? {};
   const canLaunch = options.canLaunch !== false;
+  if (!canLaunch) {
+    return `
+      <section class="mobile-handoff" aria-label="Scan with your phone to play">
+        <div class="mobile-handoff__page">
+          <img class="mobile-handoff__art" src="${mobileHandoffArt}" alt="Scan with your phone to play" />
+          <div class="mobile-handoff__qr" data-mobile-handoff-qr></div>
+        </div>
+      </section>
+    `;
+  }
+
   const launchControl = canLaunch
     ? '<button class="ar-landing__start immersive-gate__start" data-start-ar>Launch full 3D AR</button>'
     : '<div class="ar-landing__start immersive-gate__start" aria-disabled="true">Open on mobile to launch AR</div>';

@@ -145,7 +145,10 @@ async function renderImmersiveRoute(experience) {
   });
 
   app.innerHTML = renderImmersiveGate(experience, activeRuntime.getState(), { canLaunch });
-  if (!canLaunch) return;
+  if (!canLaunch) {
+    await renderQrCode(app.querySelector('[data-mobile-handoff-qr]'), getPageUrl(experience, origin));
+    return;
+  }
 
   app.querySelector('[data-start-ar]')?.addEventListener('click', async () => {
     await activeRuntime.start();
