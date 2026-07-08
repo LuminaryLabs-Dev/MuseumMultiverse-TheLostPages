@@ -2,31 +2,6 @@ import './focusCoverSplash.css';
 
 const SHOW_MS = 3200;
 const FADE_MS = 360;
-const BASE_PATH = import.meta.env.BASE_URL || '/';
-const COVER_PAYLOAD_URL = `${BASE_PATH.replace(/\/$/, '/') }lost-pages-cover-upscaled.b64`;
-const RAW_COVER_PAYLOAD_URL = 'https://raw.githubusercontent.com/LuminaryLabs-Dev/MuseumMultiverse-TheLostPages/main/lost-pages-cover-upscaled.jpg';
-
-let coverPromise;
-
-function makeDataImage(payload) {
-  const cleanPayload = String(payload || '').replace(/\s+/g, '');
-  return cleanPayload.startsWith('/9j/') ? `url('data:image/jpeg;base64,${cleanPayload}')` : '';
-}
-
-function fetchCoverPayload(url) {
-  return fetch(url, { cache: 'force-cache' }).then((response) => (response.ok ? response.text() : ''));
-}
-
-function getCoverImage() {
-  if (!coverPromise) {
-    coverPromise = fetchCoverPayload(COVER_PAYLOAD_URL)
-      .then(makeDataImage)
-      .then((backgroundImage) => backgroundImage || fetchCoverPayload(RAW_COVER_PAYLOAD_URL).then(makeDataImage))
-      .catch(() => '');
-  }
-
-  return coverPromise;
-}
 
 function makeSplash() {
   const el = document.createElement('div');
@@ -48,7 +23,6 @@ export function installFocusCoverSplash() {
   if (typeof window === 'undefined' || typeof document === 'undefined') return () => {};
 
   const splash = makeSplash();
-  const cover = splash.querySelector('.focus-cover-splash__cover');
   let showTimer = 0;
   let fadeTimer = 0;
   let wasAway = false;
@@ -66,15 +40,6 @@ export function installFocusCoverSplash() {
     showTimer = window.setTimeout(fadeOut, SHOW_MS);
   }
 
-  function loadThenShow() {
-    getCoverImage().then((backgroundImage) => {
-      if (backgroundImage && cover && cover.isConnected) {
-        cover.style.backgroundImage = backgroundImage;
-      }
-      show();
-    });
-  }
-
   function markAway() {
     wasAway = true;
   }
@@ -82,7 +47,7 @@ export function installFocusCoverSplash() {
   function maybeShow() {
     if (!wasAway || document.visibilityState === 'hidden') return;
     wasAway = false;
-    loadThenShow();
+    show();
   }
 
   function onVisibility() {
@@ -93,7 +58,7 @@ export function installFocusCoverSplash() {
   window.addEventListener('blur', markAway);
   window.addEventListener('focus', maybeShow);
   document.addEventListener('visibilitychange', onVisibility);
-  window.requestAnimationFrame(loadThenShow);
+  window.requestAnimationFrame(show);
 
   return () => {
     window.clearTimeout(showTimer);

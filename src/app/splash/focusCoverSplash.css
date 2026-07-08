@@ -20,16 +20,16 @@
 
 .focus-cover-splash__cover {
   position: relative;
-  width: min(100vw, calc((100dvh - 28px) * 0.7076));
+  width: min(100vw, calc((100dvh - 28px) * 0.665));
   height: auto;
-  aspect-ratio: 1055 / 1491;
+  aspect-ratio: 1023 / 1538;
   max-width: 920px;
   max-height: calc(100dvh - 28px);
   overflow: hidden;
   border: 0;
   border-radius: 0;
   background-color: #020207;
-  background-image: url('./focusCoverSplash-cover.jpg');
+  background-image: url('./focusCoverSplash-cover.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -51,7 +51,7 @@
   }
 
   .focus-cover-splash__cover {
-    width: min(100vw, calc((100dvh - 16px) * 0.7076));
+    width: min(100vw, calc((100dvh - 16px) * 0.665));
     max-height: calc(100dvh - 16px);
   }
 }
