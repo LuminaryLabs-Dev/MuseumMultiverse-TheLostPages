@@ -1,3 +1,3 @@
-Lost Pages comic rail updated.
+Lost Pages rail texture path corrected.
 
-The stable rail now uses the generated JR comic artwork for the first three page textures with QR overlays, while the entry splash remains unchanged.
+The first rail page now uses the original high-resolution imported image asset path again, and Pages 2–3 render as high-resolution generated canvas comic pages with QR overlays.
