@@ -4,6 +4,9 @@ import { createPagePivotService } from '../page-pivot/service.js';
 import { createPlaneMeshCreatorService } from '../plane-mesh-creator/service.js';
 import sleepingGalleryReference from './sleeping-gallery-reference.png';
 
+const SLEEPING_GALLERY_REFERENCE_SIZE = { width: 1023, height: 1537 };
+const SLEEPING_GALLERY_QR_CENTER = { x: 510.5, y: 744 };
+
 function drawWrapped(ctx, text, x, y, width, lineHeight, maxLines) {
   const words = String(text || '').split(' ');
   let line = '';
@@ -83,13 +86,18 @@ function createSleepingGalleryQrTexture(page) {
 }
 
 function overlayPositionFor(origin, faceWidth, faceHeight, overlaySize) {
+  const u = SLEEPING_GALLERY_QR_CENTER.x / SLEEPING_GALLERY_REFERENCE_SIZE.width;
+  const v = 1 - SLEEPING_GALLERY_QR_CENTER.y / SLEEPING_GALLERY_REFERENCE_SIZE.height;
   if (origin === 'bottom-left') {
     return {
-      x: (faceWidth - overlaySize) / 2,
-      y: (faceHeight - overlaySize) / 2
+      x: u * faceWidth - overlaySize / 2,
+      y: v * faceHeight - overlaySize / 2
     };
   }
-  return { x: 0, y: 0 };
+  return {
+    x: (u - 0.5) * faceWidth,
+    y: (v - 0.5) * faceHeight
+  };
 }
 
 function drawPanelFrame(ctx, x, y, w, h, fill, stroke = '#17110d') {

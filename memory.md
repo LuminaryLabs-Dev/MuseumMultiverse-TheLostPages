@@ -43,4 +43,5 @@ Conventions:
 - The first comic page now uses a centered four-panel layout with a reserved QR space in the middle and story copy about a shy kid finding expression in the museum.
 - The first comic page now uses the generated sleeping-gallery reference PNG directly as the page art, with the existing QR rendered as a centered overlay plane.
 - Aha, I found the smoking gun: the canvas-composited image drew correctly offscreen, but the visible Three.js page stayed gray; splitting base art and QR into separate textures fixed the render.
+- The sleeping-gallery QR overlay is now mapped from the generated PNG's actual middle burst-circle coordinates instead of the card's generic center.
 - Prefer additive changes; do not introduce a second source of truth for experience metadata.
