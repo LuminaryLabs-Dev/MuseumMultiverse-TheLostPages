@@ -39,4 +39,5 @@ Conventions:
 - The focus cover splash now centers the art as an image element and uses redundant reveal triggers so it reliably hands off to the page view.
 - The portal landing page curve was narrowed so the floating pages stay centered in the reveal view.
 - The stable rail page pivot now uses centered visual offsets so the floating pages sit in the frame instead of pinning to the bottom-left corner.
+- The stable rail camera now looks slightly left so the active page lands in the screen center like the splash.
 - Prefer additive changes; do not introduce a second source of truth for experience metadata.

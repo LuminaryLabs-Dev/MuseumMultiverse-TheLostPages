@@ -6,6 +6,7 @@ import './portalLanding.css';
 
 const CAMERA_Y = 0.42;
 const CAMERA_Z = 4.15;
+const CAMERA_LOOK_X = -0.24;
 const CAMERA_LOOK_Y = 0.16;
 
 export function renderStableRailMarkup() {
@@ -151,7 +152,7 @@ export function enhanceStableRail(root, options = {}) {
     const flash = Math.max(0, Math.min(1, railState.turn?.flashIntensity ?? 0));
     lostPages.focus(railState.activeIndex);
     camera.position.lerp(new THREE.Vector3(0, CAMERA_Y, CAMERA_Z), 0.04);
-    camera.lookAt(0, CAMERA_LOOK_Y, 0);
+    camera.lookAt(CAMERA_LOOK_X, CAMERA_LOOK_Y, 0);
     light.intensity = 1.65 + flash * 0.55;
     flashLight.intensity = flash * 3.2;
     if (flashLayer) {
