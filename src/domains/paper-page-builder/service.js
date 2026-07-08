@@ -229,7 +229,393 @@ function drawCenterBurst(ctx, x, y, size, accent, glow) {
   ctx.restore();
 }
 
+function drawPageQr(ctx, page, x, y, size) {
+  const target = page.qrTarget || page.routeUrl || page.routeHref || (page.slug ? `/ar/${page.slug}/` : '');
+  drawQr(ctx, target, x, y, size);
+}
+
+function drawComicCaption(ctx, text, x, y, w, h, fontSize = 28) {
+  ctx.save();
+  ctx.fillStyle = '#f6d99a';
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = '#29231d';
+  ctx.lineWidth = 5;
+  ctx.strokeRect(x, y, w, h);
+  ctx.fillStyle = '#2a251f';
+  ctx.font = `900 ${fontSize}px "Arial Black", Impact, sans-serif`;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  drawWrapped(ctx, text, x + 18, y + 16, w - 36, Math.round(fontSize * 1.18), 4);
+  ctx.restore();
+}
+
+function drawThoughtBubble(ctx, text, x, y, w, h) {
+  ctx.save();
+  ctx.fillStyle = '#f7f0df';
+  ctx.strokeStyle = '#4b443a';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.ellipse(x + w * 0.5, y + h * 0.5, w * 0.5, h * 0.42, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#2a251f';
+  ctx.font = '900 25px "Arial Black", Impact, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  drawWrapped(ctx, text, x + 18, y + h * 0.42, w - 36, 30, 3);
+  ctx.restore();
+}
+
+function drawHalftone(ctx, x, y, w, h, color = '#111111', spacing = 18, radius = 3, alpha = 0.22) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color;
+  for (let row = 0; row < h / spacing + 2; row += 1) {
+    for (let col = 0; col < w / spacing + 2; col += 1) {
+      const px = x + col * spacing + (row % 2) * spacing * 0.5;
+      const py = y + row * spacing;
+      const pulse = 0.7 + ((row + col) % 4) * 0.12;
+      ctx.beginPath();
+      ctx.arc(px, py, radius * pulse, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+
+function drawPosterBands(ctx, x, y, w, h, colors) {
+  const bandH = h / colors.length;
+  colors.forEach((color, index) => {
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y + index * bandH, w, bandH + 1);
+  });
+}
+
+function drawJrProfile(ctx, x, y, scale, facing = 1) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale * facing, scale);
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#211814';
+  ctx.lineWidth = 7;
+  ctx.fillStyle = '#2e221d';
+  ctx.beginPath();
+  ctx.arc(0, -70, 42, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  drawHalftone(ctx, -42, -112, 84, 84, '#0c0908', 13, 2.2, 0.2);
+  ctx.fillStyle = '#8a5135';
+  ctx.beginPath();
+  ctx.arc(12, -42, 28, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#2b2420';
+  ctx.beginPath();
+  ctx.arc(24, -48, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,215,148,0.55)';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.arc(20, -54, 18, -0.2, 1.35);
+  ctx.stroke();
+  ctx.strokeStyle = '#211814';
+  ctx.lineWidth = 7;
+  ctx.fillStyle = '#9d3d35';
+  ctx.beginPath();
+  ctx.roundRect?.(-24, -6, 52, 92, 8);
+  if (!ctx.roundRect) ctx.rect(-24, -6, 52, 92);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#c64e3e';
+  ctx.fillRect(-18, 2, 22, 72);
+  ctx.fillStyle = '#6e2c2b';
+  ctx.fillRect(-38, 4, 22, 78);
+  ctx.fillStyle = '#233d51';
+  ctx.fillRect(-66, 14, 42, 76);
+  ctx.strokeRect(-66, 14, 42, 76);
+  ctx.fillStyle = '#355b78';
+  ctx.fillRect(-58, 28, 18, 34);
+  ctx.fillStyle = '#d1b15d';
+  ctx.beginPath();
+  ctx.arc(-44, 42, 8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawColumns(ctx, x, y, w, h) {
+  ctx.save();
+  ctx.strokeStyle = '#2b261f';
+  ctx.lineWidth = 6;
+  for (let i = 0; i < 4; i += 1) {
+    const px = x + w * (0.18 + i * 0.2);
+    const columnGradient = ctx.createLinearGradient(px, y, px + w * 0.055, y);
+    columnGradient.addColorStop(0, '#625e55');
+    columnGradient.addColorStop(0.5, '#b9ad91');
+    columnGradient.addColorStop(1, '#565249');
+    ctx.fillStyle = columnGradient;
+    ctx.fillRect(px, y + h * 0.2, w * 0.055, h * 0.68);
+    ctx.strokeRect(px, y + h * 0.2, w * 0.055, h * 0.68);
+    ctx.fillStyle = 'rgba(255,230,166,0.35)';
+    ctx.fillRect(px + w * 0.014, y + h * 0.22, w * 0.012, h * 0.6);
+    ctx.fillStyle = '#3f3b34';
+    ctx.fillRect(px + w * 0.04, y + h * 0.22, w * 0.01, h * 0.62);
+    ctx.fillRect(px - 10, y + h * 0.16, w * 0.055 + 20, 16);
+    ctx.fillRect(px - 14, y + h * 0.88, w * 0.055 + 28, 16);
+  }
+  drawHalftone(ctx, x, y, w, h, '#17130f', 22, 2.4, 0.16);
+  ctx.restore();
+}
+
+function drawArtifact(ctx, x, y, scale, color = '#d0aa63') {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+  ctx.fillStyle = color;
+  ctx.strokeStyle = '#2b241d';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 38, 54, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(255,231,142,0.7)';
+  ctx.beginPath();
+  ctx.ellipse(-12, -16, 12, 20, -0.4, 0, Math.PI * 2);
+  ctx.fill();
+  drawHalftone(ctx, -36, -52, 72, 104, '#3b2613', 12, 1.8, 0.18);
+  ctx.strokeStyle = 'rgba(43,36,29,0.62)';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(-18, -6);
+  ctx.bezierCurveTo(-4, -24, 18, -22, 20, -4);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(-12, 10, 5, 0, Math.PI * 2);
+  ctx.arc(14, 8, 5, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawDinoSkull(ctx, x, y, scale) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+  ctx.rotate(-0.16);
+  ctx.fillStyle = '#c0aa82';
+  ctx.strokeStyle = '#2b241d';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 86, 44, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#e6d0a1';
+  ctx.beginPath();
+  ctx.ellipse(-20, -12, 38, 14, -0.15, 0, Math.PI * 2);
+  ctx.fill();
+  drawHalftone(ctx, -82, -42, 170, 86, '#5a4228', 14, 2.1, 0.18);
+  ctx.fillStyle = '#332a22';
+  for (let i = 0; i < 4; i += 1) {
+    ctx.beginPath();
+    ctx.ellipse(-36 + i * 22, -6, 10, 14, 0.2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.strokeStyle = '#2b241d';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(48, 14);
+  ctx.lineTo(112, 40);
+  ctx.lineTo(32, 36);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawReferencePanelArt(ctx, index, x, y, w, h, accent, glow) {
+  const palettes = [
+    ['#b7aa8c', '#7c827d', '#424743'],
+    ['#8a908b', '#626d70', '#33383c'],
+    ['#3b3444', '#7b5633', '#d7a84c'],
+    ['#215e9a', '#27a5c2', '#ffb43d', '#e74746']
+  ];
+  drawPosterBands(ctx, x, y, w, h, palettes[index] || palettes[0]);
+  drawHalftone(ctx, x, y, w, h, index === 3 ? '#1b1940' : '#1b1713', 17, 2.6, index === 3 ? 0.18 : 0.22);
+  ctx.strokeStyle = index === 3 ? 'rgba(255,248,185,0.28)' : 'rgba(245,229,174,0.18)';
+  ctx.lineWidth = 5;
+  for (let i = -2; i < 8; i += 1) {
+    ctx.beginPath();
+    ctx.moveTo(x + i * w * 0.22, y + h);
+    ctx.lineTo(x + i * w * 0.22 + w * 0.55, y);
+    ctx.stroke();
+  }
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+
+  if (index === 0) {
+    ctx.fillStyle = '#494941';
+    ctx.fillRect(x + w * 0.08, y + h * 0.73, w * 0.82, h * 0.08);
+    ctx.fillStyle = '#2f332f';
+    ctx.fillRect(x + w * 0.05, y + h * 0.8, w * 0.86, h * 0.18);
+    drawColumns(ctx, x + w * 0.28, y + h * 0.08, w * 0.7, h * 0.82);
+    drawJrProfile(ctx, x + w * 0.22, y + h * 0.78, Math.min(w, h) / 280, 1);
+    drawThoughtBubble(ctx, "This place does not look like much...", x + w * 0.58, y + h * 0.48, w * 0.34, h * 0.18);
+  }
+
+  if (index === 1) {
+    ctx.fillStyle = '#34383d';
+    ctx.fillRect(x, y + h * 0.58, w, h * 0.42);
+    drawColumns(ctx, x + w * 0.08, y + h * 0.08, w * 0.58, h * 0.78);
+    drawDinoSkull(ctx, x + w * 0.78, y + h * 0.23, Math.min(w, h) / 360);
+    drawArtifact(ctx, x + w * 0.73, y + h * 0.62, Math.min(w, h) / 360, '#bfb091');
+    drawJrProfile(ctx, x + w * 0.38, y + h * 0.76, Math.min(w, h) / 300, -1);
+    drawThoughtBubble(ctx, 'Just old stuff. Nothing for me.', x + w * 0.13, y + h * 0.28, w * 0.34, h * 0.18);
+  }
+
+  if (index === 2) {
+    const burst = ctx.createRadialGradient(x + w * 0.58, y + h * 0.48, 10, x + w * 0.58, y + h * 0.48, w * 0.48);
+    burst.addColorStop(0, glow);
+    burst.addColorStop(0.38, '#d9a650');
+    burst.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = burst;
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = 'rgba(255,235,120,0.72)';
+    ctx.lineWidth = 5;
+    for (let i = 0; i < 18; i += 1) {
+      const a = (Math.PI * 2 * i) / 18;
+      ctx.beginPath();
+      ctx.moveTo(x + w * 0.58, y + h * 0.48);
+      ctx.lineTo(x + w * 0.58 + Math.cos(a) * w * 0.62, y + h * 0.48 + Math.sin(a) * h * 0.62);
+      ctx.stroke();
+    }
+    drawJrProfile(ctx, x + w * 0.22, y + h * 0.78, Math.min(w, h) / 220, 1);
+    drawArtifact(ctx, x + w * 0.68, y + h * 0.5, Math.min(w, h) / 220, '#c99643');
+    drawThoughtBubble(ctx, 'Wait... what is that light?', x + w * 0.54, y + h * 0.8, w * 0.4, h * 0.18);
+  }
+
+  if (index === 3) {
+    const cx = x + w * 0.48;
+    const cy = y + h * 0.48;
+    ctx.strokeStyle = 'rgba(255,244,160,0.72)';
+    ctx.lineWidth = 8;
+    for (let i = 0; i < 20; i += 1) {
+      const a = (Math.PI * 2 * i) / 20;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(a) * w, cy + Math.sin(a) * h);
+      ctx.stroke();
+    }
+    drawHalftone(ctx, x, y, w, h, '#ffef82', 14, 2.4, 0.2);
+    drawJrProfile(ctx, x + w * 0.42, y + h * 0.78, Math.min(w, h) / 300, 1);
+    drawDinoSkull(ctx, x + w * 0.72, y + h * 0.32, Math.min(w, h) / 420);
+    drawArtifact(ctx, x + w * 0.28, y + h * 0.35, Math.min(w, h) / 320, '#e1bd64');
+    ctx.fillStyle = '#eadc9c';
+    ctx.strokeStyle = '#2b241d';
+    ctx.lineWidth = 5;
+    ctx.fillRect(x + w * 0.55, y + h * 0.63, w * 0.18, h * 0.12);
+    ctx.strokeRect(x + w * 0.55, y + h * 0.63, w * 0.18, h * 0.12);
+  }
+
+  ctx.restore();
+}
+
+function drawReferenceStyleComicPage(ctx, page, canvas) {
+  const w = canvas.width;
+  const h = canvas.height;
+  const ink = '#1f1a14';
+  const accent = page.accent || '#7ec6b8';
+  const glow = page.glow || '#ccfff4';
+  const panels = Array.isArray(page.panels) && page.panels.length === 4 ? page.panels : [];
+
+  ctx.fillStyle = '#010101';
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.save();
+  ctx.font = '900 70px "Arial Black", Impact, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = '#bd1f1d';
+  ctx.fillText('MUSEUM MULTIVERSE', 42, 52);
+  ctx.fillStyle = '#ffd43b';
+  ctx.fillText('MUSEUM MULTIVERSE', 34, 42);
+  ctx.font = '900 20px Arial, sans-serif';
+  ctx.fillStyle = '#d8c7a7';
+  ctx.fillText('THE LOST CHAPTERS', 40, 126);
+  ctx.restore();
+
+  const pageH = Math.round(h * 0.86);
+  const pageW = Math.round(pageH * 0.67);
+  const pageX = Math.round((w - pageW) / 2);
+  const pageY = Math.round(h * 0.06);
+  const pad = Math.round(pageW * 0.034);
+  const gutter = Math.round(pageW * 0.014);
+
+  ctx.fillStyle = '#211f2e';
+  ctx.fillRect(pageX + 46, pageY - 66, pageW + 120, pageH + 110);
+  ctx.fillStyle = '#eee9d7';
+  ctx.fillRect(pageX, pageY, pageW, pageH);
+  ctx.strokeStyle = '#0f0f10';
+  ctx.lineWidth = 14;
+  ctx.strokeRect(pageX, pageY, pageW, pageH);
+  ctx.strokeStyle = '#b8ad94';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(pageX + 18, pageY + 18, pageW - 36, pageH - 36);
+
+  const innerX = pageX + pad;
+  const innerY = pageY + pad;
+  const innerW = pageW - pad * 2;
+  const innerH = pageH - pad * 2;
+  const colW = Math.round((innerW - gutter) / 2);
+  const topH = Math.round(innerH * 0.49);
+  const bottomH = innerH - topH - gutter;
+  const boxes = [
+    { x: innerX, y: innerY, w: colW, h: topH },
+    { x: innerX + colW + gutter, y: innerY, w: colW, h: topH },
+    { x: innerX, y: innerY + topH + gutter, w: colW, h: bottomH },
+    { x: innerX + colW + gutter, y: innerY + topH + gutter, w: colW, h: bottomH }
+  ];
+
+  boxes.forEach((box, index) => {
+    drawReferencePanelArt(ctx, index, box.x, box.y, box.w, box.h, accent, glow);
+    ctx.strokeStyle = '#161411';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(box.x, box.y, box.w, box.h);
+  });
+
+  drawComicCaption(ctx, 'At first, the museum feels quiet and ordinary.', boxes[0].x + 26, boxes[0].y + 24, boxes[0].w * 0.48, boxes[0].h * 0.2, 24);
+  drawComicCaption(ctx, 'Inside, it feels the same.', boxes[1].x + 28, boxes[1].y + 24, boxes[1].w * 0.45, boxes[1].h * 0.16, 25);
+  drawComicCaption(ctx, 'Then something catches his eye.', boxes[2].x + 26, boxes[2].y + 24, boxes[2].w * 0.42, boxes[2].h * 0.2, 22);
+  drawComicCaption(ctx, 'Suddenly, the museum is alive. It is endless. It is me.', boxes[3].x + boxes[3].w * 0.48, boxes[3].y + 24, boxes[3].w * 0.44, boxes[3].h * 0.2, 21);
+
+  const qrOuter = Math.round(pageW * 0.36);
+  const qrX = Math.round(pageX + pageW / 2 - qrOuter / 2);
+  const qrY = Math.round(pageY + pageH * 0.5 - qrOuter * 0.34);
+  drawCenterBurst(ctx, qrX - 42, qrY - 42, qrOuter + 84, accent, glow);
+
+  ctx.fillStyle = '#f9f3e5';
+  ctx.beginPath();
+  ctx.arc(qrX + qrOuter / 2, qrY + qrOuter / 2, qrOuter * 0.47, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#f9f3e5';
+  ctx.lineWidth = 28;
+  ctx.stroke();
+  ctx.strokeStyle = ink;
+  ctx.lineWidth = 8;
+  ctx.stroke();
+
+  const qrSize = Math.round(qrOuter * 0.64);
+  drawPageQr(ctx, page, Math.round(qrX + (qrOuter - qrSize) / 2), Math.round(qrY + (qrOuter - qrSize) / 2), qrSize);
+}
+
 function drawComicPage(ctx, page, canvas) {
+  if (page.qrBurst) {
+    drawReferenceStyleComicPage(ctx, page, canvas);
+    return;
+  }
+
   const pageMarginY = Math.round(canvas.height * 0.032);
   const pageHeight = canvas.height - pageMarginY * 2;
   const pageWidth = Math.round(pageHeight * (1023 / 1538));
@@ -414,7 +800,7 @@ export function createPaperPageBuilderService({
 
     const face = new THREE.Mesh(
       plane({ width: faceWidth, height: faceHeight, segmentsX, segmentsY }),
-      page.slug === 'sleeping-gallery'
+      page.slug === 'sleeping-gallery' || page.qrBurst
         ? new THREE.MeshBasicMaterial({ map: textureFor(page), transparent: true })
         : new THREE.MeshStandardMaterial({ map: textureFor(page), roughness: 0.5, metalness: 0.01 })
     );

@@ -6,7 +6,7 @@ export const copy = {
   description:
     'JR enters the museum shy and small, then feels the hall open around him like it was waiting.',
   pitch:
-    'The museum tilts, the crowd fades, and the artifacts begin answering JR’s imagination.',
+    'The museum tilts, the crowd fades, and the artifacts begin answering JR\'s imagination.',
   panels: [
     'JR slips in shy and quiet, but the museum feels like it has been waiting for him.',
     'The room tilts and stretches as the artifacts glow and the people around him fade away.',
