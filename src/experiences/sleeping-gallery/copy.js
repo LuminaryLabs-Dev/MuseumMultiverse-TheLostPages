@@ -4,11 +4,11 @@ export const copy = {
   title: 'The Sleeping Gallery',
   qrTitle: 'Scan to Wake the Museum',
   description:
-    'The entrance hall stirs, the frames breathe, and a hidden first note flickers into view.',
+    'A shy kid walks into a museum that seems plain and quiet, then realizes the whole place is waiting for them to speak back.',
   pitch:
-    'Tap the haunted paintings in the right order to wake the museum and recover the first key fragment.',
+    'What starts as a bland first impression turns into a place where color, sound, and self-expression finally have room to happen.',
   collectible: 'Gallery Key Fragment',
-  prompt: 'Tap five lit frames before the gallery falls asleep again.',
+  prompt: 'Leave the center square clear for the scan, then follow the gallery as it wakes up.',
   completeText: 'Gallery awakened. The first fragment is locked in.',
   accent: '#cda96d',
   deep: '#141311',

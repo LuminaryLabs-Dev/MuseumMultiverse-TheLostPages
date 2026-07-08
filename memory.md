@@ -40,4 +40,5 @@ Conventions:
 - The portal landing page curve was narrowed so the floating pages stay centered in the reveal view.
 - The stable rail page pivot now uses centered visual offsets so the floating pages sit in the frame instead of pinning to the bottom-left corner.
 - The stable rail camera now looks slightly left so the active page lands in the screen center like the splash.
+- The first comic page now uses a centered four-panel layout with a reserved QR space in the middle and story copy about a shy kid finding expression in the museum.
 - Prefer additive changes; do not introduce a second source of truth for experience metadata.
