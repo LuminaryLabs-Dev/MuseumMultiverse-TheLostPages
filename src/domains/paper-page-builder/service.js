@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import QRCode from 'qrcode';
 import { createPagePivotService } from '../page-pivot/service.js';
 import { createPlaneMeshCreatorService } from '../plane-mesh-creator/service.js';
+import sleepingGalleryReference from './sleeping-gallery-reference.png';
 
 function drawWrapped(ctx, text, x, y, width, lineHeight, maxLines) {
   const words = String(text || '').split(' ');
@@ -53,6 +54,42 @@ function shortText(text, maxWords = 12) {
   if (!words.length) return '';
   if (words.length <= maxWords) return words.join(' ');
   return `${words.slice(0, maxWords).join(' ')}...`;
+}
+
+function createSleepingGalleryReferenceTexture() {
+  const texture = new THREE.TextureLoader().load(sleepingGalleryReference);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  texture.anisotropy = 4;
+  return texture;
+}
+
+function createSleepingGalleryQrTexture(page) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawQr(ctx, page.qrTarget || page.routeUrl || page.routeHref, 64, 64, 384);
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function overlayPositionFor(origin, faceWidth, faceHeight, overlaySize) {
+  if (origin === 'bottom-left') {
+    return {
+      x: (faceWidth - overlaySize) / 2,
+      y: (faceHeight - overlaySize) / 2
+    };
+  }
+  return { x: 0, y: 0 };
 }
 
 function drawPanelFrame(ctx, x, y, w, h, fill, stroke = '#17110d') {
@@ -278,15 +315,24 @@ export function createPaperPageBuilderService({
     const key = page.slug ?? page.id ?? String(page.number ?? textureCache.size);
     if (textureCache.has(key)) return textureCache.get(key);
 
+    if (page.slug === 'sleeping-gallery') {
+      const texture = createSleepingGalleryReferenceTexture();
+      textureCache.set(key, texture);
+      state.createdTextures = textureCache.size;
+      return texture;
+    }
+
     const canvas = document.createElement('canvas');
     canvas.width = textureWidth;
     canvas.height = textureHeight;
     const ctx = canvas.getContext('2d');
-    drawComicPage(ctx, page, canvas);
-
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.generateMipmaps = false;
     texture.anisotropy = 4;
+    drawComicPage(ctx, page, canvas);
     textureCache.set(key, texture);
     state.createdTextures = textureCache.size;
     return texture;
@@ -313,10 +359,26 @@ export function createPaperPageBuilderService({
 
     const face = new THREE.Mesh(
       plane({ width: faceWidth, height: faceHeight, segmentsX, segmentsY }),
-      new THREE.MeshStandardMaterial({ map: textureFor(page), roughness: 0.5, metalness: 0.01 })
+      page.slug === 'sleeping-gallery'
+        ? new THREE.MeshBasicMaterial({ map: textureFor(page), transparent: true })
+        : new THREE.MeshStandardMaterial({ map: textureFor(page), roughness: 0.5, metalness: 0.01 })
     );
     face.position.z = 0.02;
     face.userData.paperGrid = { segmentsX, segmentsY, origin };
+
+    const qrOverlaySize = page.slug === 'sleeping-gallery' ? faceWidth * 0.26 : 0;
+    const qrOverlayPosition = qrOverlaySize ? overlayPositionFor(origin, faceWidth, faceHeight, qrOverlaySize) : null;
+    const qrOverlay = qrOverlaySize ? new THREE.Mesh(
+      plane({ width: qrOverlaySize, height: qrOverlaySize, segmentsX: 1, segmentsY: 1 }),
+      new THREE.MeshBasicMaterial({
+        map: createSleepingGalleryQrTexture(page),
+        transparent: true,
+        depthWrite: false
+      })
+    ) : null;
+    if (qrOverlay) {
+      qrOverlay.position.set(qrOverlayPosition.x, qrOverlayPosition.y, 0.066);
+    }
 
     const shine = new THREE.Mesh(
       plane({ width: faceWidth, height: faceHeight, segmentsX: 1, segmentsY: 1 }),
@@ -334,7 +396,7 @@ export function createPaperPageBuilderService({
     hit.userData.index = index;
 
     const pivot = localPagePivot.wrap({
-      children: [side, shadow, face, shine, hit],
+      children: [side, shadow, face, shine, ...(qrOverlay ? [qrOverlay] : []), hit],
       width: cardWidth,
       height: cardHeight,
       name: `page-${page.slug ?? index}-pivot`
@@ -353,6 +415,7 @@ export function createPaperPageBuilderService({
     group.userData.shadow = shadow;
     group.userData.side = side;
     group.userData.face = face;
+    group.userData.qrOverlay = qrOverlay;
     state.createdCards += 1;
     return group;
   }

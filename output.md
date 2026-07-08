@@ -1,3 +1,3 @@
-Lost Pages pages centered.
+Lost Pages first comic page repaired.
 
-The stable rail now centers the floating pages in the screen, and the comic pages now use a centered four-panel layout with a QR reserve in the middle.
+The sleeping-gallery page now uses the generated comic reference image as direct cover art with the existing QR overlayed in the center.
