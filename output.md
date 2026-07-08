@@ -1,3 +1,3 @@
-Lost Pages comic placeholders updated.
+Lost Pages comic rail updated.
 
-The booklet now renders the first three generated JR comic pages as placeholders with live QR overlays for their current AR routes.
+The stable rail now uses the generated JR comic artwork for the first three page textures with QR overlays, while the entry splash remains unchanged.
