@@ -1,3 +1,3 @@
-Lost Pages card scrolling now flies right without crossing the stack.
+The Lost Pages rail now keeps the complete active comic page inside the viewport.
 
-NexusSimulator confirms rightward and forward separation, a three-card motion render budget, zero console errors, and improved scrolling performance.
+Desktop, short-window, phone, and scroll-motion browser checks pass with zero console errors.

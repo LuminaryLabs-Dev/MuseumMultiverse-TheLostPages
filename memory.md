@@ -46,6 +46,7 @@ Conventions:
 - The stable rail camera now looks slightly left so the active page lands in the screen center like the splash.
 - The main rail uses one continuous card-stack model: the front page flies right/forward, three upcoming pages stay visibly stacked behind it, wheel/touch input is bounded continuous progress, and delayed settling only aligns the stack after input stops.
 - The outgoing rail card now flies right and forward, with explicit depth separation from the incoming stack. During motion no more than three cards remain render-visible.
+- The stable rail camera uses the active page's real dimensions and current viewport aspect ratio to fit the complete page on screen; short desktop windows are height-limited and narrow phones are width-limited.
 - The first comic page now uses a centered four-panel layout with a reserved QR space in the middle and story copy about a shy kid finding expression in the museum.
 - The first comic page now uses the generated sleeping-gallery reference PNG directly as the page art, with the existing QR rendered as a centered overlay plane.
 - Aha, I found the smoking gun: the canvas-composited image drew correctly offscreen, but the visible Three.js page stayed gray; splitting base art and QR into separate textures fixed the render.

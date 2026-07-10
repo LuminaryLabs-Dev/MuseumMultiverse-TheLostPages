@@ -125,6 +125,13 @@ Validation:
 - Screenshot-free Chromium sustained-scroll benchmark measured 51 FPS over 120 frames with a 17.3ms p95 frame interval.
 - Full evidence: `agent/reports/2026-07-10-nexussimulator-card-rail-validation.md`.
 
+### Viewport-fit pass
+
+- Replaced fixed desktop/mobile camera distances with an aspect-aware fit derived from the active page geometry.
+- Centered the camera target so the full active page remains visible vertically.
+- Playwright human-view proof passed at 1440x900, 1600x720, and 390x844 with zero console errors.
+- Scroll-motion regression retained right/forward depth clearance and the three-card render budget.
+
 ## 2026-06-26
 
 Completed:

@@ -124,3 +124,14 @@ Changed:
 Reason:
 
 The outgoing card appeared to pass through prior cards and the software-WebGL proof exposed avoidable texture and material costs.
+
+### Aspect-aware rail framing
+
+Changed:
+
+- Replaced fixed rail camera distances with page-dimension and viewport-aspect fitting.
+- Added viewport-fit telemetry for browser and simulator validation.
+
+Reason:
+
+The active comic page was vertically cropped in shorter desktop browser windows.

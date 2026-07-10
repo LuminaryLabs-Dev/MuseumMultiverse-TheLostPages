@@ -4,10 +4,14 @@ import { createLostPageService } from '../../domains/lost-page/service.js';
 import { createPageRailMovementService } from '../../domains/page-rail-movement/service.js';
 import './portalLanding.css';
 
-const CAMERA_Y = 0.42;
-const CAMERA_Z = 4.15;
+const CAMERA_Y = 0;
+const CAMERA_Z = 5.4;
 const CAMERA_LOOK_X = -0.24;
-const CAMERA_LOOK_Y = 0.16;
+const CAMERA_LOOK_Y = 0;
+const ACTIVE_CARD_WIDTH = 2.12 * 1.2;
+const ACTIVE_CARD_HEIGHT = 2.9 * 1.2;
+const VERTICAL_VIEWPORT_FILL = 0.76;
+const HORIZONTAL_VIEWPORT_FILL = 0.86;
 
 export function renderStableRailMarkup() {
   return `
@@ -169,6 +173,9 @@ export function enhanceStableRail(root, options = {}) {
   let targetCameraY = CAMERA_Y;
   let targetCameraZ = CAMERA_Z;
   const cameraTarget = new THREE.Vector3(0, CAMERA_Y, CAMERA_Z);
+  let viewportWidth = 1;
+  let viewportHeight = 1;
+  let viewportLimitingAxis = 'vertical';
   let lastFocusedIndex = -1;
   let lastFrameAt = performance.now();
   let telemetryStartedAt = lastFrameAt;
@@ -180,12 +187,17 @@ export function enhanceStableRail(root, options = {}) {
   function resize() {
     const w = Math.max(1, mount.clientWidth || window.innerWidth || 1);
     const h = Math.max(1, mount.clientHeight || window.innerHeight || 1);
+    viewportWidth = w;
+    viewportHeight = h;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
-    const compact = w < 680;
-    targetCameraY = compact ? 0.34 : CAMERA_Y;
-    targetCameraZ = compact ? 5.9 : CAMERA_Z;
+    const halfVerticalFov = THREE.MathUtils.degToRad(camera.fov / 2);
+    const verticalDistance = (ACTIVE_CARD_HEIGHT / 2) / (Math.tan(halfVerticalFov) * VERTICAL_VIEWPORT_FILL);
+    const horizontalDistance = (ACTIVE_CARD_WIDTH / 2) / (Math.tan(halfVerticalFov) * camera.aspect * HORIZONTAL_VIEWPORT_FILL);
+    targetCameraY = CAMERA_Y;
+    targetCameraZ = Math.max(verticalDistance, horizontalDistance);
+    viewportLimitingAxis = verticalDistance >= horizontalDistance ? 'vertical' : 'horizontal';
   }
 
   function wheel(event) {
@@ -294,6 +306,12 @@ export function enhanceStableRail(root, options = {}) {
         renderVisibleCount: visibleCards.filter((card) => card.opacity > 0.01).length,
         outgoingCount: outgoingCards.length,
         outgoingClear: outgoingCards.every((card) => card.railPosition.x > 0 && card.railPosition.z - frontStackZ >= 0.12),
+        viewportFit: {
+          width: viewportWidth,
+          height: viewportHeight,
+          cameraZ: targetCameraZ,
+          limitingAxis: viewportLimitingAxis
+        },
         cards: railState.cards
       },
       recording: {
@@ -310,7 +328,7 @@ export function enhanceStableRail(root, options = {}) {
   }
 
   resize();
-  camera.position.set(0, CAMERA_Y, CAMERA_Z);
+  camera.position.set(0, targetCameraY, targetCameraZ);
   animate();
   window.addEventListener('resize', resize, { passive: true });
   window.addEventListener('keydown', key);
