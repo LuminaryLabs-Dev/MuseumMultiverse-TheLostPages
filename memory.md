@@ -44,6 +44,7 @@ Conventions:
 - The portal landing page curve was narrowed so the floating pages stay centered in the reveal view.
 - The stable rail page pivot now uses centered visual offsets so the floating pages sit in the frame instead of pinning to the bottom-left corner.
 - The stable rail camera now looks slightly left so the active page lands in the screen center like the splash.
+- The main rail uses one continuous card-stack model: the front page peels left/back, three upcoming pages stay visibly stacked behind it, wheel/touch input is bounded continuous progress, and delayed settling only aligns the stack after input stops.
 - The first comic page now uses a centered four-panel layout with a reserved QR space in the middle and story copy about a shy kid finding expression in the museum.
 - The first comic page now uses the generated sleeping-gallery reference PNG directly as the page art, with the existing QR rendered as a centered overlay plane.
 - Aha, I found the smoking gun: the canvas-composited image drew correctly offscreen, but the visible Three.js page stayed gray; splitting base art and QR into separate textures fixed the render.

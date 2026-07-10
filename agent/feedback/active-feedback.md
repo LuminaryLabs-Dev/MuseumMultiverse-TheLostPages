@@ -14,6 +14,7 @@ Status: active
 - Make the Pages workflow export static routes so direct routes can open from a phone.
 - Keep the launcher cleaner, simpler, and comic-book-like.
 - Keep motion subtle and physical.
+- Keep the main book/rail as a visible stack of cards that peels one page at a time through one continuous wheel/touch interaction; avoid snappy threshold switching.
 - Avoid heavy sepia as the default visual tone.
 - Page surfaces should look like squared paper, not rounded cards.
 - `/print/` is the primary non-AR review/presentation surface.

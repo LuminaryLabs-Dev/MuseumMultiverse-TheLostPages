@@ -173,6 +173,9 @@ export function enhanceStableRail(root, options = {}) {
   let frame = 0;
   let disposed = false;
   let startY = 0;
+  let lastTouchY = 0;
+  let targetCameraY = CAMERA_Y;
+  let targetCameraZ = CAMERA_Z;
 
   function resize() {
     const w = Math.max(1, mount.clientWidth || window.innerWidth || 1);
@@ -180,11 +183,15 @@ export function enhanceStableRail(root, options = {}) {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
+    const compact = w < 680;
+    targetCameraY = compact ? 0.34 : CAMERA_Y;
+    targetCameraZ = compact ? 5.9 : CAMERA_Z;
   }
 
   function wheel(event) {
     event.preventDefault();
-    pageRail.scroll(event.deltaY);
+    const modeScale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
+    pageRail.scroll(event.deltaY * modeScale);
   }
 
   function key(event) {
@@ -211,11 +218,20 @@ export function enhanceStableRail(root, options = {}) {
 
   function touchStart(event) {
     startY = event.touches?.[0]?.clientY ?? 0;
+    lastTouchY = startY;
+  }
+
+  function touchMove(event) {
+    const nextY = event.touches?.[0]?.clientY ?? lastTouchY;
+    const delta = lastTouchY - nextY;
+    lastTouchY = nextY;
+    if (Math.abs(delta) > 0.5) pageRail.scroll(delta * 1.25);
   }
 
   function touchEnd(event) {
     const dy = startY - (event.changedTouches?.[0]?.clientY ?? startY);
-    if (Math.abs(dy) > 36) pageRail.step(Math.sign(dy));
+    if (Math.abs(dy) < 8) return;
+    lastTouchY = 0;
   }
 
   function animate() {
@@ -223,7 +239,7 @@ export function enhanceStableRail(root, options = {}) {
     const railState = pageRail.tick();
     const flash = Math.max(0, Math.min(1, railState.turn?.flashIntensity ?? 0));
     lostPages.focus(railState.activeIndex);
-    camera.position.lerp(new THREE.Vector3(0, CAMERA_Y, CAMERA_Z), 0.04);
+    camera.position.lerp(new THREE.Vector3(0, targetCameraY, targetCameraZ), 0.04);
     camera.lookAt(CAMERA_LOOK_X, CAMERA_LOOK_Y, 0);
     light.intensity = 1.65 + flash * 0.55;
     flashLight.intensity = flash * 3.2;
@@ -250,6 +266,7 @@ export function enhanceStableRail(root, options = {}) {
   renderer.domElement.addEventListener('pointermove', move, { passive: true });
   renderer.domElement.addEventListener('click', click);
   renderer.domElement.addEventListener('touchstart', touchStart, { passive: true });
+  renderer.domElement.addEventListener('touchmove', touchMove, { passive: true });
   renderer.domElement.addEventListener('touchend', touchEnd, { passive: true });
 
   return () => {
@@ -261,6 +278,7 @@ export function enhanceStableRail(root, options = {}) {
     renderer.domElement.removeEventListener('pointermove', move);
     renderer.domElement.removeEventListener('click', click);
     renderer.domElement.removeEventListener('touchstart', touchStart);
+    renderer.domElement.removeEventListener('touchmove', touchMove);
     renderer.domElement.removeEventListener('touchend', touchEnd);
     scene.traverse((object) => {
       object.geometry?.dispose?.();

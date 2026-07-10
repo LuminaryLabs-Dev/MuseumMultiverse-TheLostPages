@@ -1,40 +1,37 @@
 const DEFAULT_ANIMATION = {
-  id: 'single-page-enchanted-book-turn',
-  description: 'A single hero page floats at rest. Scroll expands into a larger-radius book turn where the outgoing page slides outward, flips, and recedes behind the incoming page.',
-  path: 'enchanted-book-turn',
-  radius: 2.35,
-  preScrollRadius: 1.28,
-  radiusStep: 0.22,
-  horizontalReveal: 1.18,
-  incomingOffset: 0.42,
-  incomingDepth: 0.78,
-  rearDepth: 2.55,
-  depthStep: 0.34,
-  turnLift: 0.2,
-  mouseTwist: 0.11,
-  mouseLift: 0.045,
-  bobAmplitude: 0.055,
-  bobSpeed: 0.048,
-  hoverTilt: 0.028,
-  pageTurnAmount: 1.18,
-  incomingTurn: 0.42,
-  activeScale: 1.32,
-  rearScaleDrop: 0.22,
-  edgeGlowBase: 0.22,
-  edgeGlowFocus: 0.58
+  id: 'continuous-card-stack',
+  description: 'Cards rest in one readable stack. Continuous scroll peels the front card away while the next card glides forward from the deck.',
+  path: 'continuous-card-stack',
+  stackX: 0.065,
+  stackY: 0.05,
+  stackDepth: 0.14,
+  stackRotation: 0.012,
+  peelX: 1.72,
+  peelDepth: 1.5,
+  peelLift: 0.16,
+  peelRotation: 0.82,
+  mouseTwist: 0.045,
+  mouseLift: 0.025,
+  bobAmplitude: 0.018,
+  bobSpeed: 0.032,
+  hoverTilt: 0.012,
+  activeScale: 1.2,
+  stackScaleDrop: 0.035,
+  edgeGlowBase: 0.16,
+  edgeGlowFocus: 0.42
 };
 
 const DEFAULT_CONFIG = {
   animation: DEFAULT_ANIMATION,
-  path: 'enchanted-book-turn',
-  softness: 0.58,
-  settleStrength: 0.035,
-  smoothStrength: 0.105,
-  visibleDistance: 1.08,
-  scrollScale: 0.0032,
-  settlePauseFrames: 16,
-  activeScale: 1.32,
-  inactiveScaleDrop: 0.22
+  path: 'continuous-card-stack',
+  softness: 0.42,
+  settleStrength: 0.022,
+  smoothStrength: 0.082,
+  visibleAhead: 3.15,
+  visibleBehind: 1.02,
+  scrollScale: 0.00155,
+  maxScrollStep: 0.2,
+  settlePauseFrames: 42
 };
 
 function clamp(value, min, max) {
@@ -55,21 +52,6 @@ function smoothstep(edge0, edge1, value) {
   return t * t * (3 - 2 * t);
 }
 
-function pageTurnProgress(smoothIndex, direction) {
-  if (direction === 0) return 0;
-  const lower = Math.floor(smoothIndex);
-  const fraction = clamp(smoothIndex - lower, 0, 1);
-  return direction > 0 ? fraction : 1 - fraction;
-}
-
-function midpointFlash(progress, moving) {
-  if (!moving) return 0;
-  const center = 0.52;
-  const width = 0.13;
-  const shaped = Math.exp(-Math.pow((progress - center) / width, 2));
-  return shaped * smoothstep(0.1, 0.28, progress) * (1 - smoothstep(0.78, 0.96, progress));
-}
-
 function createBookTurnDescriptor({
   index,
   activeIndex,
@@ -82,76 +64,39 @@ function createBookTurnDescriptor({
   animation,
   mouse,
   frame,
-  moving,
-  direction,
-  hasInteracted,
-  flashIntensity
+  moving
 }) {
   const absDistance = Math.abs(distance);
-  const progressAway = clamp(absDistance, 0, 1);
-  const isOutgoing = moving && direction !== 0 && distance * direction < -0.001;
-  const isIncoming = moving && direction !== 0 && distance * direction > 0.001;
+  const peeled = distance < 0;
+  const peelProgress = clamp(-distance, 0, 1);
+  const stackDistance = Math.max(0, distance);
+  const isOutgoing = peeled && peelProgress < 1;
+  const isIncoming = !peeled && distance < 1;
   const bob = Math.sin(frame * animation.bobSpeed + index * 0.82) * animation.bobAmplitude;
-  const radius = hasInteracted ? animation.radius : animation.preScrollRadius;
-
-  let x = mouse.x * animation.mouseTwist;
-  let y = bob + mouse.y * animation.mouseLift;
-  let z = 0;
-  let rotationX = Math.sin(frame * animation.bobSpeed * 0.72 + index) * animation.hoverTilt + mouse.y * 0.015;
-  let rotationY = mouse.x * 0.045;
-  let rotationZ = mouse.x * -0.018;
-  let scale = animation.activeScale - away * 0.08;
-  let opacity = visible ? 1 : 0;
-  let glowIntensity = animation.edgeGlowBase + focus * animation.edgeGlowFocus;
-  let shineIntensity = 0.08 + focus * 0.18;
-  let shadowIntensity = 0.16 + focus * 0.28;
-  let computedRenderOrder = renderOrder;
-
-  if (moving && visible) {
-    if (isOutgoing) {
-      const t = easeOutCubic(progressAway);
-      const arc = Math.sin(t * Math.PI * 0.5);
-      x = direction * (animation.horizontalReveal + arc * radius * 0.42);
-      y = bob * 0.4 + Math.sin(t * Math.PI) * animation.turnLift;
-      z = -animation.rearDepth * t - animation.depthStep * progressAway;
-      rotationX = -0.08 * Math.sin(t * Math.PI) + mouse.y * 0.012;
-      rotationY = direction * (0.08 + animation.pageTurnAmount * t);
-      rotationZ = direction * (-0.12 * t);
-      scale = animation.activeScale - animation.rearScaleDrop * t;
-      opacity = 1 - 0.28 * smoothstep(0.62, 1, t);
-      glowIntensity = 0.34 + flashIntensity * 0.56 + (1 - t) * 0.3;
-      shineIntensity = 0.12 + flashIntensity * 0.32 + (1 - t) * 0.12;
-      shadowIntensity = 0.2 + (1 - t) * 0.2;
-      computedRenderOrder = Math.round(1010 - t * 180);
-    } else if (isIncoming) {
-      const t = easeOutCubic(1 - progressAway);
-      x = -direction * animation.incomingOffset * (1 - t);
-      y = bob + Math.sin(t * Math.PI) * animation.turnLift * 0.24;
-      z = -animation.incomingDepth * (1 - t);
-      rotationX = animation.hoverTilt * (1 - t) + mouse.y * 0.012;
-      rotationY = -direction * animation.incomingTurn * (1 - t);
-      rotationZ = direction * 0.04 * (1 - t);
-      scale = animation.activeScale - 0.1 * (1 - t);
-      opacity = 0.32 + t * 0.68;
-      glowIntensity = animation.edgeGlowBase + t * animation.edgeGlowFocus + flashIntensity * 0.5;
-      shineIntensity = 0.08 + t * 0.18 + flashIntensity * 0.28;
-      shadowIntensity = 0.1 + t * 0.28;
-      computedRenderOrder = Math.round(940 + t * 120);
-    } else if (index === activeIndex) {
-      glowIntensity += flashIntensity * 0.42;
-      shineIntensity += flashIntensity * 0.2;
-    }
-  }
-
-  if (!visible) {
-    x = side * radius;
-    y = 0;
-    z = -animation.rearDepth - absDistance * animation.radiusStep;
-    rotationX = 0;
-    rotationY = side * animation.incomingTurn;
-    rotationZ = 0;
-    scale = animation.activeScale - animation.rearScaleDrop;
-  }
+  const stackRank = Math.min(stackDistance, 4);
+  const peel = easeOutCubic(peelProgress);
+  const x = peeled
+    ? -animation.peelX * peel + mouse.x * animation.mouseTwist * (1 - peel)
+    : animation.stackX * stackRank + mouse.x * animation.mouseTwist;
+  const y = peeled
+    ? bob * (1 - peel) + Math.sin(peel * Math.PI) * animation.peelLift
+    : bob - animation.stackY * stackRank + mouse.y * animation.mouseLift;
+  const z = peeled ? -animation.peelDepth * peel : -animation.stackDepth * stackRank;
+  const rotationX = peeled
+    ? -0.04 * Math.sin(peel * Math.PI)
+    : Math.sin(frame * animation.bobSpeed * 0.72 + index) * animation.hoverTilt + mouse.y * 0.008;
+  const rotationY = peeled ? -animation.peelRotation * peel : mouse.x * 0.018;
+  const rotationZ = peeled ? -0.075 * peel : animation.stackRotation * stackRank;
+  const scale = peeled
+    ? animation.activeScale - 0.1 * peel
+    : animation.activeScale - animation.stackScaleDrop * stackRank;
+  const opacity = visible ? (peeled ? 1 - smoothstep(0.72, 1, peel) : 1 - stackRank * 0.055) : 0;
+  const glowIntensity = animation.edgeGlowBase + focus * animation.edgeGlowFocus;
+  const shineIntensity = 0.06 + focus * 0.15;
+  const shadowIntensity = 0.18 + focus * 0.22 + stackRank * 0.025;
+  const computedRenderOrder = peeled
+    ? Math.round(1300 - peel * 80)
+    : Math.round(1200 - stackRank * 35);
 
   return {
     index,
@@ -167,7 +112,7 @@ function createBookTurnDescriptor({
     glowIntensity: clamp(glowIntensity, 0, 1.35),
     shineIntensity: clamp(shineIntensity, 0, 0.72),
     shadowIntensity: clamp(shadowIntensity, 0, 0.62),
-    flashIntensity,
+    flashIntensity: 0,
     renderOrder: computedRenderOrder,
     railPosition: { x, y, z },
     railRotation: {
@@ -218,7 +163,8 @@ export function createPageRailMovementService({ pageCount = 0, rail = {} } = {})
   }
 
   function scroll(delta) {
-    const amount = Number(delta || 0) * config.scrollScale;
+    const rawAmount = Number(delta || 0) * config.scrollScale;
+    const amount = clamp(rawAmount, -config.maxScrollStep, config.maxScrollStep);
     state.targetIndex = clampIndex(state.targetIndex + amount);
     state.activeIndex = Math.round(state.targetIndex);
     touchInput(amount);
@@ -247,13 +193,12 @@ export function createPageRailMovementService({ pageCount = 0, rail = {} } = {})
     const delta = state.targetIndex - state.smoothIndex;
     const moving = Math.abs(delta) > 0.006 || state.settlePauseFramesRemaining > 0;
     const direction = moving ? (signOrZero(delta) || state.lastDirection) : 0;
-    const progress = pageTurnProgress(state.smoothIndex, direction || state.lastDirection);
-    const flashIntensity = midpointFlash(progress, moving && Math.abs(delta) > 0.006);
+    const progress = state.smoothIndex - Math.floor(state.smoothIndex);
     return {
       moving,
       direction,
       progress,
-      flashIntensity
+      flashIntensity: 0
     };
   }
 
@@ -263,9 +208,7 @@ export function createPageRailMovementService({ pageCount = 0, rail = {} } = {})
     const away = 1 - focus;
     const side = signOrZero(distance);
     const activeIndex = Math.round(clampIndex(state.smoothIndex));
-    const visible = motion.moving
-      ? Math.abs(distance) <= config.visibleDistance
-      : index === activeIndex;
+    const visible = distance > -config.visibleBehind && distance <= config.visibleAhead;
     const renderOrder = Math.round(1000 - Math.abs(distance) * 50);
 
     return createBookTurnDescriptor({

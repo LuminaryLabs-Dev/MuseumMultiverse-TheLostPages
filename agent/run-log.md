@@ -102,6 +102,20 @@ Simulator and publication preparation:
 - NexusSimulator `ar-simtime` passed Page 01 completion, 300-second content, and Gallery Key Fragment collection checks.
 - Browser simulator proof passed find wall, place map, unfold, solve, and zero console errors.
 
+## 2026-07-10 Continuous Card Stack
+
+Completed:
+
+- Replaced the single-visible-page enchanted turn with continuous card-stack descriptors.
+- Kept three upcoming cards visibly offset behind the active page.
+- Bounded wheel deltas, added continuous touch movement, delayed settling, disabled threshold flash, and widened mobile framing.
+
+Validation:
+
+- Descriptor probe confirmed four visible cards at rest and continuous front-card peel during partial progress.
+- `npm run build` passed and exported 22 static routes.
+- Playwright human-view screenshots passed at 1440x900 and 390x844 with zero console errors.
+
 ## 2026-06-26
 
 Completed:

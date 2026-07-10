@@ -1,3 +1,3 @@
-Lost Pages Page 01 Character Map is live-ready.
+Lost Pages now uses a continuous stacked-card book interaction.
 
-The NexusEngine wall-maze, procedural AR simulator room, 125-object experience, QR route, and 22-route static build are included. Physical-phone AR remains a separate device proof step.
+Pages remain visibly stacked, peel one at a time with smooth wheel or touch progress, and settle gently after scrolling stops.

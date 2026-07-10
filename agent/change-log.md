@@ -101,3 +101,14 @@ Changed:
 Reason:
 
 Page 01 needed to become the first complete 100+ object strategy slice and the reference boundary between reusable NexusEngine domain state and Lost Pages AR presentation adapters.
+
+### Continuous card-stack motion
+
+Changed:
+
+- Replaced threshold-heavy single-page rail descriptors with a persistent stacked deck and continuous peel path.
+- Updated wheel, touch, settle, flash, and mobile camera behavior.
+
+Reason:
+
+The main book felt like discrete page switching. The new model preserves spatial continuity before, during, and after each scroll.
