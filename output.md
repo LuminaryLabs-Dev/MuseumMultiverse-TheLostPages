@@ -1,3 +1,3 @@
-Lost Pages rail texture path corrected.
+Lost Pages Page 01 Character Map is live-ready.
 
-The first rail page now uses the original high-resolution imported image asset path again, and Pages 2–3 render as high-resolution generated canvas comic pages with QR overlays.
+The NexusEngine wall-maze, procedural AR simulator room, 125-object experience, QR route, and 22-route static build are included. Physical-phone AR remains a separate device proof step.

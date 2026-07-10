@@ -37,6 +37,7 @@ export function renderDebugExperienceShell(experience, origin) {
             <div class="viewer-card__controls">
               <button class="button-link" data-runtime-action="surface">Find Surface</button>
               <button class="button-link" data-runtime-action="place">Place</button>
+              ${experience.slug === 'sleeping-gallery' ? '<button class="button-link" data-runtime-action="solve">Solve Maze</button>' : ''}
               <button class="button-link button-link--ghost" data-runtime-action="reset">Reset</button>
             </div>
           </div>

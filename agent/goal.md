@@ -19,6 +19,35 @@ The repo must support:
 - durable agent handoff state
 - state alignment and inference turns
 
+## Eight Experience Quality Goal
+
+All eight QR routes should become complete, replayable, simple strategy experiences rather than small interaction demos.
+
+Each experience should have:
+
+- a clear first-screen promise and one primary launch action
+- a readable strategy loop: observe, choose, act, receive feedback, adapt, complete
+- at least 100 concrete world objects, with a target range of 100-300+ generated or authored objects per experience
+- deterministic object generation or descriptor datasets instead of hundreds of manually duplicated source entries
+- an active-simulation budget so only the nearby or relevant slice is expensive
+- meaningful success, failure, reset, replay, reward, and cross-page progression states
+- visible interaction, animation, audio, VFX, camera, and completion feedback
+- desktop debug proof, phone-route proof, and real AR proof before release acceptance
+
+## NexusEngine Domain Service Kit Goal
+
+NexusEngine is the target runtime architecture. The current NexusRealtime dependency is compatibility debt to remove, not the target for new work.
+
+Reusable mechanics should be owned by NexusEngine Domain Service Kits with:
+
+- stable `n-<domain>-kit` identity and `n:<domain>` ownership
+- explicit state, inputs, systems, outputs, dependencies, reset, snapshot, validation, version, and stability
+- APIs installed under `engine.n.<domain>`
+- serializable deterministic state and headless validation
+- no DOM, Three.js, WebXR, canvas, GPU, or host lifecycle ownership inside reusable domain logic
+
+Lost Pages should own story, copy, page manifests, object descriptors, experience composition, routes, QR behavior, and presentation adapters. Reusable gameplay rules belong in NexusEngine or its ProtoKit path.
+
 ## Eight Page Structure
 
 Page 01: cover and entry portal.
@@ -50,4 +79,4 @@ The repo should support a reusable State Intelligence Sync turn that reads agent
 
 ## Long Term Rule
 
-Lost Pages owns the magazine, copy, routes, QR structure, page data, print presentation, and experience manifests. Reusable runtime behavior belongs in NexusRealtime.
+Lost Pages owns the magazine, copy, routes, QR structure, page data, print presentation, authored descriptors, and experience compositions. Reusable runtime behavior belongs in NexusEngine Domain Service Kits or the NexusEngine ProtoKit path.

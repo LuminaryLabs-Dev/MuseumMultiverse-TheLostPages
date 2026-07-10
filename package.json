@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "nexusrealtime": "git+https://github.com/LuminaryLabs-Dev/NexusRealtime.git#ebd19e298d71bfbc51bf452394085ce1d909cb94",
+    "nexusengine": "git+https://github.com/LuminaryLabs-Dev/NexusEngine.git#55b7f33f6d008b2e3b120e370f09b96ed73105e9",
     "qrcode": "^1.5.4",
     "three": "^0.184.0"
   },

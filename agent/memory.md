@@ -31,3 +31,9 @@ Status: active
 - Do not mark feedback processed unless implementation, rejection, or supersession is evidenced.
 - Main print view is the preferred future non-AR presentation surface; the dedicated 3D book route is pending demotion/removal/legacy treatment unless deliberately retained.
 - Print-view visual direction should feel physical: tabletop surface, grounded shadows, subtle orientation/parallax, no pointer-following glow.
+- NexusEngine is the active runtime dependency. Do not restore NexusRealtime-specific architecture.
+- Page 01 is the Character Map wall-maze vertical slice and the reference for local native DSK composition plus host-owned rendering.
+- Validate Page 01 through NexusSimulator `ar-simtime` and `/sim/ar/sleeping-gallery/`; do not treat the simulator as physical AR proof.
+- The eight AR routes should become complete simple strategy experiences with 100-300+ deterministic world objects each, active-slice simulation budgets, replay, failure, reward, and strong feedback.
+- Reusable mechanics must use inspectable Domain Service Kit contracts; Three.js, DOM, canvas, WebXR, GPU, persistence providers, and host lifecycle work stay in adapters.
+- Normal player UX should expose only launch/place/current-objective hero controls on the first screen; debug, reset, metrics, and tuning belong behind advanced disclosure or debug routes.

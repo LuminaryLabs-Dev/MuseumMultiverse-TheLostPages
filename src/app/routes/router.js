@@ -7,6 +7,11 @@ export function routeFromLocation(location = window.location) {
   const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/g, '') : pathname;
   const params = new URLSearchParams(search);
 
+  const simulatorMatch = normalizedPath.match(/^\/sim\/ar\/([^/]+)$/);
+  if (simulatorMatch) {
+    return { type: 'experience-simulator', experience: getExperienceBySlug(simulatorMatch[1]) };
+  }
+
   const debugMatch = normalizedPath.match(/^\/debug\/ar\/([^/]+)$/);
   if (debugMatch) {
     return { type: 'experience-debug', experience: getExperienceBySlug(debugMatch[1]) };

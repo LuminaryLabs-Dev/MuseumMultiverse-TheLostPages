@@ -1,4 +1,4 @@
-import { defineRuntimeKit } from 'nexusrealtime';
+import { defineRuntimeKit } from 'nexusengine';
 
 export function createLocalServiceKit({ id, provides = [], requires = [], serviceName, createService }) {
   return defineRuntimeKit({

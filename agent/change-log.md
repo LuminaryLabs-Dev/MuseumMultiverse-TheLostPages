@@ -2,6 +2,18 @@
 
 Status: active
 
+## 2026-07-09
+
+Changed:
+
+- Reframed the long-term runtime target from NexusRealtime to current NexusEngine Domain Service Kits.
+- Added the 100-300+ deterministic object and full strategy-experience quality goal for all eight routes.
+- Added a durable DSK architecture, UX hierarchy, build evidence, route evidence, and implementation-order audit report.
+
+Reason:
+
+The user established a new quality and architecture goal, while the live checkout still used a stale NexusRealtime installation and small 4-9 object demo scenes.
+
 ## 2026-06-24
 
 Changed:
@@ -76,3 +88,16 @@ Changed:
 Reason:
 
 Feedback and product docs needed to stop describing the print-first tabletop/booklet work as purely pending implementation while still keeping validation, paper fallback, AR route QA, lockfile regeneration, and final `/book/` treatment open.
+
+## 2026-07-10
+
+Changed:
+
+- Cut active runtime imports and package identity from NexusRealtime to pinned NexusEngine.
+- Rebuilt Page 01 as the Character Map wall-maze experience with native local DSK composition and host-owned canvas rendering.
+- Added deterministic desktop debug solve and completion proof.
+- Added a separate AR Simulator DSK and exported procedural-room simulator route for camera-free proof.
+
+Reason:
+
+Page 01 needed to become the first complete 100+ object strategy slice and the reference boundary between reusable NexusEngine domain state and Lost Pages AR presentation adapters.

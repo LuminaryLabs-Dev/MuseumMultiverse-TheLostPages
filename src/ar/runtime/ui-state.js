@@ -2,7 +2,7 @@ export function getRuntimeUiState(runtimeState) {
   if (!runtimeState.support.supported) {
     return {
       status: 'unsupported',
-      message: 'This browser is using the desktop fallback preview. The same steps still run through NexusRealtime.'
+      message: 'This browser is using the desktop fallback preview. The same steps still run through NexusEngine.'
     };
   }
 

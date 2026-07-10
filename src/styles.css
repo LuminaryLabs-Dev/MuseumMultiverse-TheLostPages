@@ -1667,6 +1667,285 @@ a {
   to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
+.character-map-search {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  color: #fff7dc;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.character-map-search--immersive {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  font-size: 2.4rem;
+  text-shadow: 0 2px 16px #000;
+}
+
+.character-map {
+  position: absolute;
+  inset: max(28px, env(safe-area-inset-top)) 14px max(92px, env(safe-area-inset-bottom));
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  touch-action: none;
+}
+
+.character-map__paper {
+  width: min(91vw, 620px);
+  max-height: calc(100dvh - 170px);
+  aspect-ratio: 1;
+  padding: 12px;
+  overflow: hidden;
+  border: 3px solid #3f2618;
+  border-radius: 4px;
+  background: #d9bb76;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 30px rgba(236, 210, 160, 0.3);
+  transform-origin: center;
+}
+
+.character-map.is-unfolding .character-map__paper {
+  animation: character-map-unfold 900ms cubic-bezier(0.22, 0.74, 0.2, 1) both;
+}
+
+.character-map__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.character-map__controls {
+  position: absolute;
+  bottom: -74px;
+  left: 50%;
+  display: grid;
+  grid-template-columns: repeat(4, 48px);
+  gap: 8px;
+  transform: translateX(-50%);
+}
+
+.character-map__controls button,
+.character-map__claim {
+  min-width: 48px;
+  min-height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 6px;
+  background: rgba(14, 11, 8, 0.84);
+  color: white;
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 800;
+  backdrop-filter: blur(10px);
+}
+
+.character-map__claim {
+  position: absolute;
+  left: 50%;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  z-index: 5;
+  min-width: 190px;
+  padding: 0 22px;
+  transform: translateX(-50%);
+  background: #fff2c3;
+  color: #25170f;
+}
+
+.stage-stage--character-map {
+  position: relative;
+  min-height: 780px;
+  overflow: hidden;
+  background: #17130f;
+}
+
+.stage-stage--character-map .character-map {
+  inset: 18px 18px 170px;
+}
+
+.stage-stage--character-map .character-map__paper {
+  width: min(70%, 520px);
+  max-height: 500px;
+}
+
+.stage-stage--character-map .stage-stage__step {
+  z-index: 4;
+  bottom: 14px;
+}
+
+@keyframes character-map-unfold {
+  0% { transform: perspective(900px) rotateY(78deg) scaleX(0.24); filter: brightness(0.56); }
+  54% { transform: perspective(900px) rotateY(-8deg) scaleX(1.04); }
+  100% { transform: perspective(900px) rotateY(0) scaleX(1); filter: brightness(1); }
+}
+
+.ar-simulator {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #080706;
+  color: white;
+}
+
+.ar-simulator__header {
+  position: absolute;
+  z-index: 8;
+  top: 16px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  pointer-events: none;
+}
+
+.ar-simulator__header div {
+  display: grid;
+  gap: 3px;
+}
+
+.ar-simulator__header span,
+.ar-simulator__header small {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.ar-simulator__viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  perspective: 900px;
+  background: #171512;
+}
+
+.ar-simulator__wall,
+.ar-simulator__floor,
+.ar-simulator__ceiling {
+  position: absolute;
+}
+
+.ar-simulator__wall--back {
+  left: 18%;
+  right: 18%;
+  top: 12%;
+  bottom: 24%;
+  overflow: hidden;
+  border: 1px solid #4a4034;
+  background: linear-gradient(180deg, #3c372f, #28241f);
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.52);
+}
+
+.ar-simulator__wall--left,
+.ar-simulator__wall--right {
+  top: 5%;
+  bottom: 13%;
+  width: 34%;
+  background: linear-gradient(90deg, #181713, #332f28);
+}
+
+.ar-simulator__wall--left {
+  left: -9%;
+  clip-path: polygon(0 0, 100% 9%, 100% 79%, 0 100%);
+}
+
+.ar-simulator__wall--right {
+  right: -9%;
+  clip-path: polygon(0 9%, 100% 0, 100% 100%, 0 79%);
+  background: linear-gradient(90deg, #332f28, #171612);
+}
+
+.ar-simulator__wall--left i,
+.ar-simulator__wall--right i {
+  position: absolute;
+  top: calc(var(--offset) * 100%);
+  width: 25%;
+  aspect-ratio: 0.72;
+  border: 4px solid #59472e;
+  background: hsl(201 32% var(--tone));
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.48);
+}
+
+.ar-simulator__wall--left i { right: 18%; }
+.ar-simulator__wall--right i { left: 18%; }
+
+.ar-simulator__floor {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 34%;
+  clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+  background:
+    linear-gradient(90deg, transparent 49.7%, rgba(236, 210, 160, 0.12) 50%, transparent 50.3%),
+    linear-gradient(165deg, #2e2923, #14120f);
+}
+
+.ar-simulator__ceiling {
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 18%;
+  clip-path: polygon(0 0, 100% 0, 82% 100%, 18% 100%);
+  background: linear-gradient(180deg, #14130f, #2c2923);
+}
+
+.ar-simulator__wall--back .character-map {
+  inset: 5% 8% 8%;
+}
+
+.ar-simulator__wall--back .character-map__paper {
+  width: min(72%, 430px);
+  max-height: 88%;
+  padding: 6px;
+}
+
+.ar-simulator__wall--back .character-map__controls {
+  bottom: 0;
+  grid-template-columns: repeat(4, 38px);
+}
+
+.ar-simulator__wall--back .character-map__controls button {
+  min-width: 38px;
+  min-height: 38px;
+}
+
+.ar-simulator__wall--back .character-map-search {
+  font-size: 1.45rem;
+}
+
+.ar-simulator__controls {
+  position: absolute;
+  z-index: 9;
+  left: 50%;
+  bottom: 18px;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+}
+
+.ar-simulator__controls button {
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 6px;
+  background: rgba(12, 10, 8, 0.86);
+  color: white;
+  font: inherit;
+  font-weight: 750;
+  backdrop-filter: blur(12px);
+}
+
+@media (max-width: 640px) {
+  .ar-simulator__header small { display: none; }
+  .ar-simulator__wall--back { left: 10%; right: 10%; top: 14%; bottom: 25%; }
+  .ar-simulator__wall--left { left: -21%; }
+  .ar-simulator__wall--right { right: -21%; }
+  .ar-simulator__wall--back .character-map__paper { width: 84%; }
+}
+
 .book-stage {
   width: 100vw;
   height: 100vh;

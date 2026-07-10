@@ -1,5 +1,27 @@
 # Run Log
 
+## 2026-07-09
+
+Completed:
+
+- Pulled and merged 11 remote commits while preserving 2 local commits and the existing stash.
+- Audited the live Lost Pages runtime against current NexusEngine `main` and its Domain Service Kit contract.
+- Built the app and exported 21 static routes.
+- Desktop-tested all eight debug routes through Find Surface and Place.
+- Completed the Sleeping Gallery fallback loop through its reward state.
+- Recorded the NexusEngine cutover, 100-300+ object target, DSK boundary, UX hierarchy, and recommended vertical-slice order.
+
+Validation:
+
+- `npm run build` passed.
+- Eight-route Playwright sweep passed for desktop fallback placement and second-step progression.
+- Phone, deployed QR origin, camera permission, WebXR, and real AR remain unverified.
+- `npm ls --depth=0` reported the installed NexusRealtime commit does not match `package.json`.
+
+Next:
+
+- Implement the bounded NexusEngine parity cutover and DSK contract foundation before scaling Sleeping Gallery.
+
 ## 2026-06-24
 
 Completed:
@@ -56,6 +78,29 @@ Next:
 - Run `npm install`, `npm run check:composition`, `npm run build`, and browser checks.
 - Regenerate and commit `package-lock.json` for the pinned NexusRealtime main commit.
 - Validate root, launcher, print, book, one AR route, and one debug route.
+
+## 2026-07-10 Page 01 Character Map
+
+Completed:
+
+- Pulled Lost Pages, NexusEngine, NexusEngine-Kits, and NexusEngine-ProtoKits from origin before editing.
+- Replaced the Page 01 five-frame interaction with a 121-region deterministic canvas maze, wall-first placement state, swipe character, maze-heart goal, and Gallery Key Fragment claim.
+- Added six native local NexusEngine DSKs and the `engine.n.characterMap` composition API.
+- Replaced active source imports and the package dependency with pinned NexusEngine commit `55b7f33f6d008b2e3b120e370f09b96ed73105e9` and regenerated the lockfile.
+
+Validation:
+
+- `npm run build` passed and exported 21 static routes.
+- Playwright desktop debug completed find, place, unfold, deterministic solve, claim, and complete with zero console errors.
+- Mobile-sized route reached the camera-first screen showing only `Find a wall` after launch when camera access was unavailable.
+- Physical-phone camera and real wall-plane detection remain unproven.
+
+Simulator and publication preparation:
+
+- Added the native `n:ar-simulator` DSK and camera-free `/sim/ar/sleeping-gallery/` static route.
+- Generated a seeded procedural room with a classified wall, map anchor, 18 room objects, and the shared 121-region Character Map.
+- NexusSimulator `ar-simtime` passed Page 01 completion, 300-second content, and Gallery Key Fragment collection checks.
+- Browser simulator proof passed find wall, place map, unfold, solve, and zero console errors.
 
 ## 2026-06-26
 

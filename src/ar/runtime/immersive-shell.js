@@ -1,5 +1,6 @@
 import './landing.css';
 import mobileHandoffArt from './mobile-handoff-scan-phone.png';
+import { renderCharacterMap } from './character-map-view.js';
 
 function activeStep(runtimeState) {
   const experience = runtimeState.objective ?? runtimeState.experience ?? runtimeState;
@@ -83,6 +84,21 @@ export function renderImmersiveExperience({ manifest, state }) {
   const status = experience.status ?? 'intro';
   const placed = state.placement?.status === 'placed';
   const showPlace = state.selectedMode?.mode === 'webxr-plane' && !placed;
+
+  if (state.characterMap) {
+    const searching = state.characterMap.wall.status === 'searching';
+    return `
+      <section class="immersive-ar immersive-ar--character-map" style="--accent:${manifest.accent};--deep:${manifest.deep};--glow:${manifest.glow}" data-mode="${state.selectedMode?.mode ?? 'detecting'}" data-status="${status}">
+        <video class="immersive-ar__camera" data-ar-camera autoplay muted playsinline></video>
+        <div class="immersive-ar__veil"></div>
+        ${searching
+          ? '<div class="character-map-search character-map-search--immersive">Find a wall</div>'
+          : renderCharacterMap(state.characterMap)}
+        ${state.characterMap.goal.completed && !experience.completed ? '<button class="character-map__claim" data-ar-action="claim">Claim fragment</button>' : ''}
+        ${experience.completed ? `<div class="immersive-ar__complete">${manifest.completeText}</div>` : ''}
+      </section>
+    `;
+  }
 
   return `
     <section class="immersive-ar" style="--accent:${manifest.accent};--deep:${manifest.deep};--glow:${manifest.glow}" data-mode="${state.selectedMode?.mode ?? 'detecting'}" data-status="${status}">

@@ -1,3 +1,5 @@
+import { renderCharacterMap } from './character-map-view.js';
+
 export function renderExperienceStage({ manifest, state }) {
   const objective = state.objective ?? state.experience ?? state;
   const step = objective.steps?.[objective.currentStepIndex] ?? objective.steps?.[0];
@@ -12,6 +14,20 @@ export function renderExperienceStage({ manifest, state }) {
   };
   const room = descriptors.rooms?.[0] ?? descriptors.building?.rooms?.[0];
   const objects = descriptors.objects ?? [];
+
+  if (state.characterMap) {
+    return `
+      <div class="stage-stage stage-stage--character-map" style="--accent:${manifest.accent};--deep:${manifest.deep};--glow:${manifest.glow}" data-status="${objective.status}">
+        ${renderCharacterMap(state.characterMap, { debug: true })}
+        <div class="stage-stage__step">
+          <strong>${label}</strong>
+          <span>${instruction}</span>
+          <small>${progress} · ${state.characterMap.map.objectCount} stable map regions</small>
+        </div>
+        ${state.characterMap.goal.completed && !objective.completed ? '<button class="character-map__claim" data-ar-action="claim">Claim fragment</button>' : ''}
+      </div>
+    `;
+  }
 
   return `
     <div class="stage-stage" style="--accent:${manifest.accent};--deep:${manifest.deep};--glow:${manifest.glow}" data-status="${objective.status}">

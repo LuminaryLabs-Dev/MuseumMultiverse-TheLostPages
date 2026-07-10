@@ -1,6 +1,6 @@
 import './styles.css';
 
-import { createRealtimeGame } from 'nexusrealtime';
+import { createRealtimeGame } from 'nexusengine';
 import { cover, pages, getPageUrl } from './data/pages.js';
 import { createLostPagesImmersiveRuntime, createLostPagesRuntime } from './ar/runtime/session.js';
 import { renderExperienceStage } from './ar/runtime/placement.js';
@@ -24,6 +24,8 @@ import { createLostPageKit } from './kits/lostPageKit.js';
 import { createPageRailMovementKit } from './kits/pageRailMovementKit.js';
 import { createBookletReaderKit } from './kits/bookletReaderKit.js';
 import { createComicPanelSequenceKit } from './kits/panelSequenceKit.js';
+import { createPage01SimulatorRuntime } from './ar/simulator/session.js';
+import { renderArSimulator } from './ar/simulator/view.js';
 
 const app = document.querySelector('#app');
 const origin = resolvePublicOrigin();
@@ -127,6 +129,7 @@ async function renderDebugExperience(experience) {
       const action = button.getAttribute('data-runtime-action');
       if (action === 'surface') activeRuntime.findSurface();
       if (action === 'place') activeRuntime.placeOnPlane();
+      if (action === 'solve') activeRuntime.solveMaze?.();
       if (action === 'reset') activeRuntime.resetExperience();
       renderRuntimeStatus(activeRuntime);
     });
@@ -155,6 +158,16 @@ async function renderImmersiveRoute(experience) {
   }, { once: true });
 }
 
+function renderSimulatorRoute(experience) {
+  setTitle(`Simulator - ${experience.title}`);
+  if (experience.slug !== 'sleeping-gallery') {
+    app.innerHTML = '<main class="character-map-search">Simulator unavailable for this page.</main>';
+    return;
+  }
+  activeRuntime = createPage01SimulatorRuntime(experience);
+  renderArSimulator(app, experience, activeRuntime);
+}
+
 async function renderBookletSurface() {
   setTitle(`${cover.title} - Booklet`);
   app.innerHTML = renderPrintMarkup(origin);
@@ -169,6 +182,11 @@ async function render() {
 
   if (route.type === 'experience-debug' && route.experience) {
     await renderDebugExperience(route.experience);
+    return;
+  }
+
+  if (route.type === 'experience-simulator' && route.experience) {
+    renderSimulatorRoute(route.experience);
     return;
   }
 

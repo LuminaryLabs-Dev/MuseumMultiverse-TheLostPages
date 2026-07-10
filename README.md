@@ -8,6 +8,7 @@ An AR companion magazine for Museum Multiverse.
 - `print/magazine-pages/` contains the copy source for each printed page.
 - `/ar/:slug` routes launch page-specific experiences.
 - `/debug/ar/:slug` and `/ar/:slug?debug=1` keep the desktop/debug surface.
+- `/sim/ar/sleeping-gallery` opens the camera-free Page 01 procedural room simulator.
 - `/`, `/launcher`, `/print`, `/book`, and `/phone` currently fall through to the same shared booklet/print reader surface.
 - `/book` is retained as a compatibility/static entry, not the preferred separate public review surface.
 - `docs/` contains project docs.
@@ -18,7 +19,7 @@ An AR companion magazine for Museum Multiverse.
 - `docs/project-overview.md`
 - `docs/eight-pages-qr-structure.md`
 - `docs/repository-map.md`
-- `docs/nexusrealtime-dependencies.md`
+- `docs/nexusengine-dependencies.md`
 - `docs/deployment-and-discord.md`
 - `docs/feedback-loop.md`
 - `docs/agent-operating-model.md`
@@ -41,7 +42,7 @@ npm run build
 
 The build runs the composition check, Vite, and static route export so direct routes can open on GitHub Pages.
 
-`package.json` is pinned to a specific NexusRealtime commit. `package-lock.json` still needs regeneration in a network-enabled environment so it matches that dependency target.
+`package.json` and `package-lock.json` are pinned to NexusEngine commit `55b7f33f6d008b2e3b120e370f09b96ed73105e9`.
 
 ## Static routes
 
@@ -52,6 +53,7 @@ https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/print/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/book/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/ar/<slug>/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/debug/ar/<slug>/
+https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/sim/ar/sleeping-gallery/
 ```
 
 Static route export is handled by `scripts/export-static-routes.mjs`.
@@ -101,5 +103,5 @@ agent/prompts/state-intelligence-sync.md
 ## Notes
 
 - QR codes must point at a LAN/public HTTPS origin.
-- Device-specific experience mode selection lives in NexusRealtime; Lost Pages owns copy, routes, QR, and experience manifests.
+- Device-specific experience mode selection lives in NexusEngine; Lost Pages owns copy, routes, QR, experience manifests, and host presentation adapters.
 - Feedback-only turns should update feedback docs and should not change app code unless implementation is explicitly requested.

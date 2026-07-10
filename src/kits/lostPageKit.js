@@ -1,4 +1,4 @@
-import { defineRuntimeKit } from 'nexusrealtime';
+import { defineRuntimeKit } from 'nexusengine';
 import { createLostPageService } from '../domains/lost-page/service.js';
 
 export function createLostPageKit(config = {}) {

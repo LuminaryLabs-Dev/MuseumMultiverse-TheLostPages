@@ -5,8 +5,9 @@ Purpose: a browser-first companion launcher for Museum Multiverse with eight QR-
 Architecture:
 - Vite SPA with a simple QR launcher, optional book view, and route-based AR demo pages.
 - Shared experience registry in `src/ar/registry/experiences.js`.
-- Shared runtime helpers in `src/ar/runtime/` are thin adapters over the `nexusrealtime` package.
-- `nexusrealtime` should be consumed from the public GitHub tag `git+https://github.com/LuminaryLabs-Dev/NexusRealtime.git#0.0.1` so cloud/static deploy builds do not require a sibling local checkout.
+- Shared runtime helpers in `src/ar/runtime/` import the pinned NexusEngine package. The dependency and lockfile target NexusEngine commit `55b7f33f6d008b2e3b120e370f09b96ed73105e9`.
+- Page 01 is the Character Map: a wall-first canvas maze composed from six local NexusEngine Domain Service Kits. The DSKs own deterministic maze, character, unfold, goal, reset, and snapshot state; the runtime adapter owns camera, placement signals, gestures, and canvas drawing.
+- Page 01 has a camera-free `/sim/ar/sleeping-gallery/` route backed by a separate `n:ar-simulator` DSK. The simulator generates a small procedural room, classified wall, and map anchor without pretending to be physical-device AR proof.
 - Experience-specific modules live under `src/experiences/<slug>/`.
 - Each experience folder is authoring-only: `copy.js`, `level.js`, `tuning.js`, and `index.js`.
 - Shared QR generation in `src/lib/qr.js`.
@@ -24,9 +25,12 @@ Architecture:
 
 Conventions:
 - Keep copy, QR targets, and experience metadata in the shared registry.
-- Keep gameplay/runtime systems in generic NexusRealtime kits; Lost Pages owns product copy, routing, QR, launcher UI, print UI, and authored level datasets.
-- Do not restore `file:../NexusRealtime` for production-bound Lost Pages builds unless deliberately testing unpublished local runtime changes.
+- Keep reusable gameplay/runtime systems in NexusEngine Domain Service Kits or the NexusEngine ProtoKit path; Lost Pages owns product copy, routing, QR, launcher UI, print UI, authored descriptors, and eight experience compositions.
+- Do not add or restore NexusRealtime dependencies, imports, or compatibility wrappers.
+- Each experience targets 100-300+ deterministic authored or generated world objects without requiring every object to be active or expensive at once.
+- Domain state and rules must stay renderer-independent. Three.js, DOM, canvas, WebXR, GPU, and platform lifecycle work belong in explicit host or renderer adapters.
 - Use NexusSimulator `ar-simtime` for headless AR validation and authored 5-minute content checks; keep simulator orchestration outside this app repo.
+- Static export includes the Page 01 simulator route so reviewers can test the wall-map loop without camera permissions.
 - Do not put direct DOM event handlers, WebXR calls, camera code, or local progression systems in individual experience folders.
 - Keep the app dependency-light and static-host friendly.
 - QR targets must use a LAN/public `VITE_PUBLIC_ORIGIN`; do not generate printable localhost QR codes.
