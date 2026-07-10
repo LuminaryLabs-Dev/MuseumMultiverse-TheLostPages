@@ -7,9 +7,12 @@ export function createPaperSkinnedMeshService({ skin = 'lost-pages-stable-rail' 
 
   function setMaterialOpacity(object, opacity) {
     if (!object?.material || typeof object.material.opacity !== 'number') return;
-    object.material.transparent = opacity < 0.999 || object.material.transparent === true;
-    object.material.opacity = opacity;
-    object.material.needsUpdate = true;
+    const transparent = opacity < 0.999;
+    if (object.material.transparent !== transparent) {
+      object.material.transparent = transparent;
+      object.material.needsUpdate = true;
+    }
+    if (Math.abs(object.material.opacity - opacity) > 0.002) object.material.opacity = opacity;
   }
 
   function applyCardSkin(card, descriptor = {}) {
@@ -37,15 +40,21 @@ export function createPaperSkinnedMeshService({ skin = 'lost-pages-stable-rail' 
     pivot.rotation.y = rotation.y;
     pivot.rotation.z = rotation.z;
 
-    card.renderOrder = Number(descriptor.renderOrder ?? 0);
-    card.traverse((object) => {
-      object.renderOrder = card.renderOrder;
-    });
+    const renderOrder = Number(descriptor.renderOrder ?? 0);
+    if (card.userData.lastRenderOrder !== renderOrder) {
+      card.renderOrder = renderOrder;
+      card.traverse((object) => {
+        object.renderOrder = renderOrder;
+      });
+      card.userData.lastRenderOrder = renderOrder;
+    }
 
     if (card.userData.shine?.material) {
+      card.userData.shine.visible = focus > 0.42 || descriptor.outgoing === true;
       card.userData.shine.material.opacity = Math.min(0.82, shineIntensity + (descriptor.hovered ? 0.05 : 0));
     }
     if (card.userData.shadow?.material) {
+      card.userData.shadow.visible = focus > 0.08;
       card.userData.shadow.material.opacity = Math.min(0.62, shadowIntensity);
     }
     if (card.userData.edgeGlow) {

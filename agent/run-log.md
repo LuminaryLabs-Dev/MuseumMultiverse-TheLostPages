@@ -116,6 +116,15 @@ Validation:
 - `npm run build` passed and exported 22 static routes.
 - Playwright human-view screenshots passed at 1440x900 and 390x844 with zero console errors.
 
+### NexusSimulator overlap and performance pass
+
+- Changed outgoing motion from left/back to right/forward.
+- Added rail direction, depth-clearance, visible-count, and frame telemetry under `window.__NEXUS_TEST_STATE__`.
+- Reduced motion-time rendering to three cards and removed repeated material invalidation and CPU texture sharpening.
+- NexusSimulator `scroll-geometry` passed rightward X, forward Z, depth clearance, render count, screenshots, and zero console errors.
+- Screenshot-free Chromium sustained-scroll benchmark measured 51 FPS over 120 frames with a 17.3ms p95 frame interval.
+- Full evidence: `agent/reports/2026-07-10-nexussimulator-card-rail-validation.md`.
+
 ## 2026-06-26
 
 Completed:

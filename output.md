@@ -1,3 +1,3 @@
-Lost Pages now uses a continuous stacked-card book interaction.
+Lost Pages card scrolling now flies right without crossing the stack.
 
-Pages remain visibly stacked, peel one at a time with smooth wheel or touch progress, and settle gently after scrolling stops.
+NexusSimulator confirms rightward and forward separation, a three-card motion render budget, zero console errors, and improved scrolling performance.

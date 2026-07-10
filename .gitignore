@@ -12,6 +12,8 @@ dist/
 
 # Tool/runtime state
 .playwright-mcp/
+.simspaces/
+.nexus-simulator/
 
 # Logs
 *.log

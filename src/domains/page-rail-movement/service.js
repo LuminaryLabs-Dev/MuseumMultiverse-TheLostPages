@@ -6,8 +6,8 @@ const DEFAULT_ANIMATION = {
   stackY: 0.05,
   stackDepth: 0.14,
   stackRotation: 0.012,
-  peelX: 1.72,
-  peelDepth: 1.5,
+  peelX: 2.6,
+  peelDepth: 0.72,
   peelLift: 0.16,
   peelRotation: 0.82,
   mouseTwist: 0.045,
@@ -28,7 +28,7 @@ const DEFAULT_CONFIG = {
   settleStrength: 0.022,
   smoothStrength: 0.082,
   visibleAhead: 3.15,
-  visibleBehind: 1.02,
+  visibleBehind: 0.88,
   scrollScale: 0.00155,
   maxScrollStep: 0.2,
   settlePauseFrames: 42
@@ -76,21 +76,21 @@ function createBookTurnDescriptor({
   const stackRank = Math.min(stackDistance, 4);
   const peel = easeOutCubic(peelProgress);
   const x = peeled
-    ? -animation.peelX * peel + mouse.x * animation.mouseTwist * (1 - peel)
+    ? animation.peelX * peel + mouse.x * animation.mouseTwist * (1 - peel)
     : animation.stackX * stackRank + mouse.x * animation.mouseTwist;
   const y = peeled
     ? bob * (1 - peel) + Math.sin(peel * Math.PI) * animation.peelLift
     : bob - animation.stackY * stackRank + mouse.y * animation.mouseLift;
-  const z = peeled ? -animation.peelDepth * peel : -animation.stackDepth * stackRank;
+  const z = peeled ? animation.peelDepth * peel : -animation.stackDepth * stackRank;
   const rotationX = peeled
     ? -0.04 * Math.sin(peel * Math.PI)
     : Math.sin(frame * animation.bobSpeed * 0.72 + index) * animation.hoverTilt + mouse.y * 0.008;
-  const rotationY = peeled ? -animation.peelRotation * peel : mouse.x * 0.018;
-  const rotationZ = peeled ? -0.075 * peel : animation.stackRotation * stackRank;
+  const rotationY = peeled ? animation.peelRotation * peel : mouse.x * 0.018;
+  const rotationZ = peeled ? 0.075 * peel : animation.stackRotation * stackRank;
   const scale = peeled
     ? animation.activeScale - 0.1 * peel
     : animation.activeScale - animation.stackScaleDrop * stackRank;
-  const opacity = visible ? (peeled ? 1 - smoothstep(0.72, 1, peel) : 1 - stackRank * 0.055) : 0;
+  const opacity = visible ? (peeled ? 1 - smoothstep(0.72, 0.98, peel) : 1) : 0;
   const glowIntensity = animation.edgeGlowBase + focus * animation.edgeGlowFocus;
   const shineIntensity = 0.06 + focus * 0.15;
   const shadowIntensity = 0.18 + focus * 0.22 + stackRank * 0.025;
@@ -208,7 +208,8 @@ export function createPageRailMovementService({ pageCount = 0, rail = {} } = {})
     const away = 1 - focus;
     const side = signOrZero(distance);
     const activeIndex = Math.round(clampIndex(state.smoothIndex));
-    const visible = distance > -config.visibleBehind && distance <= config.visibleAhead;
+    const visibleAhead = motion.moving ? Math.min(config.visibleAhead, 2.15) : config.visibleAhead;
+    const visible = distance > -config.visibleBehind && distance <= visibleAhead;
     const renderOrder = Math.round(1000 - Math.abs(distance) * 50);
 
     return createBookTurnDescriptor({

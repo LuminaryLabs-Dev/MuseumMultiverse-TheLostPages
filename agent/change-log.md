@@ -112,3 +112,15 @@ Changed:
 Reason:
 
 The main book felt like discrete page switching. The new model preserves spatial continuity before, during, and after each scroll.
+
+### Card overlap and performance validation
+
+Changed:
+
+- Moved outgoing cards right and forward with explicit stack depth clearance.
+- Reduced page overdraw, texture-processing work, material invalidation, and active render count.
+- Added NexusSimulator-readable rail and frame telemetry.
+
+Reason:
+
+The outgoing card appeared to pass through prior cards and the software-WebGL proof exposed avoidable texture and material costs.

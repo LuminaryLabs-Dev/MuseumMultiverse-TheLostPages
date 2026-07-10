@@ -61,31 +61,6 @@ function addEdgeGlow(card, page) {
   card.userData.edgeGlow = edgeGlow;
 }
 
-function sharpenCanvas(ctx, width, height) {
-  const source = ctx.getImageData(0, 0, width, height);
-  const input = source.data;
-  const output = new Uint8ClampedArray(input);
-  const amount = 0.42;
-
-  for (let y = 1; y < height - 1; y += 1) {
-    for (let x = 1; x < width - 1; x += 1) {
-      const i = (y * width + x) * 4;
-      const north = i - width * 4;
-      const south = i + width * 4;
-      const west = i - 4;
-      const east = i + 4;
-
-      for (let c = 0; c < 3; c += 1) {
-        const edge = input[i + c] * 4 - input[north + c] - input[south + c] - input[west + c] - input[east + c];
-        output[i + c] = Math.max(0, Math.min(255, input[i + c] + edge * amount));
-      }
-    }
-  }
-
-  source.data.set(output);
-  ctx.putImageData(source, 0, 0);
-}
-
 function upgradeLowResolutionComicTexture(card) {
   const face = card?.userData?.face;
   const material = face?.material;
@@ -99,7 +74,7 @@ function upgradeLowResolutionComicTexture(card) {
     const sourceHeight = image.naturalHeight || image.videoHeight || image.height || 0;
     if (!sourceWidth || !sourceHeight || sourceWidth >= 720) return;
 
-    const targetWidth = 1024;
+    const targetWidth = 768;
     const targetHeight = Math.round(targetWidth * (sourceHeight / sourceWidth));
     const canvas = document.createElement('canvas');
     canvas.width = targetWidth;
@@ -112,7 +87,6 @@ function upgradeLowResolutionComicTexture(card) {
     ctx.filter = 'contrast(1.13) saturate(1.08)';
     ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
     ctx.filter = 'none';
-    sharpenCanvas(ctx, targetWidth, targetHeight);
 
     const upgradedTexture = new THREE.CanvasTexture(canvas);
     upgradedTexture.colorSpace = THREE.SRGBColorSpace;
@@ -146,8 +120,8 @@ export function enhanceStableRail(root, options = {}) {
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x020307, 0.052);
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 80);
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   mount.appendChild(renderer.domElement);
 
@@ -161,21 +135,47 @@ export function enhanceStableRail(root, options = {}) {
   scene.add(flashLight);
 
   const cards = paperPageBuilder.loadPages(railPages);
+  let disposed = false;
+  const textureUpgradeTimers = [];
+  const scheduledTextureUpgrades = new Set();
   cards.forEach((card, index) => {
     addEdgeGlow(card, railPages[index]);
-    upgradeLowResolutionComicTexture(card);
     scene.add(card);
   });
+
+  function scheduleTextureUpgrade(index) {
+    const card = cards[index];
+    if (!card || scheduledTextureUpgrades.has(index) || card.userData.hiResComicTexture) return;
+    scheduledTextureUpgrades.add(index);
+    const runUpgrade = () => {
+      if (!disposed) upgradeLowResolutionComicTexture(card);
+    };
+    if (typeof window.requestIdleCallback === 'function') {
+      textureUpgradeTimers.push({ type: 'idle', id: window.requestIdleCallback(runUpgrade, { timeout: 900 }) });
+    } else {
+      textureUpgradeTimers.push({ type: 'timeout', id: window.setTimeout(runUpgrade, 180) });
+    }
+  }
+
+  scheduleTextureUpgrade(0);
+  scheduleTextureUpgrade(1);
   const hits = cards.map((card) => card.userData.hit);
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
   let hover = null;
   let frame = 0;
-  let disposed = false;
   let startY = 0;
   let lastTouchY = 0;
   let targetCameraY = CAMERA_Y;
   let targetCameraZ = CAMERA_Z;
+  const cameraTarget = new THREE.Vector3(0, CAMERA_Y, CAMERA_Z);
+  let lastFocusedIndex = -1;
+  let lastFrameAt = performance.now();
+  let telemetryStartedAt = lastFrameAt;
+  let telemetryWarmed = false;
+  let renderedFrames = 0;
+  let droppedFrames = 0;
+  let activeFrameTimeMs = 0;
 
   function resize() {
     const w = Math.max(1, mount.clientWidth || window.innerWidth || 1);
@@ -236,10 +236,31 @@ export function enhanceStableRail(root, options = {}) {
 
   function animate() {
     if (disposed) return;
+    const frameAt = performance.now();
+    const frameDelta = frameAt - lastFrameAt;
+    if (renderedFrames > 0 && frameDelta <= 250) {
+      activeFrameTimeMs += frameDelta;
+      if (frameDelta > 25) droppedFrames += Math.max(0, Math.round(frameDelta / (1000 / 60)) - 1);
+    }
+    lastFrameAt = frameAt;
+    renderedFrames += 1;
+    if (!telemetryWarmed && renderedFrames >= 120) {
+      telemetryWarmed = true;
+      telemetryStartedAt = frameAt;
+      renderedFrames = 1;
+      droppedFrames = 0;
+      activeFrameTimeMs = 0;
+    }
     const railState = pageRail.tick();
     const flash = Math.max(0, Math.min(1, railState.turn?.flashIntensity ?? 0));
-    lostPages.focus(railState.activeIndex);
-    camera.position.lerp(new THREE.Vector3(0, targetCameraY, targetCameraZ), 0.04);
+    if (railState.activeIndex !== lastFocusedIndex) {
+      lostPages.focus(railState.activeIndex);
+      lastFocusedIndex = railState.activeIndex;
+      scheduleTextureUpgrade(railState.activeIndex);
+      scheduleTextureUpgrade(railState.activeIndex + 1);
+    }
+    cameraTarget.set(0, targetCameraY, targetCameraZ);
+    camera.position.lerp(cameraTarget, 0.04);
     camera.lookAt(CAMERA_LOOK_X, CAMERA_LOOK_Y, 0);
     light.intensity = 1.65 + flash * 0.55;
     flashLight.intensity = flash * 3.2;
@@ -253,6 +274,37 @@ export function enhanceStableRail(root, options = {}) {
         hovered: hover === card.userData.hit
       });
     });
+    const visibleCards = railState.cards.filter((card) => card.visible);
+    const outgoingCards = visibleCards.filter((card) => card.outgoing);
+    const stackedCards = visibleCards.filter((card) => !card.outgoing);
+    const frontStackZ = stackedCards.length
+      ? Math.max(...stackedCards.map((card) => card.railPosition.z))
+      : 0;
+    const elapsedSeconds = Math.max(0.001, activeFrameTimeMs / 1000);
+    const measuredFps = activeFrameTimeMs >= 250
+      ? Math.round(Math.max(0, renderedFrames - 1) / elapsedSeconds)
+      : 0;
+    globalThis.__NEXUS_TEST_STATE__ = {
+      ...(globalThis.__NEXUS_TEST_STATE__ ?? {}),
+      frame: renderedFrames,
+      rail: {
+        activeIndex: railState.activeIndex,
+        smoothIndex: railState.smoothIndex,
+        visibleCount: visibleCards.length,
+        renderVisibleCount: visibleCards.filter((card) => card.opacity > 0.01).length,
+        outgoingCount: outgoingCards.length,
+        outgoingClear: outgoingCards.every((card) => card.railPosition.x > 0 && card.railPosition.z - frontStackZ >= 0.12),
+        cards: railState.cards
+      },
+      recording: {
+        ...(globalThis.__NEXUS_TEST_STATE__?.recording ?? {}),
+        smoothness: {
+          renderedFrames,
+          measuredFps,
+          droppedFrames
+        }
+      }
+    };
     renderer.render(scene, camera);
     frame = window.requestAnimationFrame(animate);
   }
@@ -280,6 +332,10 @@ export function enhanceStableRail(root, options = {}) {
     renderer.domElement.removeEventListener('touchstart', touchStart);
     renderer.domElement.removeEventListener('touchmove', touchMove);
     renderer.domElement.removeEventListener('touchend', touchEnd);
+    textureUpgradeTimers.forEach((timer) => {
+      if (timer.type === 'idle') window.cancelIdleCallback?.(timer.id);
+      else window.clearTimeout(timer.id);
+    });
     scene.traverse((object) => {
       object.geometry?.dispose?.();
       object.material?.map?.dispose?.();

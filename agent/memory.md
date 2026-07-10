@@ -23,6 +23,7 @@ Status: active
 - Launcher visuals should stay clean, comic-book-like, readable, and less PDF-heavy.
 - Motion should feel subtle and reactive; avoid spectacle that distracts from AR route selection.
 - Main rail motion should preserve a visible stack and continuous scroll progress. Do not switch back to one-card-only idle states, threshold jumps, or bright midpoint flashes.
+- Completed rail cards travel right and toward the camera before fading. Keep outgoing cards depth-separated from the stack and cap motion-time render visibility at three cards.
 - Page surfaces should read as square-corner paper, not rounded cards; use texture and shader-based shading where the WebGL book/print route owns the page surface.
 - User feedback should be added to `main` as feedback only. Do not change app code unless implementation is explicitly requested.
 - A State Intelligence Sync turn may update docs and agent knowledge files, but must not change app/source implementation.
