@@ -132,6 +132,12 @@ Validation:
 - Playwright human-view proof passed at 1440x900, 1600x720, and 390x844 with zero console errors.
 - Scroll-motion regression retained right/forward depth clearance and the three-card render budget.
 
+### Down-left page release
+
+- Redirected the outgoing page from rightward flight to a down-left, forward fall.
+- Added a mild edge-on Y rotation, forward pitch, and counterclockwise roll during the release.
+- Playwright motion capture confirmed negative X/Y travel, positive Z separation, three render-visible cards, and zero console errors.
+
 ## 2026-06-26
 
 Completed:

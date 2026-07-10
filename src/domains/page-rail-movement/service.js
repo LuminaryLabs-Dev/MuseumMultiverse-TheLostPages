@@ -6,10 +6,12 @@ const DEFAULT_ANIMATION = {
   stackY: 0.05,
   stackDepth: 0.14,
   stackRotation: 0.012,
-  peelX: 2.6,
-  peelDepth: 0.72,
-  peelLift: 0.16,
-  peelRotation: 0.82,
+  peelX: -1.9,
+  peelDrop: 2.2,
+  peelDepth: 0.82,
+  peelLift: 0.12,
+  peelRotation: -0.58,
+  peelRoll: -0.22,
   mouseTwist: 0.045,
   mouseLift: 0.025,
   bobAmplitude: 0.018,
@@ -79,14 +81,14 @@ function createBookTurnDescriptor({
     ? animation.peelX * peel + mouse.x * animation.mouseTwist * (1 - peel)
     : animation.stackX * stackRank + mouse.x * animation.mouseTwist;
   const y = peeled
-    ? bob * (1 - peel) + Math.sin(peel * Math.PI) * animation.peelLift
+    ? bob * (1 - peel) + Math.sin(peel * Math.PI) * animation.peelLift - animation.peelDrop * peel
     : bob - animation.stackY * stackRank + mouse.y * animation.mouseLift;
   const z = peeled ? animation.peelDepth * peel : -animation.stackDepth * stackRank;
   const rotationX = peeled
-    ? -0.04 * Math.sin(peel * Math.PI)
+    ? 0.1 * peel - 0.04 * Math.sin(peel * Math.PI)
     : Math.sin(frame * animation.bobSpeed * 0.72 + index) * animation.hoverTilt + mouse.y * 0.008;
   const rotationY = peeled ? animation.peelRotation * peel : mouse.x * 0.018;
-  const rotationZ = peeled ? 0.075 * peel : animation.stackRotation * stackRank;
+  const rotationZ = peeled ? animation.peelRoll * peel : animation.stackRotation * stackRank;
   const scale = peeled
     ? animation.activeScale - 0.1 * peel
     : animation.activeScale - animation.stackScaleDrop * stackRank;

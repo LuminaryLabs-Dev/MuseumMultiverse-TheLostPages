@@ -135,3 +135,14 @@ Changed:
 Reason:
 
 The active comic page was vertically cropped in shorter desktop browser windows.
+
+### Down-left page release
+
+Changed:
+
+- Replaced the outgoing page's rightward path with a down-left and forward fall.
+- Added restrained three-axis rotation so the page turns partially perpendicular to the camera while leaving the stack.
+
+Reason:
+
+The outgoing page should feel like a loose physical comic sheet falling away from the reader.

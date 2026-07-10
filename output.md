@@ -1,3 +1,3 @@
-The Lost Pages rail now keeps the complete active comic page inside the viewport.
+Lost Pages now releases each completed comic page down-left and toward the viewer with a slight physical turn.
 
-Desktop, short-window, phone, and scroll-motion browser checks pass with zero console errors.
+Browser motion proof confirms stack clearance, the three-card render budget, and zero console errors.

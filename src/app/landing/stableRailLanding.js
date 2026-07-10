@@ -305,7 +305,11 @@ export function enhanceStableRail(root, options = {}) {
         visibleCount: visibleCards.length,
         renderVisibleCount: visibleCards.filter((card) => card.opacity > 0.01).length,
         outgoingCount: outgoingCards.length,
-        outgoingClear: outgoingCards.every((card) => card.railPosition.x > 0 && card.railPosition.z - frontStackZ >= 0.12),
+        outgoingClear: outgoingCards.every((card) => (
+          card.railPosition.x < 0
+          && card.railPosition.y < 0
+          && card.railPosition.z - frontStackZ >= 0.12
+        )),
         viewportFit: {
           width: viewportWidth,
           height: viewportHeight,
