@@ -1,4 +1,4 @@
-import { getExperienceBySlug } from '../../ar/registry/experiences.js';
+import { getExperienceBySlug, getExperienceByPageId } from '../../ar/registry/experiences.js';
 import { stripBasePath } from './basePath.js';
 
 export function routeFromLocation(location = window.location) {
@@ -25,9 +25,9 @@ export function routeFromLocation(location = window.location) {
     };
   }
 
-  const searchPage = params.get('page');
-  if (searchPage) {
-    return { type: 'experience', experience: getExperienceBySlug(searchPage) };
+  if (params.has('page')) {
+    const experience = getExperienceByPageId(params.get('page'));
+    return experience ? { type: 'experience', experience } : { type: 'invalid-page' };
   }
 
   return { type: 'print' };

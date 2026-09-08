@@ -1,92 +1,35 @@
-name: Deploy Lost Pages
+name: Validate Lost Pages source
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: lost-pages-deploy
+  group: lost-pages-source-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Build Lost Pages
+    name: Build static release candidate (no deployment)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
-      - name: Configure GitHub Pages build paths
-        run: |
-          set -euo pipefail
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          OWNER_LC="$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
-          echo "VITE_BASE_PATH=/$REPO_NAME/" >> "$GITHUB_ENV"
-          echo "VITE_PUBLIC_ORIGIN=https://$OWNER_LC.github.io/$REPO_NAME" >> "$GITHUB_ENV"
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-      - name: Build site
-        run: |
-          set -euo pipefail
-          npm install
-          npm run build
-          test -d dist
-          cp lost-pages-cover-upscaled.jpg dist/lost-pages-cover-upscaled.b64
-          touch dist/.nojekyll
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build for Website hosting
+        run: npm run build:luminary
+      - name: Upload candidate for review
+        uses: actions/upload-artifact@v4
         with:
-          path: dist
-
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-  notify:
-    name: Notify deploy channel
-    needs:
-      - build
-      - deploy
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout notification source
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      - name: Send output message
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          set -euo pipefail
-          if [ -z "${DISCORD_WEBHOOK_URL:-}" ]; then
-            echo "No deploy channel secret set; skipping notification."
-            exit 0
-          fi
-          CONTENT="$(cat output.md 2>/dev/null || printf 'Lost Pages deployed.')"
-          export CONTENT
-          python3 - <<'PY' > /tmp/lost-pages-payload.json
-          import json
-          import os
-          print(json.dumps({"content": os.environ.get("CONTENT", "Lost Pages deployed.")[:6500]}))
-          PY
-          curl -fsS -H "Content-Type: application/json" -d @/tmp/lost-pages-payload.json "$DISCORD_WEBHOOK_URL"
+          name: lost-pages-static-candidate
+          path: dist/
+          retention-days: 14

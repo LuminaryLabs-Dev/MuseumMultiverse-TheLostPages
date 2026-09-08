@@ -16,12 +16,15 @@ export function getPageBySlug(slug) {
 }
 
 export function getPagePath(page) {
-  return `/ar/${page.slug}/`;
+  if (!experiences.some((entry) => entry.number === page?.number && entry.slug === page?.slug)) {
+    throw new Error('Cannot generate a publication link for an unknown page.');
+  }
+  return `/?page=page${page.number}`;
 }
 
 export function getPageUrl(page, origin) {
   if (origin) {
-    return `${origin}${getPagePath(page)}`;
+    return `${String(origin).replace(/\/+$/, '')}${getPagePath(page)}`;
   }
 
   return requirePublicUrl(getPagePath(page));

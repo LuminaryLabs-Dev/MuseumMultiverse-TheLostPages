@@ -22,6 +22,13 @@ export function getExperienceBySlug(slug) {
   return experiences.find((entry) => entry.slug === slug);
 }
 
+// Publication identities stay stable even when a display title changes.
+export function getExperienceByPageId(value) {
+  if (typeof value !== 'string') return undefined;
+  const match = /^page(0[1-8])$/.exec(value);
+  return match ? experiences.find((entry) => entry.number === match[1]) : getExperienceBySlug(value);
+}
+
 export function getExperienceRoute(entry) {
   return `/ar/${entry.slug}/`;
 }

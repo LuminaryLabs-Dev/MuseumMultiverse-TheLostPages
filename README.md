@@ -2,6 +2,15 @@
 
 An AR companion magazine for Museum Multiverse.
 
+## Current publishing boundary
+
+Lost Pages builds here; Website receives only the generated static release
+under `/lostpages/`. See [Static release contract](docs/STATIC-RELEASE.md) for
+canonical numbered links, build/stage/push commands and required release gates.
+The source CI builds candidates only; it no longer auto-deploys or notifies.
+The historical gameplay descriptions below describe existing prototypes, not
+completion of the new eight-page joystick-and-jump comic/AR product.
+
 ## What is in the repo
 
 - `src/` contains the browser app, page data, routes, route surfaces, and authored experiences.
@@ -66,21 +75,14 @@ A later pass may decide whether `/book` stays as a compatibility/legacy route, r
 
 ## Deploy
 
-This repo deploys from `main` with GitHub Actions.
+Source pushes run `.github/workflows/deploy-lost-pages.yml` to validate and
+archive a candidate build. They do not publish a site or send notifications.
 
-Workflow file:
-
-```text
-.github/workflows/deploy-lost-pages.yml
-```
-
-The workflow builds `dist/`, exports direct static routes, uploads the Pages artifact, deploys to Pages, and sends the short message from `output.md`.
-
-Set Pages to:
-
-```text
-Settings → Pages → Build and deployment → Source → GitHub Actions
-```
+Run `npm run build:luminary`, then `npm run stage:luminary` for a read-only
+release preview. Actual staging requires the completed product and its
+acceptance evidence. Website's default branch publishes the generated files
+under `/lostpages/`; it does not build or contain this source application.
+See [Static release contract](docs/STATIC-RELEASE.md) for gates and rollback.
 
 ## Agent operating folder
 

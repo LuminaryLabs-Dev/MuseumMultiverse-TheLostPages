@@ -14,7 +14,7 @@ export function isLoopbackOrigin(origin) {
 }
 
 export function resolvePublicOrigin(location = window.location) {
-  const configured = cleanOrigin(import.meta.env.VITE_PUBLIC_ORIGIN);
+  const configured = cleanOrigin(import.meta.env?.VITE_PUBLIC_ORIGIN);
   if (configured) {
     return configured;
   }
@@ -24,7 +24,8 @@ export function resolvePublicOrigin(location = window.location) {
     return '';
   }
 
-  return current;
+  const base = String(import.meta.env?.BASE_URL || '/').replace(/^\/+|\/+$/g, '');
+  return base ? `${current}/${base}` : current;
 }
 
 export function requirePublicUrl(path, location = window.location) {

@@ -180,6 +180,30 @@ async function render() {
   cleanupCurrentSurface();
   const route = routeFromLocation();
 
+  if (route.type === 'invalid-page') {
+    const recovery = document.createElement('main');
+    recovery.style.cssText = 'min-height:100vh;background:#fff8df;color:#241d17;padding:32px;box-sizing:border-box';
+    const notice = document.createElement('h1');
+    notice.setAttribute('role', 'alert');
+    notice.textContent = 'That page link is not valid.';
+    const instruction = document.createElement('p');
+    instruction.textContent = 'Choose a Lost Pages experience:';
+    const links = document.createElement('nav');
+    links.setAttribute('aria-label', 'Lost Pages experiences');
+    links.style.cssText = 'display:flex;flex-direction:column;gap:12px;align-items:flex-start';
+    for (let number = 1; number <= 8; number += 1) {
+      const pageId = `page${String(number).padStart(2, '0')}`;
+      const link = document.createElement('a');
+      link.href = `${import.meta.env.BASE_URL}?page=${pageId}`;
+      link.textContent = `Open page ${number}`;
+      link.style.cssText = 'color:#241d17;text-decoration:underline;padding:8px';
+      links.append(link);
+    }
+    recovery.append(notice, instruction, links);
+    app.replaceChildren(recovery);
+    return;
+  }
+
   if (route.type === 'experience-debug' && route.experience) {
     await renderDebugExperience(route.experience);
     return;
