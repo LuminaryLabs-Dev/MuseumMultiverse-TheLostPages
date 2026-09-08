@@ -26,6 +26,9 @@ Status: partial implementation, not a finished product release.
 - npm audit initially reported three high-severity build-tool findings.
   Compatible lockfile updates select Vite 6.4.3, PostCSS 8.5.28 and Nanoid
   3.3.18. The updated lockfile audit reports zero known vulnerabilities.
+- Clean checkout of 263c22c: fresh npm ci/build passed with Vite 6.4.3,
+  41 inventoried files and sourceDirty=false. Real Website staging dry-run
+  passed and left its checkout clean. No actual release was staged.
 - Plain static-server route sweep: eight HTTP 200 responses, matching titles,
   no captured page exceptions or failed requests. This reaches existing phone
   handoff screens; it does not prove new joystick gameplay or desktop fallback.
@@ -34,6 +37,9 @@ Status: partial implementation, not a finished product release.
 - Disposable staging fixtures checked dry-run no-op, first/replacement staging,
   backup retention, untouched company index, rejection of unknown target files,
   corrupt candidate hashes and symlinks. No real Website staging was applied.
+- A second isolated fixture confirmed dirty-source rejection specifically
+  and restored the previous release with an empty Git diff. This rehearsed
+  local directory recovery, not a live deployment or reverse-commit rollout.
 - Existing local Page 01–02 auto-run rules proofs passed, but are pending
   user-owned work outside this source commit and not new-product acceptance.
 - Build warns about a large JS chunk and NexusEngine browser-externalized Node
