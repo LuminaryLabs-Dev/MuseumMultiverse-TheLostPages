@@ -16,6 +16,16 @@ Status: partial implementation, not a finished product release.
 ## Checks and limits
 
 - Local npm run build:luminary passed; composition recognizes eight entries.
+- Clean detached checkout of 1b7aee3: npm ci/build passed, 41 release files,
+  manifest sourceDirty=false. The earlier dirty tree had one extra pending
+  simulator route; it was deliberately excluded from this source commit.
+- Clean-build browser sweep also passed all eight numbered routes and eight
+  invalid-link recovery choices with no captured exceptions or HTTP errors.
+- The invalid-link recovery screen was visually reviewed; its eight links
+  are readable and usable. This is not game-view acceptance.
+- npm audit initially reported three high-severity build-tool findings.
+  Compatible lockfile updates select Vite 6.4.3, PostCSS 8.5.28 and Nanoid
+  3.3.18. The updated lockfile audit reports zero known vulnerabilities.
 - Plain static-server route sweep: eight HTTP 200 responses, matching titles,
   no captured page exceptions or failed requests. This reaches existing phone
   handoff screens; it does not prove new joystick gameplay or desktop fallback.

@@ -22,9 +22,10 @@ if (info && (!info.isDirectory() || info.isSymbolicLink())) throw new Error('Ref
 const incoming = await verifyRelease(dist);
 if (incoming.basePath !== '/lostpages/' || incoming.publicOrigin !== 'https://luminarylabs.dev/lostpages') throw new Error('Build is not configured for /lostpages/.');
 let previous = [];
+let previousManifest;
 if (info) {
   // Unknown contents or locally modified releases are never adopted/overwritten.
-  await verifyRelease(target);
+  previousManifest = await verifyRelease(target);
   previous = await inventory(target);
 }
 const before = new Map(previous.map((file) => [file.path, file]));
@@ -52,7 +53,10 @@ const container = await mkdtemp(path.join(privateDir, 'lostpages-release-'));
 const candidate = path.join(container, 'candidate');
 const backup = path.join(container, 'previous');
 await cp(dist, candidate, { recursive: true, errorOnExist: true, force: false });
-await verifyRelease(candidate);
+const copiedManifest = await verifyRelease(candidate);
+if (JSON.stringify(copiedManifest) !== JSON.stringify(incoming)) throw new Error('Candidate changed during staging; destination untouched.');
+if (git('status', '--porcelain')) throw new Error('Website changed during staging; destination untouched.');
+if (info && JSON.stringify(await verifyRelease(target)) !== JSON.stringify(previousManifest)) throw new Error('Existing release changed during staging; destination untouched.');
 if (info) await rename(target, backup);
 try {
   await rename(candidate, target);
