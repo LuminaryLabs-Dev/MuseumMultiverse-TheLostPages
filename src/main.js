@@ -27,6 +27,7 @@ import { createComicPanelSequenceKit } from './kits/panelSequenceKit.js';
 import { createPage01SimulatorRuntime, createPage02SimulatorRuntime } from './ar/simulator/session.js';
 import { renderArSimulator } from './ar/simulator/view.js';
 import { renderMuseumMockScene } from './mock/museumMockScene.js';
+import { mountGame, renderGameShell } from './game/runtime.js';
 
 const app = document.querySelector('#app');
 const origin = resolvePublicOrigin();
@@ -34,6 +35,7 @@ let activeRuntime = null;
 let bookCleanup = null;
 let launcherCleanup = null;
 let surfaceGame = null;
+let gameCleanup = null;
 
 function cleanupCurrentSurface() {
   activeRuntime?.renderer?.dispose?.();
@@ -45,6 +47,8 @@ function cleanupCurrentSurface() {
   launcherCleanup = null;
   surfaceGame?.n?.lostPages?.dispose?.();
   surfaceGame = null;
+  gameCleanup?.();
+  gameCleanup = null;
 }
 
 function createLostPagesSurfaceGame(root) {
@@ -179,6 +183,12 @@ function renderMockSceneRoute(experience) {
   app.innerHTML = renderMuseumMockScene(experience);
 }
 
+function renderGameSceneRoute(sceneId) {
+  setTitle('Museum Multiverse');
+  app.innerHTML = renderGameShell(sceneId);
+  gameCleanup = mountGame(app, sceneId);
+}
+
 async function renderBookletSurface() {
   setTitle(`${cover.title} - Booklet`);
   app.innerHTML = renderPrintMarkup(origin);
@@ -227,6 +237,11 @@ async function render() {
 
   if (route.type === 'mock-scene' && route.experience) {
     renderMockSceneRoute(route.experience);
+    return;
+  }
+
+  if (route.type === 'game-scene') {
+    renderGameSceneRoute(route.sceneId);
     return;
   }
 

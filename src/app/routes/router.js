@@ -7,6 +7,15 @@ export function routeFromLocation(location = window.location) {
   const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/g, '') : pathname;
   const params = new URLSearchParams(search);
 
+  if (params.get('hub') === '1') {
+    return { type: 'game-scene', sceneId: 'hub' };
+  }
+
+  if (params.has('page') && params.get('play') === '1') {
+    const experience = getExperienceByPageId(params.get('page'));
+    return experience ? { type: 'game-scene', sceneId: `page${experience.number}` } : { type: 'invalid-page' };
+  }
+
   if (params.has('page') && params.get('mock') === '1') {
     const experience = getExperienceByPageId(params.get('page'));
     return experience ? { type: 'mock-scene', experience } : { type: 'invalid-page' };
