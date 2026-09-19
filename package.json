@@ -5,11 +5,14 @@
   "scripts": {
     "dev": "vite",
     "check:composition": "node scripts/check-print-composition.mjs",
+    "proof:page01": "node scripts/prove-page01-player-slice.mjs",
+    "proof:page02": "node scripts/prove-page02-player-slice.mjs",
+    "smoke:game": "bash scripts/smoke-game.sh",
     "build": "npm run check:composition && vite build && node scripts/export-static-routes.mjs && node scripts/release-manifest.mjs",
     "build:luminary": "VITE_BASE_PATH=/lostpages/ VITE_PUBLIC_ORIGIN=https://luminarylabs.dev/lostpages npm run build",
+    "stage:luminary": "node scripts/deploy-to-website.mjs",
     "deploy:luminary": "node scripts/deploy-to-website.mjs",
-    "preview": "vite preview",
-    "stage:luminary": "node scripts/deploy-to-website.mjs"
+    "preview": "vite preview"
   },
   "dependencies": {
     "nexusengine": "git+https://github.com/LuminaryLabs-Dev/NexusEngine.git#55b7f33f6d008b2e3b120e370f09b96ed73105e9",

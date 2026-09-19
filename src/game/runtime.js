@@ -208,6 +208,10 @@ export function mountGame(root, sceneId) {
       shell.querySelector('[data-game-complete]').hidden = false;
     }
   }
+  function advance(deltaMs = 16.67) {
+    if (paused) return;
+    move(Math.min(0.05, Math.max(0, Number(deltaMs) || 0) / 1000));
+  }
   function render(now) {
     if (disposed) return;
     const delta = Math.min(0.05, (now - last) / 1000);
@@ -231,6 +235,19 @@ export function mountGame(root, sceneId) {
   viewport.addEventListener('pointercancel', onPointerUp);
   window.addEventListener('resize', updateSize);
   updateSize();
+  const testApi = {
+    sceneId,
+    advance,
+    snapshot() {
+      return {
+        sceneId,
+        paused,
+        completed,
+        player: { x: Number(player.position.x.toFixed(3)), z: Number(player.position.z.toFixed(3)) }
+      };
+    }
+  };
+  window.__lostPagesGameTest = testApi;
   frame = requestAnimationFrame(render);
 
   return () => {
@@ -244,6 +261,7 @@ export function mountGame(root, sceneId) {
     viewport.removeEventListener('pointerup', onPointerUp);
     viewport.removeEventListener('pointercancel', onPointerUp);
     renderer.dispose();
+    if (window.__lostPagesGameTest === testApi) delete window.__lostPagesGameTest;
     loadedModel?.traverse?.((node) => {
       node.geometry?.dispose?.();
       if (Array.isArray(node.material)) node.material.forEach((material) => material.dispose?.());
