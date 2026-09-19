@@ -1,0 +1,45 @@
+.museum-mock {
+  min-height: 100vh;
+  padding: clamp(18px, 4vw, 48px);
+  color: #f7efde;
+  background: #11100f;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.museum-mock__header,
+.museum-mock__controls {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1180px;
+  margin: 0 auto 18px;
+}
+
+.museum-mock h1 { margin: 4px 0; font-family: 'Cormorant Garamond', serif; font-size: clamp(2.6rem, 7vw, 5.6rem); line-height: .84; }
+.museum-mock p { margin: 8px 0 0; color: rgba(247,239,222,.68); }
+.museum-mock__eyebrow { color: #e2b56d; font-size: .76rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+.museum-mock__back { border: 1px solid rgba(247,239,222,.3); padding: 10px 14px; border-radius: 999px; white-space: nowrap; }
+.museum-mock__stage { max-width: 1180px; margin: 0 auto; }
+.museum-mock__room { position: relative; min-height: min(68vh, 700px); overflow: hidden; border: 2px solid #80684b; background: linear-gradient(165deg, #33423f 0 32%, #1b201d 32% 100%); box-shadow: 0 28px 80px rgba(0,0,0,.45); perspective: 800px; }
+.museum-mock__ceiling { position: absolute; inset: 0 0 auto; height: 32%; background: linear-gradient(180deg, #574839, #29312e); clip-path: polygon(0 0,100% 0,76% 100%,24% 100%); }
+.museum-mock__wall { position: absolute; background: #202522; border: 1px solid rgba(247,239,222,.1); }
+.museum-mock__wall--back { inset: 28% 16% 20%; }
+.museum-mock__wall--left { inset: 28% auto 20% 0; width: 16%; transform: skewY(19deg); transform-origin: right; }
+.museum-mock__wall--right { inset: 28% 0 20% auto; width: 16%; transform: skewY(-19deg); transform-origin: left; }
+.museum-mock__frame { position: absolute; top: 39%; width: 12%; aspect-ratio: 3/4; border: 10px solid #9a7545; background: #101412; box-shadow: 0 10px 18px rgba(0,0,0,.35); z-index: 2; display: grid; place-items: center; color: #d9bc83; font-weight: 900; }
+.museum-mock__frame--left { left: 24%; }
+.museum-mock__frame--center { left: 44%; top: 33%; width: 17%; border-width: 14px; }
+.museum-mock__frame--right { right: 24%; }
+.museum-mock__frame img { width: 100%; height: 100%; object-fit: cover; }
+.museum-mock__plinth { position: absolute; bottom: 24%; width: 13%; height: 9%; background: #80684b; transform: skewX(-10deg); box-shadow: 0 14px 18px rgba(0,0,0,.34); }
+.museum-mock__plinth--left { left: 27%; }
+.museum-mock__plinth--right { right: 27%; }
+.museum-mock__player { position: absolute; left: var(--player-x, 50%); top: var(--player-y, 78%); z-index: 4; width: 34px; height: 56px; transform: translate(-50%, -100%); transition: filter .2s; }
+.museum-mock__player::before { content: ''; position: absolute; left: 8px; top: 0; width: 20px; height: 20px; border-radius: 50%; background: #d68b54; box-shadow: 0 22px 0 4px #b43e32, 0 40px 0 0 #204a63; }
+.museum-mock__player span { position: absolute; left: 3px; bottom: 0; width: 28px; height: 5px; border-radius: 50%; background: rgba(0,0,0,.4); }
+.museum-mock__player.is-walking { filter: brightness(1.2); }
+.museum-mock__exit { position: absolute; left: 50%; bottom: 5%; transform: translateX(-50%); padding: 5px 10px; border: 1px solid #d9bc83; color: #d9bc83; letter-spacing: .16em; font-size: .7rem; }
+.museum-mock__controls { margin-top: 14px; color: rgba(247,239,222,.68); }
+.museum-mock__controls strong { color: #e2b56d; }
+@media (max-width: 700px) { .museum-mock__header, .museum-mock__controls { align-items: start; flex-direction: column; } .museum-mock__room { min-height: 62vh; } }

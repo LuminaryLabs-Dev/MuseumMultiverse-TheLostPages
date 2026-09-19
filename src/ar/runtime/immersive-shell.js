@@ -1,6 +1,7 @@
 import './landing.css';
 import mobileHandoffArt from './mobile-handoff-scan-phone.png';
 import { renderCharacterMap } from './character-map-view.js';
+import { withBasePath } from '../../app/routes/basePath.js';
 
 function activeStep(runtimeState) {
   const experience = runtimeState.objective ?? runtimeState.experience ?? runtimeState;
@@ -67,11 +68,13 @@ export function renderImmersiveGate(experience, runtimeState = {}, options = {})
         <p class="ar-landing__eyebrow">${experience.qrTitle}</p>
         <h1>${experience.title}</h1>
         <p class="ar-landing__copy">${experience.prompt}</p>
+        ${experience.number === '01' ? `<img class="immersive-gate__art" src="${withBasePath('/assets/comic-pages/page01-museum-entry-v1.png')}" alt="JR enters a mysterious museum gallery" />` : ''}
         <div class="ar-landing__artifact">
           <span>Reward</span>
           <strong>${experience.collectible}</strong>
         </div>
         ${launchControl}
+        <a class="immersive-gate__mock" href="${withBasePath(`/?page=page${experience.number}&mock=1`)}">Open mock scene</a>
         <small>${launchNote}</small>
       </div>
     </section>

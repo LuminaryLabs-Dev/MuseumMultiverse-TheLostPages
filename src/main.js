@@ -24,8 +24,9 @@ import { createLostPageKit } from './kits/lostPageKit.js';
 import { createPageRailMovementKit } from './kits/pageRailMovementKit.js';
 import { createBookletReaderKit } from './kits/bookletReaderKit.js';
 import { createComicPanelSequenceKit } from './kits/panelSequenceKit.js';
-import { createPage01SimulatorRuntime } from './ar/simulator/session.js';
+import { createPage01SimulatorRuntime, createPage02SimulatorRuntime } from './ar/simulator/session.js';
 import { renderArSimulator } from './ar/simulator/view.js';
+import { renderMuseumMockScene } from './mock/museumMockScene.js';
 
 const app = document.querySelector('#app');
 const origin = resolvePublicOrigin();
@@ -160,12 +161,22 @@ async function renderImmersiveRoute(experience) {
 
 function renderSimulatorRoute(experience) {
   setTitle(`Simulator - ${experience.title}`);
-  if (experience.slug !== 'sleeping-gallery') {
+  const runtimeFactories = {
+    'sleeping-gallery': createPage01SimulatorRuntime,
+    'frame-that-breathes': createPage02SimulatorRuntime
+  };
+  const createRuntime = runtimeFactories[experience.slug];
+  if (!createRuntime) {
     app.innerHTML = '<main class="character-map-search">Simulator unavailable for this page.</main>';
     return;
   }
-  activeRuntime = createPage01SimulatorRuntime(experience);
+  activeRuntime = createRuntime(experience);
   renderArSimulator(app, experience, activeRuntime);
+}
+
+function renderMockSceneRoute(experience) {
+  setTitle(`Mock Scene · ${experience.title}`);
+  app.innerHTML = renderMuseumMockScene(experience);
 }
 
 async function renderBookletSurface() {
@@ -211,6 +222,11 @@ async function render() {
 
   if (route.type === 'experience-simulator' && route.experience) {
     renderSimulatorRoute(route.experience);
+    return;
+  }
+
+  if (route.type === 'mock-scene' && route.experience) {
+    renderMockSceneRoute(route.experience);
     return;
   }
 
