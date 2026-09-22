@@ -30,7 +30,8 @@ const routes = [
   'phone',
   ...experiences.map((experience) => `ar/${experience.slug}`),
   ...experiences.map((experience) => `debug/ar/${experience.slug}`),
-  'sim/ar/sleeping-gallery'
+  'sim/ar/sleeping-gallery',
+  'sim/ar/frame-that-breathes'
 ];
 
 await Promise.all(routes.map(writeRoute));

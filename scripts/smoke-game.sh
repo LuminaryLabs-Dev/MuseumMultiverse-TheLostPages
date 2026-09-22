@@ -25,16 +25,21 @@ for number in 01 02 03 04 05 06 07 08; do
   grep -q '"pause":true' <<<"$snapshot"
   grep -q "\"scene\":\"page${number}\"" <<<"$snapshot"
 
+  "$pwcli" eval 'window.__lostPagesGameTest.setManualClock(true)' >/dev/null
+  before="$(run_eval 'JSON.stringify(window.__lostPagesGameTest.snapshot())')"
   "$pwcli" keydown ArrowUp >/dev/null
-  delta_snapshot="$(run_eval '(() => { window.__lostPagesGameTest?.advance(250); return JSON.stringify(window.__lostPagesGameTest?.snapshot()); })()')"
+  delta_snapshot="$(run_eval '(() => { window.__lostPagesGameTest.advance(250); return JSON.stringify(window.__lostPagesGameTest.snapshot()); })()')"
   "$pwcli" keyup ArrowUp >/dev/null
   echo "page${number} delta ${delta_snapshot}"
   grep -q '"paused":false' <<<"$delta_snapshot"
+  node --input-type=module -e 'const a=JSON.parse(process.argv[1]),b=JSON.parse(process.argv[2]); if(b.clock.ticks-a.clock.ticks!==15 || Math.abs(a.player.z-b.player.z-0.775)>0.002) process.exit(1)' "$before" "$delta_snapshot"
 
   "$pwcli" eval '(() => { document.querySelector("button[aria-label=\"Pause\"]")?.click(); return "clicked"; })()' >/dev/null
   paused_snapshot="$(run_eval 'JSON.stringify(window.__lostPagesGameTest?.snapshot())')"
   echo "page${number} pause ${paused_snapshot}"
   grep -q '"paused":true' <<<"$paused_snapshot"
+  after_pause="$(run_eval '(() => { window.__lostPagesGameTest.advance(1000); return JSON.stringify(window.__lostPagesGameTest.snapshot()); })()')"
+  test "$paused_snapshot" = "$after_pause"
 done
 
-echo "game smoke: PASS"
+echo "game smoke: PASS (route loading, exact elapsed movement, pause freeze only; not eight-game completion)"

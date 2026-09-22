@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { withBasePath } from '../app/routes/basePath.js';
 import { getGameScene } from './scenes.js';
+import { createGameClock } from './clock.js';
 import './game.css';
 
 const WORLD_LIMIT = 4.4;
@@ -32,7 +33,7 @@ function buildRoom(scene) {
   addBox(scene, [10, 0.12, 10], [0, 4.15, 0], trim);
 }
 
-function addExhibit(scene, config, position, imageUrl) {
+function addExhibit(scene, config, position, imageUrl, isDisposed) {
   const group = new THREE.Group();
   group.position.set(position[0], 1.5, position[1]);
   const frame = new THREE.Mesh(
@@ -49,6 +50,7 @@ function addExhibit(scene, config, position, imageUrl) {
   group.add(art);
   if (imageUrl) {
     new THREE.TextureLoader().load(imageUrl, (texture) => {
+      if (isDisposed()) { texture.dispose(); return; }
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.anisotropy = 4;
       artMaterial.map = texture;
@@ -108,6 +110,7 @@ export function mountGame(root, sceneId) {
 
   const config = getGameScene(sceneId);
   const scene = new THREE.Scene();
+  let disposed = false;
   scene.background = new THREE.Color('#111513');
   scene.fog = new THREE.Fog('#111513', 8, 16);
   const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 30);
@@ -123,15 +126,16 @@ export function mountGame(root, sceneId) {
   scene.add(key);
   buildRoom(scene);
 
-  const center = addExhibit(scene, config, [config.goal.x, config.goal.z], pageAsset(sceneId));
-  const sideA = addExhibit(scene, { accent: '#725a45' }, [-3.1, -3.25], pageAsset(sceneId));
-  const sideB = addExhibit(scene, { accent: '#725a45' }, [3.1, -3.25], pageAsset(sceneId));
+  const center = addExhibit(scene, config, [config.goal.x, config.goal.z], pageAsset(sceneId), () => disposed);
+  const sideA = addExhibit(scene, { accent: '#725a45' }, [-3.1, -3.25], pageAsset(sceneId), () => disposed);
+  const sideB = addExhibit(scene, { accent: '#725a45' }, [3.1, -3.25], pageAsset(sceneId), () => disposed);
   sideA.scale.setScalar(0.72);
   sideB.scale.setScalar(0.72);
 
   const loader = new GLTFLoader();
   let loadedModel = null;
   loader.load(withBasePath('/assets/mmgdoc/models/center-frame-set.glb'), (gltf) => {
+    if (disposed) { disposeObject(gltf.scene); return; }
     loadedModel = gltf.scene;
     loadedModel.scale.setScalar(0.75);
     loadedModel.position.set(0, 0, -4.8);
@@ -144,34 +148,57 @@ export function mountGame(root, sceneId) {
   scene.add(player);
   const keys = new Set();
   let paused = false;
-  let disposed = false;
   let completed = false;
   let last = performance.now();
   let frame = 0;
   let pointerIntent = null;
+  let manualClock = false;
+  const clock = createGameClock(move);
 
   const onKeyDown = (event) => {
+    if (paused && event.key === 'Tab') {
+      const controls = [...shell.querySelectorAll('[data-game-pause-menu] button, [data-game-pause-menu] a')];
+      const index = controls.indexOf(document.activeElement);
+      event.preventDefault();
+      controls[(index + (event.shiftKey ? -1 : 1) + controls.length) % controls.length].focus();
+      return;
+    }
     if (event.key === 'Escape') {
+      if (event.repeat) return;
       paused = !paused;
       updatePause();
       return;
     }
+    if (paused) return;
     if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(event.key.toLowerCase())) {
       keys.add(event.key.toLowerCase());
       event.preventDefault();
     }
   };
   const onKeyUp = (event) => keys.delete(event.key.toLowerCase());
-  const onPointerDown = (event) => { pointerIntent = { x: event.clientX, y: event.clientY }; };
+  const onPointerDown = (event) => {
+    if (paused) return;
+    viewport.setPointerCapture(event.pointerId);
+    pointerIntent = { x: event.clientX, y: event.clientY };
+  };
   const onPointerMove = (event) => { if (pointerIntent) pointerIntent = { ...pointerIntent, x: event.clientX, y: event.clientY }; };
   const onPointerUp = () => { pointerIntent = null; };
 
   function updatePause() {
+    keys.clear();
+    pointerIntent = null;
+    last = performance.now();
     shell.querySelector('[data-game-pause-menu]').hidden = !paused;
+    viewport.inert = paused;
+    shell.querySelector('[data-game-pause]').hidden = paused;
+    shell.querySelector(paused ? '[data-game-resume]' : '[data-game-pause]').focus();
   }
+  const onBlur = () => { paused = true; updatePause(); };
+  const onVisibility = () => { if (document.hidden) onBlur(); };
   function restart() {
     player.position.set(0, 0, 3.7);
     completed = false;
+    clock.reset();
     shell.querySelector('[data-game-complete]').hidden = true;
     paused = false;
     updatePause();
@@ -210,15 +237,16 @@ export function mountGame(root, sceneId) {
   }
   function advance(deltaMs = 16.67) {
     if (paused) return;
-    move(Math.min(0.05, Math.max(0, Number(deltaMs) || 0) / 1000));
+    clock.advance(deltaMs);
   }
   function render(now) {
     if (disposed) return;
-    const delta = Math.min(0.05, (now - last) / 1000);
+    const elapsed = Math.max(0, now - last);
+    const delta = Math.min(0.25, elapsed / 1000);
     last = now;
-    if (!paused) move(delta);
+    if (!paused && !manualClock) clock.frame(elapsed);
     const target = new THREE.Vector3(player.position.x, 1.2, player.position.z + 2.2);
-    camera.position.lerp(new THREE.Vector3(player.position.x, 3.2, player.position.z + 6.2), 0.08);
+    camera.position.lerp(new THREE.Vector3(player.position.x, 3.2, player.position.z + 6.2), 1 - Math.exp(-5 * delta));
     camera.lookAt(target);
     renderer.render(scene, camera);
     frame = requestAnimationFrame(render);
@@ -234,15 +262,19 @@ export function mountGame(root, sceneId) {
   viewport.addEventListener('pointerup', onPointerUp);
   viewport.addEventListener('pointercancel', onPointerUp);
   window.addEventListener('resize', updateSize);
+  window.addEventListener('blur', onBlur);
+  document.addEventListener('visibilitychange', onVisibility);
   updateSize();
   const testApi = {
     sceneId,
     advance,
+    setManualClock(enabled) { manualClock = Boolean(enabled); keys.clear(); last = performance.now(); },
     snapshot() {
       return {
         sceneId,
         paused,
         completed,
+        clock: clock.snapshot(),
         player: { x: Number(player.position.x.toFixed(3)), z: Number(player.position.z.toFixed(3)) }
       };
     }
@@ -256,17 +288,27 @@ export function mountGame(root, sceneId) {
     window.removeEventListener('keydown', onKeyDown);
     window.removeEventListener('keyup', onKeyUp);
     window.removeEventListener('resize', updateSize);
+    window.removeEventListener('blur', onBlur);
+    document.removeEventListener('visibilitychange', onVisibility);
     viewport.removeEventListener('pointerdown', onPointerDown);
     viewport.removeEventListener('pointermove', onPointerMove);
     viewport.removeEventListener('pointerup', onPointerUp);
     viewport.removeEventListener('pointercancel', onPointerUp);
     renderer.dispose();
     if (window.__lostPagesGameTest === testApi) delete window.__lostPagesGameTest;
-    loadedModel?.traverse?.((node) => {
-      node.geometry?.dispose?.();
-      if (Array.isArray(node.material)) node.material.forEach((material) => material.dispose?.());
-      else node.material?.dispose?.();
-    });
+    disposeObject(scene);
     viewport.replaceChildren();
   };
+}
+
+function disposeObject(object) {
+  const resources = new Set();
+  object.traverse((node) => {
+    if (node.geometry) resources.add(node.geometry);
+    for (const material of [node.material].flat().filter(Boolean)) {
+      for (const value of Object.values(material)) if (value?.isTexture) resources.add(value);
+      resources.add(material);
+    }
+  });
+  resources.forEach((resource) => resource.dispose());
 }

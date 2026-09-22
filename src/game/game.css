@@ -10,3 +10,7 @@
 .game-shell__complete { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; pointer-events: none; }
 .game-shell__complete-fragment { width: 68px; height: 68px; transform: rotate(45deg); border: 2px solid var(--game-accent); box-shadow: 0 0 42px var(--game-accent); animation: game-fragment-pulse 1.4s ease-in-out infinite; }
 @keyframes game-fragment-pulse { 0%,100% { opacity: .4; scale: .8; } 50% { opacity: 1; scale: 1; } }
+.game-shell :focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  .game-shell__complete-fragment { animation: none; opacity: 1; }
+}
