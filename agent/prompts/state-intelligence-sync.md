@@ -13,18 +13,21 @@ Do not implement product, route, runtime, print, visual, or game behavior unless
 
 Read:
 
-1. `agent/start-here.md`
-2. `agent/pointer.md`
-3. `agent/workflow.md`
-4. `agent/goal.md`
-5. `agent/dependencies.md`
-6. all files in `agent/feedback/`
-7. `agent/memory.md`
-8. `agent/run-log.md`
-9. `agent/change-log.md`
-10. `agent/state-intelligence-ledger.md` if present
-11. key non-agent docs under `docs/`
-12. implementation files only if needed as evidence
+1. `goal.md`
+2. `docs/CURRENT-STATE.md`
+3. `docs/DOCUMENTATION-MAP.md`
+4. `agent/start-here.md`
+5. `agent/pointer.md`
+6. `agent/workflow.md`
+7. `agent/dependencies.md`
+8. all files in `agent/feedback/`
+9. `memory.md`
+10. `agent/memory.md`
+11. `agent/run-log.md`
+12. `agent/change-log.md`
+13. `agent/state-intelligence-ledger.md` if present
+14. key active non-agent docs under `docs/`
+15. implementation files only if needed as evidence
 
 Then report:
 

@@ -2,6 +2,57 @@
 
 Status: active
 
+## 2026-08-08
+
+Changed:
+
+- Reconstructed the repository history through current `main` in
+  `CHANGELOG.md`.
+- Added `docs/CURRENT-STATE.md` as the dated active-truth snapshot.
+- Classified committed runtime, fresh validation, historical paths, unverified
+  behavior, and local provisional `.agent/` discovery separately.
+- Corrected the docs index from the removed NexusRealtime dependency page to
+  the active NexusEngine dependency page.
+- Marked the June state-intelligence snapshot as historical rather than current.
+- Established root `goal.md`, `docs/DOCUMENTATION-MAP.md`, and tracked `agent/`
+  as the active mission, authority map, and execution surface.
+- Preserved `.agent/` as a provisional design-discovery archive and stopped its
+  repeated-question loop from selecting work.
+- Replaced the stale pointer chain with the ordered twelve-pass workflow and
+  Pass 3 final-product prompt.
+- Added simulator-first deterministic proof plus direct-route Playwright
+  player proof as the required gameplay validation loop.
+- Added `docs/FINAL-PRODUCT-GOAL.md` as the canonical final product and eight
+  page contract.
+- Resolved the repeated discovery questions into one-action-at-a-time
+  Plan-Run-Reward gameplay and advanced the pointer to the goal matrix.
+- Added and validated the 61-row goal matrix, including exact dependency ids,
+  specification coverage, four bounded outcomes per page, and the ordered
+  critical path into the simple gameplay contract.
+- Added the canonical simple gameplay contract and made it part of the required
+  read order, documentation authority map, workflow, and durable repository
+  memory before advancing to architecture ownership.
+- Added product-first architecture authority and a narrow Page 01 context
+  capsule so tooling, framework, and skill work cannot replace the actual
+  player outcome or reload the provisional discovery loop.
+- Implemented and proved the complete Page 01 direct-simulator player slice,
+  including route trace, auto-run, Jump, local recovery, save-before-reward,
+  one-hero UX, Nexus replay, and mobile/desktop player evidence.
+- Closed Pass 7 and reduced the next context to one Page 02 capsule; no all-page
+  framework, A-Frame, asset, environment, skill, external-repo, or deployment
+  work was added.
+
+Reason:
+
+The project is moving from incremental nudging and a long provisional discovery
+interview into twelve ordered goal-matrix passes. The first pass needed a
+verified history and an explicit current-state boundary before cleanup or new
+implementation.
+
+The documentation cleanup then needed one owner per topic and an efficient
+proof loop centered on interaction, feedback, recovery, and visible player
+outcomes rather than QR scanning or environment detail.
+
 ## 2026-07-09
 
 Changed:

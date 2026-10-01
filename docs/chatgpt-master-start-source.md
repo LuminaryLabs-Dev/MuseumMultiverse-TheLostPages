@@ -1,6 +1,12 @@
-# Museum Multiverse: Lost Pages - ChatGPT Master Start Source
+# Museum Multiverse: Lost Pages - Historical Master Start Source
 
-Status: active master starting source  
+> Historical notice (2026-08-08): this June 2026 starting source predates the
+> NexusEngine cutover, Page 01 Character Map, simulator, card-stack validation,
+> and twelve-pass program. It is preserved for provenance and must not be used
+> as current implementation truth. Start with `goal.md`,
+> `docs/CURRENT-STATE.md`, and `docs/DOCUMENTATION-MAP.md`.
+
+Status: historical starting source
 Repository: `LuminaryLabs-Dev/MuseumMultiverse-TheLostPages`  
 Primary branch: `main`  
 Last synthesized: 2026-06-26  
@@ -320,6 +326,8 @@ agent/prompts/004-ar-route-check.md
 
 ## 17. Update policy for this document
 
-Update this document when route families, experience slugs, experience count, print source naming, deployment target, dependency boundary, current pointer structure, agent operating model, core product goal, validation status, major visual direction, state intelligence workflow, or primary non-AR review surface direction changes.
+This historical source is frozen. Record current changes in `CHANGELOG.md`,
+`docs/CURRENT-STATE.md`, root `goal.md`, and the active topic owner named in
+`docs/DOCUMENTATION-MAP.md`.
 
 Keep this file as the high-level master source. Do not turn it into a run log. Detailed execution history belongs in `agent/run-log.md`; durable instructions belong in `agent/memory.md`; active work belongs in `agent/pointer.md`.

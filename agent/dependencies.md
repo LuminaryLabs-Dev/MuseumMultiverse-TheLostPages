@@ -38,6 +38,15 @@ Lost Pages should configure reusable behavior. It should not become the runtime 
 
 Reusable domain services must remain renderer and host independent. Three.js, DOM, canvas, GPU, WebXR, storage providers, and platform lifecycle code belong behind explicit adapters.
 
+The implemented Page 01 boundary contains only three new local DSK owners: Lost
+Pages Gameplay, Auto Runner, and Journey Progress. Page 01 consumes all three
+with passing headless and player proof. They remain local promotion candidates
+until another page proves reuse; no external repository write is authorized.
+
+A-Frame is not a dependency target. Reopen it only in Pass 9 if direct-device
+evidence shows the installed NexusEngine/Three.js host cannot satisfy the
+declared wall/table/floor placement and recovery contract.
+
 ## Review Rule
 
 When a change touches runtime architecture, decide whether the behavior belongs in Lost Pages content/composition, a NexusEngine Domain Service Kit, a ProtoKit, or a host/renderer adapter.

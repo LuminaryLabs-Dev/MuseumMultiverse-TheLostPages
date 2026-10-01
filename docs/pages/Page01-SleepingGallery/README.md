@@ -1,63 +1,78 @@
-# Page 01 — The Sleeping Gallery
+# Page 01 — The Character Map
 
-Status: supporting content scaffold
+Status: current vertical-slice packet
+
+Final target: `../../FINAL-PRODUCT-GOAL.md`. This packet records the current
+Character Map slice; the final target extends it into the shared
+Plan-Run-Reward and Jump grammar.
 Slug: `sleeping-gallery`
 Route: `/ar/sleeping-gallery/`
 Debug route: `/debug/ar/sleeping-gallery/`
+Simulator route: `/sim/ar/sleeping-gallery/`
 Print source: `print/magazine-pages/01-sleeping-gallery.md`
 Runtime source: `src/experiences/sleeping-gallery/`
-QR title: Scan to Wake the Museum
+QR title: Scan to Find the Maze
 Reward: Gallery Key Fragment
-Primary verb: tap
+Primary verbs: place, swipe, claim
 
 ## DNA
 
-Page 01 is the cover and entry portal. It introduces the reader to the idea that the museum is asleep and the printed magazine can wake it. The page should feel like the first forbidden scan after hours.
+Page 01 is the current reference slice. A shy visitor unfolds a living character
+map on a museum wall, guides its character through a deterministic maze, and
+awakens the first fragment. It introduces placement, readable spatial play,
+and the cross-page reward arc.
 
 ## Design doc
 
-The print page should foreground a quiet gallery wall, sleeping frames, and a clear QR portal. Use bold title hierarchy, readable scan copy, and a visual cue that five frames are waiting to be awakened. Keep the QR area clean and give the page a strong entry-cover composition.
+The final print page should foreground the folded character map, maze heart,
+first-fragment promise, and a clean QR portal. The current print Markdown still
+describes the superseded five-frame interaction; that copy drift is open for
+Pass 3 and must not be treated as current runtime behavior.
 
 ## Projected assets
 
 | Asset | Status | Use |
 |---|---|---|
-| sleeping gallery cover art | planned | print background and launcher card |
-| five lit frame states | needed | AR tap targets and progress feedback |
-| gallery key fragment icon | needed | reward UI |
-| subtle frame glow sprite | optional | interaction feedback |
-| wake chime audio | optional | reward/activation feedback |
+| Character Map reader art | source-backed | current dedicated reader page |
+| 121 maze regions | implemented primitive/canvas | deterministic maze state |
+| folded wall map | implemented primitive/canvas | placement and unfold state |
+| maze character and heart | implemented primitive/canvas | movement and goal readability |
+| Gallery Key Fragment identity | functional placeholder | reward feedback and progression |
+| final map, character, heart, and reward art | pending | Pass 10 visual production |
+| movement, unfold, solve, and reward audio | optional/pending | polish feedback |
 
 ## Full outline
 
-1. Reader scans the cover/entry page.
-2. Route opens with a Start AR gate.
-3. The gallery appears asleep.
-4. Five frames glow one by one or are visible as dormant tap targets.
-5. Reader taps all five lit frames.
-6. The gallery wakes and reveals the Gallery Key Fragment.
-7. Completion is stored as the first progress slot.
+1. Reader scans the cover/entry page and opens the route.
+2. Reader starts the experience and finds a clear wall.
+3. Reader places and unfolds the Character Map.
+4. Reader swipes the character through the 11-by-11 maze.
+5. Reaching the maze heart awakens the Gallery Key Fragment.
+6. Reader claims the fragment and reaches completion.
 
 ## Experience structure
 
 ```text
 entry gate
-  -> sleeping gallery scene
-  -> five frame tap targets
-  -> progress count
-  -> gallery wake reveal
+  -> find wall
+  -> place and unfold map
+  -> swipe through deterministic maze
+  -> reach maze heart
   -> reward claim
 ```
 
 ## Game outline
 
-Objective: tap five lit frames and claim the Gallery Key Fragment.
+Objective: unfold the wall map, reach the maze heart, and claim the Gallery Key
+Fragment.
 
-Inputs: phone tap; desktop debug click.
+Inputs: phone swipe/pointer; desktop debug controls.
 
-Win state: all frames active, reward shown, progress saved.
+Win state: maze solved, reward claimed, experience state complete.
 
-Soft fail: missed taps should do nothing harmful.
+Recovery target: an invalid maze move must preserve a readable state and allow
+the player to continue or reset. Final failure/recovery acceptance remains a
+Pass 3 decision.
 
 ## Implementation map
 
@@ -69,7 +84,11 @@ Soft fail: missed taps should do nothing harmful.
 ## Acceptance checklist
 
 - Page 01 route opens directly.
-- Start AR gate appears before immersive behavior.
-- Five-frame progress is visible.
+- Start gate appears before immersive behavior.
+- Debug flow reaches find, place, unfold, solve, claim, and complete.
+- Maze generation is deterministic for the declared seed.
+- The manifest declares 121 map regions plus map, character, heart, and reward.
 - Reward name matches print, launcher, docs, and shared progress.
-- No phone/AR proof is claimed unless device-tested.
+- Simulator completes without camera access.
+- Physical wall AR, phone camera, and tracking are not claimed until
+  device-tested.

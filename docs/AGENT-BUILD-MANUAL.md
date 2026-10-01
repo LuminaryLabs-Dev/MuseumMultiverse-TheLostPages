@@ -9,6 +9,10 @@ This manual tells an auto agent how to use the product docs and the `agent/` ope
 ## Read order for content work
 
 ```text
+goal.md
+docs/CURRENT-STATE.md
+docs/DOCUMENTATION-MAP.md
+docs/FINAL-PRODUCT-GOAL.md
 docs/supporting-content/README.md
 docs/DNA.md
 docs/FULL-OUTLINE.md
@@ -24,10 +28,12 @@ agent/feedback/active-feedback.md
 ## Read order for State Intelligence Sync work
 
 ```text
+goal.md
+docs/CURRENT-STATE.md
+docs/DOCUMENTATION-MAP.md
 agent/start-here.md
 agent/pointer.md
 agent/workflow.md
-agent/goal.md
 agent/dependencies.md
 agent/feedback/active-feedback.md
 agent/feedback/feedback-inbox.md
@@ -73,7 +79,8 @@ A sync turn may update docs and agent knowledge, but it should not edit implemen
 - Do not invent a new page structure when docs already define one.
 - Do not move slugs without updating routes, print, QR, rewards, docs, and static export.
 - Do not claim AR/device proof from code review alone.
-- Do not copy reusable runtime logic into Lost Pages if it belongs in NexusRealtime.
+- Do not copy reusable deterministic domain logic into Lost Pages if it belongs
+  in NexusEngine Kits or ProtoKits.
 - Do not make visual changes from feedback notes alone unless the prompt asks for that visual pass.
 - Do not treat active feedback as implemented from docs alignment alone.
 - Do not edit `src/`, `print/`, `scripts/`, or `.github/` during State Intelligence Sync unless explicitly asked.

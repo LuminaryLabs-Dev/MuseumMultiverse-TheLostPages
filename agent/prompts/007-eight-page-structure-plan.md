@@ -1,6 +1,6 @@
 # 007 Eight Page Structure Plan
 
-Status: pending
+Status: superseded by Passes 3 and 4 of root `goal.md`
 
 ## Goal
 
@@ -21,4 +21,4 @@ Make the eight page QR magazine structure explicit and keep it aligned with the 
 
 ## Pointer
 
-If complete, move to 008-nexusrealtime-integration-audit.md unless a higher priority issue appears.
+Historical pointer only. Current work is `009-final-product-goal.md`.

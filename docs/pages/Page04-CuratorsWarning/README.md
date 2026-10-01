@@ -1,6 +1,8 @@
 # Page 04 — The Curator's Warning
 
-Status: supporting content scaffold
+Status: active design-intent packet
+
+Final contract: `../../FINAL-PRODUCT-GOAL.md`.
 Slug: `curators-warning`
 Route: `/ar/curators-warning/`
 Debug route: `/debug/ar/curators-warning/`
@@ -8,7 +10,7 @@ Print source: `print/magazine-pages/04-curators-warning.md`
 Runtime source: `src/experiences/curators-warning/`
 QR title: Scan the Red Seal
 Reward: Red Seal Note
-Primary verb: restore
+Primary verbs: restore, jump, read
 
 ## DNA
 
@@ -32,27 +34,30 @@ Use red seal language, warning labels, partial blackouts, stamped typography, an
 
 1. Reader scans the red seal.
 2. Start gate warns that the message is incomplete.
-3. Missing warning words appear as fragments or tiles.
-4. Reader restores the warning message.
-5. The warning locks into readable form.
-6. The Red Seal Note is awarded.
+3. At four safe stops the reader restores FOLLOW, VOICES, SEALED, and WING.
+4. Each accepted word builds the next route segment.
+5. JR auto-runs between stops with the shared Jump.
+6. The reader reaches the perch and reads the untimed warning.
+7. The Red Seal Note is awarded.
 
 ## Experience structure
 
 ```text
 entry gate
   -> corrupted warning surface
-  -> word restoration puzzle
-  -> sentence lock-in
+  -> word-built route and shared Jump
+  -> grounded reading perch
   -> warning reveal
   -> reward claim
 ```
 
 ## Game outline
 
-Objective: restore warning words and read the curator's warning.
+Objective: restore four words, traverse the route they build, and read the
+curator's warning.
 
-Inputs: tap/drag word fragments; desktop debug click/drag.
+Inputs: tap/drag or select one obvious word at a safe stop; shared Jump during
+auto-run; desktop keyboard/pointer equivalents.
 
 Win state: warning text restored, reward saved.
 
@@ -68,6 +73,7 @@ Soft fail: wrong placements should remain movable or clearly reject without puni
 ## Acceptance checklist
 
 - Restored words are legible.
+- Each accepted word visibly creates the matching route segment.
 - Red seal visual identity is consistent across print and runtime.
 - Completion state clearly reveals the warning.
 - Reward name matches print/runtime/docs.

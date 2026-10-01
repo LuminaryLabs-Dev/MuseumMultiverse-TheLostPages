@@ -1,7 +1,7 @@
 # Lost Pages Technical Build Map
 
 Status: supporting content scaffold
-Last aligned: 2026-06-26
+Last aligned: 2026-08-08
 
 ## Purpose
 
@@ -10,7 +10,11 @@ This document maps product docs to the implementation files an auto agent should
 ## Source-of-truth chain
 
 ```text
-docs/DNA.md
+docs/FINAL-PRODUCT-GOAL.md
+  -> goal matrix
+  -> docs/SIMPLE-GAMEPLAY-CONTRACT.md
+  -> docs/ARCHITECTURE-SKILL-MAP.md
+  -> docs/DNA.md
   -> docs/pages/PageXX-*/
   -> print/magazine-pages/XX-<slug>.md
   -> src/experiences/<slug>/copy.js
@@ -21,6 +25,9 @@ docs/DNA.md
   -> src/app/routes/router.js
   -> scripts/export-static-routes.mjs
 ```
+
+Live source and `docs/CURRENT-STATE.md` still own claims about what currently
+exists. The chain above describes target-to-implementation alignment.
 
 ## Current inspected route model
 
@@ -36,13 +43,16 @@ docs/DNA.md
 | `/ar/<slug>/` | Experience route. |
 | `/ar/<slug>/?debug=1` | Experience debug route. |
 | `/debug/ar/<slug>/` | Desktop debug route. |
+| `/sim/ar/sleeping-gallery/` | Complete Page 01 camera-free Plan/Run/Reward player simulator. |
 | `?page=<slug>` | Legacy search-param route into an experience. |
 
 `src/app/launcher/bookScene.js` still exists as legacy source, but it is not the current default public non-experience route path.
 
 ## Dependency state
 
-`package.json` is pinned to a specific NexusRealtime commit. `package-lock.json` still references the older dependency target and needs regeneration before dependency hygiene is complete.
+`package.json` and `package-lock.json` pin `nexusengine@0.0.3` to commit
+`55b7f33f6d008b2e3b120e370f09b96ed73105e9`. `npm ls --depth=0` and the
+production build passed on 2026-08-08.
 
 ## Implementation areas
 
@@ -61,11 +71,21 @@ docs/DNA.md
 | `src/app/launcher/cleanLauncher.css` | tabletop and paper-surface styling |
 | `src/app/launcher/launcherMotion.js` | subtle physical motion |
 | `src/app/launcher/bookScene.js` | legacy book implementation source |
-| `src/ar/runtime/session.js` | NexusRealtime-backed runtime adapter |
+| `src/ar/runtime/session.js` | app-owned session adapter using NexusEngine contracts |
+| `src/ar/simulator/session.js` | Page 01 semantic-input, clock, storage, and kit composition adapter |
+| `src/ar/simulator/view.js` | Page 01 one-hero player shell and greybox/canvas presentation |
+| `src/domains/auto-runner/` | renderer-free fixed-tick route and Jump rules |
+| `src/domains/journey-progress/` | versioned page/journey save and reward ledger |
+| `src/domains/lost-pages-gameplay/` | shared phases, commands, recovery, hero, and page coordination |
+| `src/experiences/sleeping-gallery/gameplay.js` | pure Page 01 Direct route authoring |
+| `scripts/prove-page01-player-slice.mjs` | durable Nexus replay/rules proof |
 
 ## Agent safety rules
 
-- Do not change reusable runtime architecture without checking whether the change belongs in NexusRealtime.
+- Classify reusable deterministic rules against NexusEngine Domain Service
+  Kits or ProtoKits before adding app-local domain logic.
+- Keep Three.js, DOM, canvas, camera, WebXR, storage, GPU, and lifecycle code in
+  explicit host/renderer adapters.
 - Do not claim build, route, browser, device, or immersive proof without actual testing.
 - Do not change slugs casually; slugs affect routes, static export, print docs, and progress.
 - Do not treat active feedback as processed until implementation and validation evidence exist.

@@ -19,7 +19,9 @@ PageXX-PageName/
     └── acceptance checklist
 ```
 
-A later split may move those sections into separate files such as `DNA.md`, `DESIGN.md`, `PROJECTED-ASSETS.md`, `FULL-OUTLINE.md`, `EXPERIENCE.md`, `STRUCTURE.md`, and `GAME.md`. Until then, the page README is the canonical page content packet.
+A later split may move those sections into separate files. Until then, the page
+README is the page's design-intent packet. It does not override live source,
+`docs/CURRENT-STATE.md`, or the final specification produced in Pass 3.
 
 ## Required fields
 
@@ -33,6 +35,7 @@ A later split may move those sections into separate files such as `DNA.md`, `DES
 - Runtime source folder.
 - Reward/collectible.
 - Primary interaction verb.
+- Simulator semantic actions and direct-route player goal.
 - Story beat.
 - Projected asset list.
 - Acceptance checklist.
@@ -54,4 +57,6 @@ docs/pages/Page08-SecretPortalRoom/
 
 ## Agent rule
 
-Do not implement a page change until the page content packet identifies the page's route, intended interaction, expected assets, reward, and acceptance criteria.
+Do not implement a page change until its final specification and matrix row
+identify the route, intended interaction, simulator actions, player goal,
+expected assets, reward, and acceptance criteria.

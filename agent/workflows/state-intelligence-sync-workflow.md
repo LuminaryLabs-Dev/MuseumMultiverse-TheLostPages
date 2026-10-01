@@ -48,25 +48,28 @@ Do not edit these during a state sync unless the user explicitly asks for implem
 
 ## Required read order
 
-1. `agent/start-here.md`
-2. `agent/pointer.md`
-3. `agent/workflow.md`
-4. `agent/goal.md`
-5. `agent/dependencies.md`
-6. all files in `agent/feedback/`
-7. `agent/memory.md`
-8. `agent/run-log.md`
-9. `agent/change-log.md`
-10. `agent/state-intelligence-ledger.md` if present
-11. `docs/chatgpt-master-start-source.md`
-12. `docs/DNA.md`
-13. `docs/FULL-OUTLINE.md`
-14. `docs/STYLE-GUIDE.md`
-15. `docs/TECHNICAL-BUILD-MAP.md`
-16. `docs/QA-ACCEPTANCE.md`
-17. `docs/TRACEABILITY-MATRIX.md`
-18. `docs/STATE-ALIGNMENT-MAP.md` if present
-19. `README.md`
+1. `goal.md`
+2. `docs/CURRENT-STATE.md`
+3. `docs/DOCUMENTATION-MAP.md`
+4. `agent/start-here.md`
+5. `agent/pointer.md`
+6. `agent/workflow.md`
+7. `agent/dependencies.md`
+8. all files in `agent/feedback/`
+9. `memory.md`
+10. `agent/memory.md`
+11. `agent/run-log.md`
+12. `agent/change-log.md`
+13. `agent/state-intelligence-ledger.md` if present
+14. `docs/DNA.md`
+15. `docs/FULL-OUTLINE.md`
+16. `docs/STYLE-GUIDE.md`
+17. `docs/TECHNICAL-BUILD-MAP.md`
+18. `docs/QA-ACCEPTANCE.md`
+19. `docs/SIMULATOR-PLAYER-PROOF.md`
+20. `docs/TRACEABILITY-MATRIX.md`
+21. `docs/STATE-ALIGNMENT-MAP.md` if present
+22. `README.md`
 
 ## State report requirements
 

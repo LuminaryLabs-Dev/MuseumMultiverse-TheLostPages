@@ -1,6 +1,8 @@
 # Page 03 — The Lost Child's Sketchbook
 
-Status: supporting content scaffold
+Status: active design-intent packet
+
+Final contract: `../../FINAL-PRODUCT-GOAL.md`.
 Slug: `lost-childs-sketchbook`
 Route: `/ar/lost-childs-sketchbook/`
 Debug route: `/debug/ar/lost-childs-sketchbook/`
@@ -8,7 +10,7 @@ Print source: `print/magazine-pages/03-lost-childs-sketchbook.md`
 Runtime source: `src/experiences/lost-childs-sketchbook/`
 QR title: Scan the Forgotten Drawing
 Reward: Memory Sketch
-Primary verb: catch
+Primary verbs: jump, reveal
 
 ## DNA
 
@@ -23,7 +25,7 @@ The print page should look like a torn sketchbook insert placed inside the magaz
 | Asset | Status | Use |
 |---|---|---|
 | sketchbook page background | planned | print/page identity |
-| sketch creature sprites | needed | catch targets |
+| sketch creature/platform sprites | needed | predictable moving platforms |
 | memory reveal illustration | needed | completion moment |
 | Memory Sketch collectible icon | needed | reward UI |
 | pencil trail particles | optional | movement feedback |
@@ -32,9 +34,10 @@ The print page should look like a torn sketchbook insert placed inside the magaz
 
 1. Reader scans the sketchbook page.
 2. Start gate frames the forgotten drawing.
-3. Sketch creatures appear or drift across the scene.
-4. Reader catches the required creatures.
-5. The drawing resolves into a memory.
+3. Glide, Lift, and Loop sketch creatures become predictable moving platforms.
+4. JR auto-runs while the reader uses Jump to cross them; safe landings record
+   their impressions automatically.
+5. At the final static landing, the reader reveals the memory.
 6. The Memory Sketch is awarded and saved.
 
 ## Experience structure
@@ -42,21 +45,22 @@ The print page should look like a torn sketchbook insert placed inside the magaz
 ```text
 entry gate
   -> sketchbook scene
-  -> creature movement loop
-  -> catch progress
+  -> predictable moving-platform loop
+  -> checkpoint-safe Jump progress
   -> memory reveal
   -> reward claim
 ```
 
 ## Game outline
 
-Objective: catch sketch creatures and reveal a memory.
+Objective: cross three moving sketch platforms and reveal the memory.
 
-Inputs: phone tap/drag; desktop click/hover debug as appropriate.
+Inputs: shared Jump on phone; keyboard/pointer debug equivalent; explicit
+Reveal Memory at the safe goal.
 
-Win state: required creatures caught, memory revealed, reward saved.
+Win state: all three platforms crossed, memory revealed, reward saved.
 
-Soft fail: creatures can loop or respawn rather than creating a hard failure.
+Soft fail: restore the exact platform phase at the last checkpoint and retry.
 
 ## Implementation map
 
@@ -67,7 +71,8 @@ Soft fail: creatures can loop or respawn rather than creating a hard failure.
 
 ## Acceptance checklist
 
-- Creature targets are easy to distinguish from background texture.
-- Catch progress is visible.
+- Moving-platform paths, direction, and safe saddles are easy to distinguish
+  from background texture.
+- Platform timing and checkpoint recovery are visible.
 - Memory reveal communicates completion.
 - Reward name matches print/runtime/docs.

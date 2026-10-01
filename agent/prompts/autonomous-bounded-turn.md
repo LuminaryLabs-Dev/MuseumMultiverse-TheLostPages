@@ -11,6 +11,11 @@ The turn must read repo state, choose exactly one coherent objective from the re
 
 This is not a queue runner. Do not continue into additional turns. Do not run background work. Do not start the next recommended turn.
 
+Root `goal.md` owns the current pass order. `docs/CURRENT-STATE.md` owns current
+truth and `docs/DOCUMENTATION-MAP.md` owns document authority. This prompt may
+select one bounded objective inside the active pass; it may not skip or redefine
+that pass.
+
 ## Full reusable prompt
 
 ```text
@@ -90,32 +95,35 @@ FIRST: READ THE REPO STATE
 
 Read these before deciding what to do:
 
-1. agent/start-here.md
-2. agent/pointer.md
-3. agent/workflow.md
-4. agent/goal.md
-5. agent/dependencies.md
-6. agent/state-intelligence-ledger.md
-7. agent/scheduled-turn-lock.md if present
-8. agent/feedback/active-feedback.md
-9. agent/feedback/feedback-inbox.md
-10. agent/feedback/feedback-rules.md
-11. agent/feedback/feedback-log.md
-12. agent/feedback/processed-feedback.md
-13. agent/memory.md
-14. agent/run-log.md
-15. agent/change-log.md
-16. docs/STATE-ALIGNMENT-MAP.md
-17. docs/DNA.md
-18. docs/FULL-OUTLINE.md
-19. docs/STYLE-GUIDE.md
-20. docs/TECHNICAL-BUILD-MAP.md
-21. docs/QA-ACCEPTANCE.md
-22. docs/TRACEABILITY-MATRIX.md
-23. docs/chatgpt-master-start-source.md
-24. README.md
-25. output-rules.md
-26. output.md
+1. goal.md
+2. docs/CURRENT-STATE.md
+3. docs/DOCUMENTATION-MAP.md
+4. agent/start-here.md
+5. agent/pointer.md
+6. agent/workflow.md
+7. agent/dependencies.md
+8. agent/state-intelligence-ledger.md
+9. agent/scheduled-turn-lock.md if present
+10. agent/feedback/active-feedback.md
+11. agent/feedback/feedback-inbox.md
+12. agent/feedback/feedback-rules.md
+13. agent/feedback/feedback-log.md
+14. agent/feedback/processed-feedback.md
+15. memory.md
+16. agent/memory.md
+17. agent/run-log.md
+18. agent/change-log.md
+19. docs/SIMULATOR-PLAYER-PROOF.md
+20. docs/STATE-ALIGNMENT-MAP.md
+21. docs/DNA.md
+22. docs/FULL-OUTLINE.md
+23. docs/STYLE-GUIDE.md
+24. docs/TECHNICAL-BUILD-MAP.md
+25. docs/QA-ACCEPTANCE.md
+26. docs/TRACEABILITY-MATRIX.md
+27. README.md
+28. output-rules.md
+29. output.md
 
 Inspect implementation files as needed to understand current behavior. Do not edit implementation files until the selected turn mode allows it.
 
@@ -264,7 +272,8 @@ Invalid overbroad objectives include:
 * Improve every UI, route, AR, print, and deploy system at once.
 * Start multiple unrelated queued tasks.
 * Implement visual changes and AR runtime architecture in the same turn.
-* Change Lost Pages and NexusRealtime in the same turn unless explicitly requested.
+* Change Lost Pages and an external shared-runtime repository in the same turn
+  unless explicitly requested.
 
 FIFTH: OBEY THESE BOUNDS
 
@@ -273,7 +282,10 @@ FIFTH: OBEY THESE BOUNDS
 * Do not start the next recommended turn.
 * Do not implement from feedback unless implementation is explicitly selected and justified.
 * Do not edit src/, print/, scripts/, or .github/ during feedback intake, state sync, or planning.
-* Do not touch NexusRealtime or generic runtime architecture unless the selected objective explicitly requires runtime work.
+* Do not change external NexusEngine repositories or generic runtime
+  architecture unless the selected objective explicitly requires that work.
+* For gameplay, use deterministic simulator proof and direct-route Playwright
+  player proof; do not use physical QR scans as the normal harness.
 * Do not change slugs, QR routes, static export, or rewards without checking traceability docs.
 * Do not claim build success unless a build was actually run.
 * Do not claim browser, phone, camera, WebXR, or AR testing unless actually tested.

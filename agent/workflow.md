@@ -5,23 +5,30 @@ Status: active
 ## Required Run Loop
 
 1. Read `agent/start-here.md`.
-2. Read `agent/pointer.md`.
-3. Read this file.
-4. Read `agent/goal.md`.
-5. Read `agent/dependencies.md`.
-6. Read `agent/feedback/active-feedback.md`.
-7. Read the workflow named in the pointer, unless the user explicitly triggers a different workflow or prompt.
-8. Read the prompt named in the pointer, unless the user explicitly triggers a different prompt.
-9. Inspect only the source files needed for the selected prompt.
-10. Execute one bounded batch.
-11. Validate with the closest available check.
-12. Update `output.md` with the shortest useful deploy message.
-13. Update `agent/run-log.md`.
-14. Update `agent/feedback/processed-feedback.md` if feedback was addressed.
-15. Update `agent/memory.md` if a durable rule was learned.
-16. Update `agent/change-log.md` if agent system files changed.
-17. Update `agent/pointer.md` to the next best prompt only when the active task is completed, blocked, obsolete, or superseded.
-18. Push the whole batch.
+2. Read root `goal.md`.
+3. Read `docs/CURRENT-STATE.md` and `docs/DOCUMENTATION-MAP.md`.
+4. Read `docs/FINAL-PRODUCT-GOAL.md` for product or gameplay work.
+5. Read `docs/SIMPLE-GAMEPLAY-CONTRACT.md` for gameplay behavior.
+6. Read `agent/pointer.md`.
+7. Read this file.
+8. Read `agent/dependencies.md`.
+9. Read `agent/feedback/active-feedback.md`.
+10. Read the workflow named in the pointer, unless the user explicitly triggers a different workflow or prompt.
+11. Read the prompt named in the pointer, unless the user explicitly triggers a different prompt.
+12. Inspect only the source files needed for the selected prompt.
+13. Execute one bounded batch.
+14. Validate with the closest available check.
+15. Update `output.md` with the shortest useful deploy message.
+16. Update `agent/run-log.md`.
+17. Update `agent/feedback/processed-feedback.md` if feedback was addressed.
+18. Update `agent/memory.md` if a durable rule was learned.
+19. Update `agent/change-log.md` if agent system files changed.
+20. Update the active pass and matrix row from evidence.
+21. Update `CHANGELOG.md` when product or architecture state changes.
+22. Update `agent/pointer.md` only when the active task is completed, blocked,
+    obsolete, or superseded.
+23. Commit, push, deploy, or notify only when explicitly authorized by the
+    current user instruction or scheduled workflow.
 
 ## Push Discipline
 
@@ -31,7 +38,29 @@ For multi-file work, batch changes first and publish once.
 
 `output.md` should be updated last so the deploy chat describes the whole batch, not each intermediate file edit.
 
-Scheduled autonomous turns push to `main` only and do not create new PRs.
+Do not infer publication authority from the existence of changed files. When a
+scheduled workflow explicitly authorizes publication, push one completed batch
+to the repository's actual default branch and do not create several public
+messages.
+
+## Gameplay Proof Loop
+
+Gameplay work follows `docs/SIMULATOR-PLAYER-PROOF.md`:
+
+The semantic behavior being proved is fixed by
+`docs/SIMPLE-GAMEPLAY-CONTRACT.md`.
+
+1. compose the shipped domain kits in the additive testing space;
+2. drive semantic inputs with a fixed seed and clock;
+3. prove startup, play, failure, recovery, reset, snapshot, replay, reward, and
+   completion;
+4. use Playwright on the direct simulator/debug URL to prove objective, hero
+   control, visible feedback, recovery, and completion comprehension;
+5. add the smallest missing capability and rerun both layers;
+6. stop after a stable pass, one concrete blocker, or three review cycles.
+
+Physical QR scanning is not the routine gameplay harness. Environment detail
+and object counts do not substitute for user-visible interaction quality.
 
 ## Self Learning Loop
 
@@ -124,7 +153,8 @@ Valid large scheduled objectives include:
 Invalid scheduled objectives include:
 
 - changing UI, AR runtime, print, route export, and deploy messaging in one unrelated batch
-- changing Lost Pages and NexusRealtime in the same turn unless explicitly requested
+- changing Lost Pages and an external shared runtime repository in the same
+  turn unless explicitly requested
 - running a queue of multiple unrelated tasks
 - pushing partial implementation without a closeout audit
 

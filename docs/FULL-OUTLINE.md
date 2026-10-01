@@ -9,14 +9,14 @@ An eight-page printed museum magazine becomes a sequence of QR-launched micro-ex
 ## Reader journey
 
 ```text
-Page 01: discover the magazine is alive
-Page 02: learn art can breathe and open
-Page 03: recover a child's lost museum memory
-Page 04: decode the curator's warning system
-Page 05: play inside a miniature exhibit world
-Page 06: sort artifacts between overlapping realities
-Page 07: resolve the canvas shadow encounter
-Page 08: use the collected fragments to open the portal room
+Page 01: trace a map route and learn the shared Jump
+Page 02: build a route with breathing-frame glyphs
+Page 03: cross predictable moving sketch platforms
+Page 04: restore words that become the safe route
+Page 05: complete the full living-picture-frame platformer
+Page 06: sort artifacts that build four route lanes
+Page 07: reveal hidden routes and contain the canvas shadow
+Page 08: use seven receipts to complete the final portal route
 ```
 
 ## Product stages
@@ -59,14 +59,14 @@ Page 08: use the collected fragments to open the portal room
 
 | Page | Slug | Role | Interaction | Reward |
 |---|---|---|---|---|
-| 01 | `sleeping-gallery` | Entry portal | Tap five lit frames | Gallery Key Fragment |
-| 02 | `frame-that-breathes` | Living painting | Align three glyphs | Canvas Whisper |
-| 03 | `lost-childs-sketchbook` | Memory recovery | Catch sketch creatures | Memory Sketch |
-| 04 | `curators-warning` | Warning decode | Restore warning words | Red Seal Note |
-| 05 | `tiny-platformer-diorama` | Playable miniature | Clear hazards and goal gate | Tiny Portal Badge |
-| 06 | `in-between-exhibit` | Reality sorting | Sort artifacts by world | Portal Stabilizer |
-| 07 | `monster-behind-canvas` | Canvas shadow encounter | Reveal and seal the canvas | Shadow Exhibit Fragment |
-| 08 | `secret-portal-room` | Finale | Light eight sockets | Final Portal Key |
+| 01 | `sleeping-gallery` | Entry portal | Trace and lock the Character Map, then complete the Jump lesson | Gallery Key Fragment |
+| 02 | `frame-that-breathes` | Living painting | Match three glyphs, run their route, enter the frame | Canvas Whisper |
+| 03 | `lost-childs-sketchbook` | Memory recovery | Jump across three predictable sketch platforms, reveal memory | Memory Sketch |
+| 04 | `curators-warning` | Warning decode | Restore four words that build the route, read the warning | Red Seal Note |
+| 05 | `tiny-platformer-diorama` | Hero picture frame | Shift three layers and traverse the living-frame course | Tiny Portal Badge |
+| 06 | `in-between-exhibit` | Reality sorting | Match four artifacts, run their lanes, seal the exhibit | Portal Stabilizer |
+| 07 | `monster-behind-canvas` | Canvas shadow encounter | Reveal three path parts, traverse them, seal the canvas | Shadow Exhibit Fragment |
+| 08 | `secret-portal-room` | Finale | Verify seven receipts, complete three familiar phases, enter portal | Final Portal Key |
 
 ## Current active direction
 
@@ -78,10 +78,18 @@ Source-backed implementation state:
 - `/book/` remains as a compatibility/static route entry, not as the preferred separate public review surface
 - tabletop/paper styling, grounded paper shadows, no pointer-following glow, subtle physical motion direction, and a first-pass opening/settling transition are source-backed
 
+Fresh 2026-08-08 validation:
+
+- production build and 22-route export passed
+- desktop and mobile-sized reader samples passed
+- Page 01 full direct simulator player slice and Page 02 legacy debug loop passed
+- sampled public routes and the deployed Page 02 QR origin passed
+
 Pending validation and decisions:
 
-- run dependency hygiene, composition check, build, browser preview, deployed-route checks, phone/device checks, and AR launch checks
-- decide whether `/book/` should remain compatibility/legacy, redirect to `/print/`, hide from public navigation/static export, or be removed
+- complete all eight debug loops and prove phone-camera, WebXR, physical
+  placement, accessibility, recovery, save/reset, and performance behavior
+- keep `/book/` as a hidden compatibility/static alias to the shared reader
 - judge the physical opening/settling transition in browser/device preview before polishing it further
 
 Do not mark these active feedback themes processed until implementation and validation evidence exist.
@@ -89,3 +97,6 @@ Do not mark these active feedback themes processed until implementation and vali
 ## Final outcome
 
 The finished repo should support a printed eight-page artifact, a phone-friendly launcher, a primary print/booklet review surface, direct AR routes for every QR code, desktop debug routes, short deploy messages, and durable agent handoff state.
+
+The objective shared gameplay, UX, duration, save, simulator, accessibility,
+spatial-host, art, and release contract lives in `FINAL-PRODUCT-GOAL.md`.

@@ -1,6 +1,10 @@
 # 008 NexusRealtime Integration Audit
 
-Status: pending
+Status: superseded by the 2026-07-10 NexusEngine cutover
+
+> Historical prompt. Do not run it. Current dependency truth lives in
+> `agent/dependencies.md`; current work is selected by root `goal.md` and
+> `agent/pointer.md`.
 
 ## Goal
 

@@ -1,6 +1,8 @@
 # Page 02 — The Frame That Breathes
 
-Status: supporting content scaffold
+Status: active design-intent packet
+
+Final contract: `../../FINAL-PRODUCT-GOAL.md`.
 Slug: `frame-that-breathes`
 Route: `/ar/frame-that-breathes/`
 Debug route: `/debug/ar/frame-that-breathes/`
@@ -8,7 +10,7 @@ Print source: `print/magazine-pages/02-frame-that-breathes.md`
 Runtime source: `src/experiences/frame-that-breathes/`
 QR title: Scan to Open the Painting
 Reward: Canvas Whisper
-Primary verb: align
+Primary verbs: align, jump, enter
 
 ## DNA
 
@@ -36,8 +38,9 @@ The print page should read as a four-panel comic beat, not a static poster. The 
 3. Four comic panels establish JR's awe and the museum's first shift.
 4. The center burst QR is revealed and scanned.
 5. Three glyphs appear misaligned around or within the frame.
-6. Reader aligns the glyphs and the painting opens.
-7. The Canvas Whisper appears as the page reward.
+6. Reader aligns Bridge, Step, and Gate glyphs and locks the route.
+7. JR auto-runs the built route with one Jump control.
+8. Reader enters the opened frame and receives Canvas Whisper.
 
 ## Experience structure
 
@@ -45,18 +48,20 @@ The print page should read as a four-panel comic beat, not a static poster. The 
 entry gate
   -> breathing frame scene
   -> three glyph alignment puzzle
-  -> alignment confirmation
-  -> canvas opening reveal
+  -> lock and run the glyph-built route
+  -> explicit frame entry
   -> reward claim
 ```
 
 ## Game outline
 
-Objective: align three glyphs to open the frame.
+Objective: align three glyphs, traverse their route, and enter the frame.
 
-Inputs: drag/tap alignment on phone; mouse/keyboard equivalents in debug.
+Inputs: drag/select alignment at safe planning time; shared Jump during auto-run;
+mouse/keyboard equivalents in debug.
 
-Win state: all glyphs aligned, canvas opens, reward saved.
+Win state: all glyphs aligned, JR grounded at the portal, explicit entry
+accepted, reward saved.
 
 Soft fail: wrong alignment should visibly drift back or remain incomplete without blocking replay.
 

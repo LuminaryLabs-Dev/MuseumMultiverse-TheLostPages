@@ -1,42 +1,50 @@
 # Lost Pages Agent Memory
 
-Status: active
+Status: active operating rules
 
-## Durable Rules
+Product and architecture conventions live in `../memory.md`; do not duplicate
+them here.
 
-- Start future runs from `agent/start-here.md` and `agent/pointer.md`.
-- Use `agent/` as the repo-local agent folder.
-- Use one active pointer at a time.
-- Prompt files define what to do.
-- Workflow files define how to do it.
-- Read `agent/goal.md` before product-direction work.
-- Read `agent/dependencies.md` before dependency-boundary work.
-- Read `agent/feedback/active-feedback.md` before editing.
-- Keep deploy chat messages short.
-- Use `output-rules.md` for message style.
-- Use `output.md` for the current message source.
-- Do not include repo metadata unless requested.
-- Update `output.md` with each completed batch.
-- Update `output.md` last so the message describes the whole batch.
-- Validate before claiming a site or AR issue is fixed.
-- Phone routes require static route export from the build.
-- Launcher visuals should stay clean, comic-book-like, readable, and less PDF-heavy.
-- Motion should feel subtle and reactive; avoid spectacle that distracts from AR route selection.
-- Main rail motion should preserve a visible stack and continuous scroll progress. Do not switch back to one-card-only idle states, threshold jumps, or bright midpoint flashes.
-- Completed rail cards fall down-left and toward the camera with a mild edge-on turn and counterclockwise roll before fading. Keep outgoing cards depth-separated from the stack and cap motion-time render visibility at three cards.
-- Fit the complete active rail page inside the current viewport using aspect-aware camera distance; do not restore fixed desktop/mobile camera distances.
-- Page surfaces should read as square-corner paper, not rounded cards; use texture and shader-based shading where the WebGL book/print route owns the page surface.
-- User feedback should be added to `main` as feedback only. Do not change app code unless implementation is explicitly requested.
-- A State Intelligence Sync turn may update docs and agent knowledge files, but must not change app/source implementation.
-- Active feedback should be mirrored across `active-feedback.md`, `feedback-inbox.md`, and `feedback-log.md`.
-- Non-agent docs should reflect active direction as pending or current product direction when implementation is not complete.
-- Implementation status must be explicit: captured, aligned-to-docs, ready-for-implementation, implemented, processed, superseded, or blocked.
-- Do not mark feedback processed unless implementation, rejection, or supersession is evidenced.
-- Main print view is the preferred future non-AR presentation surface; the dedicated 3D book route is pending demotion/removal/legacy treatment unless deliberately retained.
-- Print-view visual direction should feel physical: tabletop surface, grounded shadows, subtle orientation/parallax, no pointer-following glow.
-- NexusEngine is the active runtime dependency. Do not restore NexusRealtime-specific architecture.
-- Page 01 is the Character Map wall-maze vertical slice and the reference for local native DSK composition plus host-owned rendering.
-- Validate Page 01 through NexusSimulator `ar-simtime` and `/sim/ar/sleeping-gallery/`; do not treat the simulator as physical AR proof.
-- The eight AR routes should become complete simple strategy experiences with 100-300+ deterministic world objects each, active-slice simulation budgets, replay, failure, reward, and strong feedback.
-- Reusable mechanics must use inspectable Domain Service Kit contracts; Three.js, DOM, canvas, WebXR, GPU, persistence providers, and host lifecycle work stay in adapters.
-- Normal player UX should expose only launch/place/current-objective hero controls on the first screen; debug, reset, metrics, and tuning belong behind advanced disclosure or debug routes.
+## Start Order
+
+1. `../goal.md`
+2. `../docs/CURRENT-STATE.md`
+3. `../docs/DOCUMENTATION-MAP.md`
+4. `../docs/FINAL-PRODUCT-GOAL.md` for product or gameplay work
+5. `../docs/SIMPLE-GAMEPLAY-CONTRACT.md` for gameplay behavior
+6. `../docs/GOAL-MATRIX.md` for execution work
+7. `start-here.md`
+8. `pointer.md`
+9. `workflow.md`
+10. `dependencies.md`
+11. `feedback/active-feedback.md`
+12. `../docs/SIMULATOR-PLAYER-PROOF.md` for gameplay work
+13. relevant source, docs, reports, and proof
+
+## Operating Rules
+
+- Use `agent/` as the active execution and feedback workspace.
+- Treat `.agent/` as preserved provisional discovery, not an active interview.
+- Keep one active pointer and one bounded capability in progress.
+- Prompts define the target; workflows define the execution loop.
+- Preserve unrelated work and never discard an unowned dirty change.
+- Distinguish current, historical, proposed, source-backed, built, previewed,
+  desktop-tested, phone-tested, and AR-tested states.
+- Update `run-log.md` for completed or blocked work.
+- Update `change-log.md` when the operating system or documentation authority
+  changes.
+- Update `../memory.md` only for lasting repository conventions.
+- Update `../goal.md` when pass status or completion criteria change.
+- Keep active feedback in `feedback/active-feedback.md`; do not mark feedback
+  processed without implementation, rejection, or supersession evidence.
+- Update `output.md` once at the end of a publishable batch and keep it short.
+- Validate visible work through browser/human-view proof when possible.
+- Use the direct NexusEngine simulator space for gameplay rules and Playwright
+  for separate player-visible acceptance; do not rely on physical QR scans.
+- Do not claim physical AR from simulator, fallback, source, or build evidence.
+
+## Documentation Pass Boundary
+
+During Truth, Documentation Cleanup, Final Product Goal, and Goal Matrix passes,
+do not change application behavior unless the active pass explicitly requires a
+runtime correction and its scope is documented first.

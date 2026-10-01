@@ -1,6 +1,8 @@
 # Page 08 — The Secret Portal Room
 
-Status: supporting content scaffold
+Status: active design-intent packet
+
+Final contract: `../../FINAL-PRODUCT-GOAL.md`.
 Slug: `secret-portal-room`
 Route: `/ar/secret-portal-room/`
 Debug route: `/debug/ar/secret-portal-room/`
@@ -8,7 +10,7 @@ Print source: `print/magazine-pages/08-secret-portal-room.md`
 Runtime source: `src/experiences/secret-portal-room/`
 QR title: Scan to Unlock the Lost Room
 Reward: Final Portal Key
-Primary verb: light / open
+Primary verbs: familiar context, jump, enter
 
 ## DNA
 
@@ -33,27 +35,32 @@ The print page should frame the final portal room as a mysterious threshold. Use
 
 1. Reader scans the final page.
 2. Start gate introduces the final room.
-3. The scene shows eight sockets or fragment positions.
-4. Previously earned rewards light their matching sockets.
-5. The reader completes the final interaction.
-6. The portal room opens and awards the Final Portal Key.
+3. The hub shows seven prior reward sockets and one reserved Final Portal Key
+   socket.
+4. Fewer than seven receipts exposes exact missing pages and Continue Journey.
+5. Seven receipts unlock a three-phase route using only familiar actions and
+   the shared Jump.
+6. Reader enters the restored portal.
+7. Page 08 completion creates slot eight and awards the Final Portal Key.
 
 ## Experience structure
 
 ```text
 entry gate
   -> final portal room scene
-  -> eight socket progress display
-  -> light/open interactions
+  -> seven-receipt eligibility display
+  -> three familiar route phases
   -> final portal reveal
   -> reward claim
 ```
 
 ## Game outline
 
-Objective: light eight sockets and open the final portal.
+Objective: verify seven earlier rewards, complete the familiar final route,
+and enter the restored portal.
 
-Inputs: tap sockets or confirm final action; desktop debug click controls.
+Inputs: familiar contextual actions at safe stops, shared Jump during auto-run,
+and explicit final portal entry.
 
 Win state: final portal opened, Final Portal Key saved.
 
@@ -69,6 +76,6 @@ Soft fail: missing fragments should show a partial state and guide replay withou
 ## Acceptance checklist
 
 - Page can show empty, partial, and complete states.
-- Eight-socket progress is legible.
-- Final reward does not claim missing progress.
+- Seven prior sockets and the reserved eighth key socket are distinguishable.
+- Final reward is created only after the finale and never gates its own start.
 - Reward name matches print/runtime/docs.

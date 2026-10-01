@@ -54,6 +54,9 @@ The active product direction now uses the main print view as the primary non-AR 
 
 - Every AR route needs a clear start gate.
 - Every page needs a visible objective.
+- Only one normal hero control is active at a time: the current contextual
+  action at a safe stop or `Jump` during auto-run.
+- Reset, metrics, seed, scenario, and tuning controls stay advanced or debug.
 - Progress feedback should be countable or otherwise obvious.
 - Reward feedback should be distinct from ordinary interaction feedback.
 - Non-AR review navigation should prioritize the main print view unless `/book/` is deliberately retained for debug or legacy review.

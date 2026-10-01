@@ -6,6 +6,29 @@ Status: supporting content scaffold
 
 This document defines the evidence an auto agent should record before claiming a Lost Pages page, route, visual surface, or State Intelligence Sync is ready.
 
+Gameplay proof follows `SIMULATOR-PLAYER-PROOF.md`. Physical QR scanning is not
+the routine test harness.
+
+Exact final player goals, duration bands, controls, failure/recovery behavior,
+and release acceptance live in `FINAL-PRODUCT-GOAL.md`.
+
+## Gameplay Proof Ladder
+
+For every shared mechanic and page loop:
+
+1. **Simulator proof** — compose the shipped domain kits, drive semantic inputs
+   on a fixed seed/clock, and prove startup, normal play, failure, recovery,
+   reset, snapshot, deterministic replay, reward, and completion.
+2. **Player proof** — open the direct simulator or debug URL with Playwright,
+   use the visible hero controls, and prove the player can understand every
+   meaningful state change.
+3. **Additive review** — if either layer is partial or failed, add the smallest
+   missing interaction or feedback capability and rerun both layers. Limit one
+   bounded batch to three cycles.
+
+Simulator success cannot substitute for human-view acceptance. Environment
+detail and object count cannot substitute for either layer.
+
 ## Route QA
 
 For each slug:
@@ -15,6 +38,9 @@ For each slug:
 - `/debug/ar/<slug>/` opens desktop debug surface.
 - Static export includes direct route folders.
 - Launcher QR target points to intended public origin.
+
+Use direct URLs for the gameplay path. QR destinations may be checked as data
+and rendered output; do not require a physical QR scan during normal iteration.
 
 ## Page QA
 

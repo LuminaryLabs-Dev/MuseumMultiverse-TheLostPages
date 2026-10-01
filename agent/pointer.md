@@ -3,19 +3,22 @@
 Status: active
 
 Current workflow:
-`workflows/ar-qa-workflow.md`
+`workflows/twelve-pass-program.md`
 
 Current prompt:
-`prompts/004-ar-route-check.md`
+`prompts/014-page02-player-slice.md` (ready; not started)
 
 Next prompt if complete:
-`prompts/005-qr-print-readiness.md`
+Prepare the bounded Page 03 slice only after Page 02 passes both proof layers.
 
 Reason:
-The launcher cleanup pass is complete. The next best run should check AR route behavior and confirm the phone-openable route assumptions.
+Pass 7 proved the actual Page 01 player path. Pass 8 now reuses that product
+spine one page at a time; Page 02 must prove its living-frame teaching route
+before any Page 03 or generalized all-page expansion.
 
 Last completed:
-`launcher-clean-comic-book-pass`
+`page01-player-slice`
 
 Pointer rule:
-After each successful run, update this file to the next best prompt. Do not blindly increment if a more urgent task appears.
+Advance only when the active pass evidence is complete. The pointer cannot skip
+the ordered passes in root `goal.md`.

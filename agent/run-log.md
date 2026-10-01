@@ -1,5 +1,168 @@
 # Run Log
 
+## 2026-08-08 Truth, Documentation, and Simulator Baseline
+
+Completed:
+
+- Reconstructed the Git-backed product history and current-state snapshot.
+- Assigned canonical ownership for goals, current truth, history, memory,
+  execution, feedback, page intent, and provisional discovery.
+- Closed the `.agent/` interview as a preserved archive and made tracked
+  `agent/` the active execution surface.
+- Added the ordered twelve-pass workflow and advanced the pointer to Pass 3.
+- Added the simulator/player proof strategy: deterministic NexusEngine rules
+  proof, direct-route Playwright player proof, then bounded additive review.
+- Updated the Page 01 packet from the superseded five-frame concept to the
+  current Character Map and recorded the stale print-copy gap.
+
+Validation:
+
+- `git diff --check` passed.
+- Targeted active Markdown path references resolved.
+- No `src/`, `print/`, `scripts/`, `.github/`, package manifest, or lockfile
+  change was made.
+- Page 01 simulator replay passed blocked-placement recovery, completion, and
+  reset deterministically with identical-input digests.
+- Playwright at 390 by 844 passed entry and placement clarity with zero console
+  errors, but visible completion/reward feedback was missing; result partial.
+- No physical QR scan, phone camera, WebXR, or environment-quality claim was
+  made.
+
+Next:
+
+- Convert the completed final player contracts into the Pass 4 goal matrix.
+
+### Final Product Goal
+
+Completed:
+
+- Defined the shared auto-run, one-button Jump, safe-stop contextual-action
+  grammar.
+- Defined all eight final page contracts, including Page 05 living-frame
+  platforming and Page 08 seven-receipt eligibility.
+- Defined duration, difficulty, save, recovery, accessibility, host, art,
+  performance, and release acceptance.
+- Reconciled page packets and active feedback with the final target.
+
+Validation:
+
+- Confirmed eight page sections, eight simulator action sets, eight
+  failure/recovery contracts, and eight Playwright player goals.
+- Simulated the specification and found its one-action-at-a-time flow stable.
+- Active target document paths resolved and `git diff --check` passed.
+- Final player-visible implementation remains unverified by design.
+
+### Goal Matrix
+
+Completed:
+
+- Added the canonical 61-row execution matrix.
+- Assigned 29 shared outcomes plus gameplay, reward/save, proof, and host/art
+  outcomes to each of eight pages.
+- Replaced shorthand dependencies with exact row identifiers and mapped every
+  final-specification section to its matrix owners.
+- Advanced the active pointer to Pass 5.
+
+Validation:
+
+- Matrix audit passed: 61 unique rows, nine columns each, controlled statuses,
+  no unknown dependencies, and four page rows for each of Pages 01-08.
+- Final-specification audit passed eight page sections, action sets,
+  failure/recovery contracts, player goals, and duration rows.
+- Seven-prior-receipt, slot-eight-after-completion, one-hero-control, and
+  no-QR-harness decisions are represented.
+- `git diff --check` passed and no application/source boundary changed.
+
+Next:
+
+- Define the exact shared simple gameplay contract for Pass 5.
+
+### Simple Gameplay Contract
+
+Completed:
+
+- Defined eight primary phases, legal transitions, one semantic command/result
+  envelope, and a deterministic one-hero selector.
+- Defined fixed-tick auto-run/Jump, safe-stop context, visible feedback,
+  checkpoint recovery, assistance, pause/restore, replay, reset, save, and
+  reward behavior.
+- Mapped all eight pages to one shared phase grammar and fixed Page 08 to seven
+  identified prior receipts plus its own post-finale eighth receipt.
+- Advanced the active pointer to Pass 6 architecture and skill ownership.
+
+Validation:
+
+- Contract audit passed eight phase rows, eight page extensions, eight reward
+  slots, twelve deterministic fixture groups, one-hero and no-mutation
+  invariants, and the no-QR-harness boundary.
+- A disposable transition model completed all eight normal paths and passed
+  early-Jump, unsafe-context, stale-input, miss-preservation, six-receipt, and
+  seven-receipt assertions.
+- The simulation proves specification consistency only; NexusEngine runtime
+  and player-visible behavior remain unverified.
+- `git diff --check` passed.
+
+Next:
+
+- Assign non-overlapping architecture, kit, adapter, and skill ownership.
+
+### Product Architecture and Skill Map
+
+Completed:
+
+- Reframed supporting architecture as a direct consumer of Page 01's player
+  outcome, not an independent tooling or workspace deliverable.
+- Cleared three local-candidate domain owners and seven explicit app adapters.
+- Defined the canonical 3D frame, wall/table/floor mappings, placement checks,
+  runtime lifecycle, and greybox budgets.
+- Classified 4 temporal orchestrators, 6 middle routes, and 14 atomic existing
+  skills; all dispositions are reuse or keep-separate and no mutation ran.
+- Deferred A-Frame, all-page framework work, final assets, environment detail,
+  and external promotion.
+- Added a bounded Page 01 context capsule and advanced to Pass 7.
+
+Validation:
+
+- Architecture audit passed 4 DSK/current rows, 7 adapter rows, 4/6/14 skill
+  counts, seven Page 01 implementation steps, and an acyclic domain graph.
+- Installed skill paths and public NexusEngine exports were verified.
+- `npm run build` passed: 22 routes, 776.15 kB / 209.42 kB gzip JS.
+- No application/source file or skill file changed in Pass 6.
+
+Next:
+
+- Implement and prove the Page 01 plan/run/Jump/recover/reward path only.
+
+### Page 01 Player Slice
+
+Completed:
+
+- Implemented the renderer-neutral Auto Runner, Journey Progress, and Lost
+  Pages Gameplay owners only where the Page 01 path consumes them.
+- Derived a five-point Direct route from the existing deterministic 11x11 map.
+- Replaced equal-weight simulator/debug controls with one objective, one hero,
+  visible feedback, a readable runner, and advanced controls under `More`.
+- Persisted the Gallery Key Fragment before showing the reward and preserved it
+  through reset/replay.
+- Closed Pass 7 and prepared a bounded Page 02 Pass 8 capsule without starting
+  Page 02 implementation.
+
+Validation:
+
+- `npm run proof:page01` passed all declared rules cases and identical Nexus
+  replay; runner p95 was 0.0089 ms.
+- `npm run build` passed: 22 routes, 814.55/220.74 kB JS raw/gzip and
+  58.54/12.99 kB CSS raw/gzip.
+- Playwright passed the full 390x844 path and 1440x900 reward view, persisted
+  the exact slot-1 receipt, kept Reset under closed `More`, and logged zero
+  console errors.
+- Physical AR, QR scanning, Pages 02-08, final art, and public deployment were
+  not changed or claimed.
+
+Next:
+
+- Run `prompts/014-page02-player-slice.md` as the first bounded Pass 8 page.
+
 ## 2026-07-09
 
 Completed:

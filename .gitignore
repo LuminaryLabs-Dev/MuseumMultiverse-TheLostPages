@@ -12,6 +12,7 @@ dist/
 
 # Tool/runtime state
 .playwright-mcp/
+.playwright-cli/
 .simspaces/
 .nexus-simulator/
 

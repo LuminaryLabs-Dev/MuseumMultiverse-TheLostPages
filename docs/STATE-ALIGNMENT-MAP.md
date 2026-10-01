@@ -11,10 +11,13 @@ Use this document during a State Intelligence Sync turn.
 ## Agent state files
 
 ```text
+goal.md
+docs/CURRENT-STATE.md
+docs/DOCUMENTATION-MAP.md
+docs/SIMULATOR-PLAYER-PROOF.md
 agent/start-here.md
 agent/pointer.md
 agent/workflow.md
-agent/goal.md
 agent/dependencies.md
 agent/feedback/active-feedback.md
 agent/feedback/feedback-inbox.md
@@ -30,7 +33,8 @@ agent/state-intelligence-ledger.md
 ## Product docs to align
 
 ```text
-docs/chatgpt-master-start-source.md
+goal.md
+docs/CURRENT-STATE.md
 docs/project-overview.md
 docs/DNA.md
 docs/FULL-OUTLINE.md
@@ -54,9 +58,8 @@ agent/state-intelligence-ledger.md
 ```text
 docs/TECHNICAL-BUILD-MAP.md
 docs/TRACEABILITY-MATRIX.md
-docs/chatgpt-master-start-source.md
 README.md
-agent/goal.md
+goal.md
 agent/pointer.md
 ```
 
@@ -83,6 +86,8 @@ src/app/launcher/renderPrint.js
 src/app/launcher/bookScene.js
 src/app/launcher/pageTextures.js
 src/ar/registry/experiences.js
+src/ar/simulator/session.js
+src/ar/simulator/view.js
 src/experiences/shared/rewards.js
 scripts/export-static-routes.mjs
 .github/workflows/deploy-lost-pages.yml
@@ -121,11 +126,13 @@ A State Intelligence Sync is valid when:
 
 ## Current high-priority alignment topic
 
-Active feedback currently prefers a print-first presentation model:
+The active program is the ordered twelve-pass mission in `goal.md`. Current
+implementation and validation claims must come from `docs/CURRENT-STATE.md` or
+new evidence. The current route decision still preserves:
 
 ```text
 /print/ = primary non-AR review/presentation surface
-/book/ = current route, pending demotion/removal/redirect/legacy decision
+/book/ = hidden compatibility alias to the shared reader
 ```
 
-Do not remove or redirect `/book/` during a sync turn. That is implementation work.
+Do not promote `/book/` as a separate product or primary navigation target.

@@ -4,6 +4,11 @@ Status: supporting content scaffold
 
 Each page folder is a content packet for one printed page and one QR-launched experience. The page packet should guide writers, designers, builders, and auto agents.
 
+Page packets describe design intent and acceptance targets. They do not prove
+implementation. Check `../CURRENT-STATE.md` first for current behavior and
+fresh evidence; Pass 3 will reconcile these scaffolds into final page
+specifications.
+
 ## Page folders
 
 ```text
@@ -39,3 +44,7 @@ Before editing a page, read the matching folder and confirm:
 - acceptance checklist
 
 Then compare against `docs/TRACEABILITY-MATRIX.md`, the runtime files in `src/experiences/<slug>/`, and the matching print file in `print/magazine-pages/`.
+
+If runtime copy, print copy, and a page packet disagree, record the drift
+instead of silently choosing one. Runtime manifests own current route behavior;
+Pass 3 owns the final product decision.

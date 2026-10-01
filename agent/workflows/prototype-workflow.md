@@ -8,7 +8,10 @@ Use this workflow for small prototype passes.
 
 - Keep the prototype bounded.
 - Build a small proof before a broad rewrite.
-- Use NexusRealtime when the behavior is reusable runtime behavior.
+- Use NexusEngine Domain Service Kits or ProtoKits for reusable deterministic
+  behavior; keep host/render work in explicit app adapters.
+- Add new proof surfaces without removing stable routes or behavior.
+- Use the simulator for rules and Playwright for player-visible acceptance.
 - Record what was proven.
 - Record what was not proven.
 - Promote a prototype only after route, build, or visual evidence.

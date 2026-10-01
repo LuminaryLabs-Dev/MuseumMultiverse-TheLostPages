@@ -26,17 +26,25 @@ The site should support:
 
 Active feedback prefers the main print view as the primary non-AR review/presentation surface.
 
-The current `/book/` route may still exist in implementation, but it is pending product decision: remove, redirect, hide, or retain as debug/experimental/legacy. Do not describe `/book/` as the preferred product focus unless a later decision changes this direction.
+The final product keeps `/book/` as a hidden compatibility alias to the shared
+reader. It is not a primary navigation destination or separate review product.
 
 The print-view visual direction should feel physical: tabletop-like surface, squared paper, grounded shadows, subtle orientation/parallax, and no pointer-following glow effect.
 
 ## Operating Shape
 
-Product direction lives in `agent/goal.md` and supporting docs under `docs/`.
+The active mission and pass status live in root `goal.md`.
+
+The dated implementation snapshot lives in `docs/CURRENT-STATE.md`; the
+documentation ownership map lives in `docs/DOCUMENTATION-MAP.md`.
+
+The final shared flow and all eight measurable page contracts live in
+`docs/FINAL-PRODUCT-GOAL.md`.
 
 Human docs live in `docs/`.
 
-Agent handoff state lives in `agent/`.
+Active execution, feedback, and handoff state live in tracked `agent/`.
+Provisional picture-frame discovery is preserved under `.agent/` as history.
 
 State alignment and inference rules live in `agent/state-intelligence-ledger.md`, `agent/prompts/state-intelligence-sync.md`, and `docs/STATE-ALIGNMENT-MAP.md`.
 

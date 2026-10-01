@@ -1,6 +1,8 @@
 # Page 05 — Tiny Platformer Diorama
 
-Status: supporting content scaffold
+Status: active design-intent packet
+
+Final contract: `../../FINAL-PRODUCT-GOAL.md`.
 Slug: `tiny-platformer-diorama`
 Route: `/ar/tiny-platformer-diorama/`
 Debug route: `/debug/ar/tiny-platformer-diorama/`
@@ -8,11 +10,12 @@ Print source: `print/magazine-pages/05-tiny-platformer-diorama.md`
 Runtime source: `src/experiences/tiny-platformer-diorama/`
 QR title: Scan to Play the Tiny World
 Reward: Tiny Portal Badge
-Primary verb: clear
+Primary verbs: shift, jump, enter
 
 ## DNA
 
-Page 05 makes the museum playful. A diorama becomes a tiny platform world, turning the exhibit into a small game inside the printed magazine.
+Page 05 is the hero living-picture-frame experience: the player rearranges a
+layered paper world, then platforms through the route they created.
 
 ## Design doc
 
@@ -22,8 +25,8 @@ The print page should feel like an exhibit case containing a miniature world. Us
 
 | Asset | Status | Use |
 |---|---|---|
-| diorama case illustration | planned | print/page identity |
-| tiny platform tiles | needed | playable world |
+| Conservator's Impossible Portal frame | planned | print/page and hero landmark identity |
+| layered paper route modules | needed | three shiftable picture routes |
 | hazard sprites | needed | challenge objects |
 | goal gate sprite | needed | completion target |
 | Tiny Portal Badge icon | needed | reward UI |
@@ -33,17 +36,20 @@ The print page should feel like an exhibit case containing a miniature world. Us
 
 1. Reader scans the diorama page.
 2. Start gate introduces the tiny world.
-3. A small platform course appears.
-4. Reader clears hazards and reaches the goal gate.
-5. The tiny world opens a portal badge reward.
-6. Tiny Portal Badge is saved to progress.
+3. The Conservator's Impossible Portal opens into three short planning bays.
+4. At each safe bay the reader shifts one labeled picture layer into place.
+5. JR auto-runs the resulting section with one Jump control and checkpoint
+   recovery.
+6. Reader enters the tiny final portal.
+7. Tiny Portal Badge is saved to progress.
 
 ## Experience structure
 
 ```text
 entry gate
   -> miniature world scene
-  -> platform/hazard loop
+  -> layer shift at safe bay
+  -> auto-run and Jump loop
   -> goal gate
   -> portal badge reveal
   -> reward claim
@@ -51,9 +57,11 @@ entry gate
 
 ## Game outline
 
-Objective: clear tiny hazards and enter the goal gate.
+Objective: shift three picture layers, traverse their routes, and enter the
+goal portal.
 
-Inputs: tap/press/jump controls on phone; keyboard or click controls in debug.
+Inputs: one contextual layer shift at safe stops; one Jump control during
+auto-run; keyboard or pointer equivalents in debug.
 
 Win state: goal gate reached, reward saved.
 
@@ -68,7 +76,10 @@ Soft fail: hazards can reset the tiny avatar or course segment without ending th
 
 ## Acceptance checklist
 
-- Controls are visible before play begins.
+- Only the current layer action or Jump hero control is visible during normal
+  play.
 - Hazards are readable at phone size.
+- A missed jump returns to the current planning-bay checkpoint without losing
+  accepted layer positions.
 - Completion is clear when the goal gate is reached.
 - Reward name matches print/runtime/docs.

@@ -9,19 +9,22 @@ This folder is the non-agent product and creative documentation scaffold for Mus
 
 ## Required read order for content-building agents
 
-1. `docs/supporting-content/README.md`
-2. `docs/DNA.md`
-3. `docs/FULL-OUTLINE.md`
-4. `docs/PITCH-DECK.md`
-5. `docs/EXPERIENCE-MODEL.md`
-6. `docs/GAME-MODEL.md`
-7. `docs/ASSET-PIPELINE.md`
-8. `docs/TRACEABILITY-MATRIX.md`
-9. `docs/PAGE-DOC-STANDARD.md`
-10. `docs/AGENT-BUILD-MANUAL.md`
-11. The target `docs/pages/PageXX-*/README.md`
-12. `agent/start-here.md`
-13. `agent/pointer.md`
+1. `goal.md`
+2. `docs/CURRENT-STATE.md`
+3. `docs/DOCUMENTATION-MAP.md`
+4. `docs/supporting-content/README.md`
+5. `docs/DNA.md`
+6. `docs/FULL-OUTLINE.md`
+7. `docs/EXPERIENCE-MODEL.md`
+8. `docs/GAME-MODEL.md`
+9. `docs/SIMULATOR-PLAYER-PROOF.md`
+10. `docs/ASSET-PIPELINE.md`
+11. `docs/TRACEABILITY-MATRIX.md`
+12. `docs/PAGE-DOC-STANDARD.md`
+13. `docs/AGENT-BUILD-MANUAL.md`
+14. The target `docs/pages/PageXX-*/README.md`
+15. `agent/start-here.md`
+16. `agent/pointer.md`
 
 ## Required read order for state alignment and inference
 
@@ -79,7 +82,9 @@ docs/
 
 ## Page packet standard
 
-Each page README is the canonical content packet for that page. It includes:
+Each page README is the active design-intent packet for that page. Current
+implementation proof comes from `docs/CURRENT-STATE.md`; final page
+specifications will be produced in Pass 3. A packet includes:
 
 ```text
 PageXX-PageName/README.md

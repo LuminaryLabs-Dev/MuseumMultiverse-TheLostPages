@@ -1,82 +1,21 @@
-# Lost Pages Long Term Goal
+# Lost Pages Goal Pointer
 
-Status: active
+Status: active compatibility pointer
 
-## Product Goal
+The canonical active mission, twelve passes, completion criteria, guardrails,
+and pass status live in:
 
-Lost Pages is an eight page AR companion magazine for Museum Multiverse.
+```text
+../goal.md
+```
 
-Each printed page should have a QR code. Each QR code should open a public static route. Each route should launch a page-specific web, debug, or AR experience.
+Read current implementation truth from `../docs/CURRENT-STATE.md` and the
+authority map from `../docs/DOCUMENTATION-MAP.md`.
 
-The repo must support:
+The prior long-term goal is preserved at:
 
-- print-facing page composition
-- QR targets that work from a phone
-- static GitHub Pages deployment
-- debug routes for desktop review
-- AR routes for mobile launch
-- short deploy chat messages
-- durable agent handoff state
-- state alignment and inference turns
+```text
+archive/goal-2026-07-10.md
+```
 
-## Eight Experience Quality Goal
-
-All eight QR routes should become complete, replayable, simple strategy experiences rather than small interaction demos.
-
-Each experience should have:
-
-- a clear first-screen promise and one primary launch action
-- a readable strategy loop: observe, choose, act, receive feedback, adapt, complete
-- at least 100 concrete world objects, with a target range of 100-300+ generated or authored objects per experience
-- deterministic object generation or descriptor datasets instead of hundreds of manually duplicated source entries
-- an active-simulation budget so only the nearby or relevant slice is expensive
-- meaningful success, failure, reset, replay, reward, and cross-page progression states
-- visible interaction, animation, audio, VFX, camera, and completion feedback
-- desktop debug proof, phone-route proof, and real AR proof before release acceptance
-
-## NexusEngine Domain Service Kit Goal
-
-NexusEngine is the target runtime architecture. The current NexusRealtime dependency is compatibility debt to remove, not the target for new work.
-
-Reusable mechanics should be owned by NexusEngine Domain Service Kits with:
-
-- stable `n-<domain>-kit` identity and `n:<domain>` ownership
-- explicit state, inputs, systems, outputs, dependencies, reset, snapshot, validation, version, and stability
-- APIs installed under `engine.n.<domain>`
-- serializable deterministic state and headless validation
-- no DOM, Three.js, WebXR, canvas, GPU, or host lifecycle ownership inside reusable domain logic
-
-Lost Pages should own story, copy, page manifests, object descriptors, experience composition, routes, QR behavior, and presentation adapters. Reusable gameplay rules belong in NexusEngine or its ProtoKit path.
-
-## Eight Page Structure
-
-Page 01: cover and entry portal.
-Page 02: artifact page.
-Page 03: character or exhibit page.
-Page 04: museum map or path page.
-Page 05: lore fragment page.
-Page 06: interactive object page.
-Page 07: hidden or unlock page.
-Page 08: back page and final portal.
-
-## Route Structure
-
-Each page should map to one slug in the AR experience registry.
-
-Expected route families:
-
-- `/launcher/` for the phone-friendly entry screen.
-- `/print/` for the primary print review / presentation surface.
-- `/book/` currently exists as a composition-book/reference route, but active feedback says it is pending demotion, hiding, redirect, removal, or retention only as debug/experimental/legacy.
-- `/ar/<slug>/` for QR-launched AR.
-- `/debug/ar/<slug>/` for desktop debug.
-
-Do not treat `/book/` demotion/removal as implemented until route/source changes and validation evidence exist.
-
-## State Intelligence Goal
-
-The repo should support a reusable State Intelligence Sync turn that reads agent state, reads non-agent docs, detects drift, infers durable future rules, and updates only docs/agent knowledge unless implementation is explicitly requested.
-
-## Long Term Rule
-
-Lost Pages owns the magazine, copy, routes, QR structure, page data, print presentation, authored descriptors, and experience compositions. Reusable runtime behavior belongs in NexusEngine Domain Service Kits or the NexusEngine ProtoKit path.
+Do not duplicate or independently advance goal status in this file.

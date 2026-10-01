@@ -17,7 +17,10 @@ completion of the new eight-page joystick-and-jump comic/AR product.
 - `print/magazine-pages/` contains the copy source for each printed page.
 - `/ar/:slug` routes launch page-specific experiences.
 - `/debug/ar/:slug` and `/ar/:slug?debug=1` keep the desktop/debug surface.
-- `/sim/ar/sleeping-gallery` opens the camera-free Page 01 procedural room simulator.
+- `/sim/ar/sleeping-gallery` opens the camera-free Page 01 player simulator:
+  trace, auto-run, Jump, checkpoint recovery, and saved reward.
+- `/sim/ar/frame-that-breathes` opens the camera-free Page 02 player simulator:
+  match Bridge/Step/Gate, build the route, auto-run, Jump/recover, enter, save.
 - `/`, `/launcher`, `/print`, `/book`, and `/phone` currently fall through to the same shared booklet/print reader surface.
 - `/book` is retained as a compatibility/static entry, not the preferred separate public review surface.
 - `docs/` contains project docs.
@@ -25,6 +28,15 @@ completion of the new eight-page joystick-and-jump comic/AR product.
 
 ## Key docs
 
+- `goal.md`
+- `CHANGELOG.md`
+- `docs/CURRENT-STATE.md`
+- `docs/DOCUMENTATION-MAP.md`
+- `docs/SIMULATOR-PLAYER-PROOF.md`
+- `docs/FINAL-PRODUCT-GOAL.md`
+- `docs/SIMPLE-GAMEPLAY-CONTRACT.md`
+- `docs/ARCHITECTURE-SKILL-MAP.md`
+- `docs/GOAL-MATRIX.md`
 - `docs/project-overview.md`
 - `docs/eight-pages-qr-structure.md`
 - `docs/repository-map.md`
@@ -49,11 +61,21 @@ npm run dev -- --host 0.0.0.0 --port 4176
 npm run build
 ```
 
+Page 01 and Page 02 rules proof:
+
+```bash
+npm run proof:page01
+npm run proof:page02
+```
+
 The build runs the composition check, Vite, and static route export so direct routes can open on GitHub Pages.
 
 `package.json` and `package-lock.json` are pinned to NexusEngine commit `55b7f33f6d008b2e3b120e370f09b96ed73105e9`.
 
 ## Static routes
+
+The local build exports all routes below. The Page 02 simulator URL is not
+public until this local work is explicitly committed, pushed, and deployed.
 
 ```text
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/
@@ -63,6 +85,7 @@ https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/book/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/ar/<slug>/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/debug/ar/<slug>/
 https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/sim/ar/sleeping-gallery/
+https://luminarylabs-dev.github.io/MuseumMultiverse-TheLostPages/sim/ar/frame-that-breathes/
 ```
 
 Static route export is handled by `scripts/export-static-routes.mjs`.
@@ -71,7 +94,8 @@ Static route export is handled by `scripts/export-static-routes.mjs`.
 
 The shared booklet/print reader is the current source-backed non-AR surface for root, launcher, print, book, and phone route entries. It should read as a physical tabletop surface with grounded paper shadows, squared paper pages, subtle physical reactivity, and no pointer-following glow effect.
 
-A later pass may decide whether `/book` stays as a compatibility/legacy route, redirects to `/print`, or is removed from public/static paths.
+`/book` remains a compatibility/static alias and should stay out of the primary
+hero navigation.
 
 ## Deploy
 
@@ -86,11 +110,13 @@ See [Static release contract](docs/STATIC-RELEASE.md) for gates and rollback.
 
 ## Agent operating folder
 
-The preferred hidden folder name would be `.agent/`, but hidden path writes were blocked during setup. This repository uses `agent/` as the repo-local agent operating folder.
+This repository uses tracked `agent/` as the active operating folder.
 
 Start future agent work from:
 
 ```text
+goal.md
+docs/CURRENT-STATE.md
 agent/start-here.md
 agent/pointer.md
 agent/workflow.md
@@ -102,8 +128,16 @@ Use this prompt for state alignment and inference turns:
 agent/prompts/state-intelligence-sync.md
 ```
 
+The `.agent/` tree preserves the completed picture-frame discovery interview.
+It is a provisional design archive, not an active question loop or an
+implementation authority. Start current work from `goal.md` and tracked
+`agent/`; use `docs/DOCUMENTATION-MAP.md` whenever two documents appear to
+overlap.
+
 ## Notes
 
-- QR codes must point at a LAN/public HTTPS origin.
-- Device-specific experience mode selection lives in NexusEngine; Lost Pages owns copy, routes, QR, experience manifests, and host presentation adapters.
+- Published QR codes must point at the intended public HTTPS origin; routine
+  gameplay proof uses direct simulator/debug routes instead of physical scans.
+- NexusEngine owns reusable renderer-independent contracts; Lost Pages owns
+  copy, routes, QR, experience manifests, and host presentation adapters.
 - Feedback-only turns should update feedback docs and should not change app code unless implementation is explicitly requested.

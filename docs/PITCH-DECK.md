@@ -44,7 +44,7 @@ The museum is asleep, unstable, and full of exhibits that remember things they s
 
 ## Slide 07 — Eight-page arc
 
-1. Wake the gallery.
+1. Unfold the Character Map and wake the first fragment.
 2. Open the breathing frame.
 3. Restore the child's sketch memory.
 4. Decode the curator's warning.
@@ -57,7 +57,7 @@ The museum is asleep, unstable, and full of exhibits that remember things they s
 
 Each page has one short verb:
 
-- tap
+- place/swipe
 - align
 - catch
 - restore
@@ -76,7 +76,8 @@ Readable comic-book museum design. Bold page rhythm. Subtle motion. Strong contr
 - Direct route exports for GitHub Pages.
 - `src/ar/registry/experiences.js` as slug source of truth.
 - `src/experiences/<slug>/` for page-specific content, level, tuning, and manifest.
-- NexusRealtime for reusable runtime behavior.
+- NexusEngine Domain Service Kits for reusable renderer-independent behavior.
+- Explicit Lost Pages adapters for Three.js, DOM, canvas, camera, and WebXR.
 
 ## Slide 11 — Production needs
 

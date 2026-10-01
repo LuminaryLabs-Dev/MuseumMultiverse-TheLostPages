@@ -1,7 +1,13 @@
 # Lost Pages State Intelligence Ledger
 
-Status: active
-Last updated: 2026-06-26
+Status: historical snapshot with current forward notice
+Last updated: 2026-08-08
+
+> Current-state notice (2026-08-08): the snapshot below is historical and
+> predates the NexusEngine cutover, Page 01 Character Map, AR simulator, and
+> card-stack validation. Use `docs/CURRENT-STATE.md` for active truth and
+> `CHANGELOG.md` for the reconstructed timeline. The older ledger remains below
+> as preserved evidence of the June state.
 
 ## Current True State
 

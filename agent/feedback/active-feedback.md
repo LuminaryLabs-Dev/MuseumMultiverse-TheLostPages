@@ -26,8 +26,19 @@ Status: active
 - AR experience clarification: the AR experiences themselves are full 3D and should not include a book/booklet metaphor. The phone-facing AR route should be a consistent flat, glossy, sharp-edged landing page whose only job is to launch the full 3D AR experience.
 - Feedback intake rule: feedback-only turns update feedback docs on `main` and do not change app/source files unless implementation is explicit.
 - NexusEngine cutover is implemented at the package and source-import boundary; remaining work is promotion and broader DSK conversion across Pages 02-08.
-- Expand all eight AR routes from small demos into full, replayable simple strategy experiences with 100-300+ deterministic world objects each and strong interaction feedback.
+- Expand all eight routes into complete, replayable experiences with strong
+  interaction feedback. Treat 100-300 objects as an optional world-density
+  guideline, not a completion gate; player comprehension and outcome win.
 - Keep the normal first screen focused on launch/place/current objective; advanced controls and debug information belong behind disclosure or debug routes.
+- Build an additive all-eight NexusEngine simulator/testing space and use it as
+  the routine gameplay proof surface instead of physically scanning QR codes.
+- Validate each interaction repeatedly through separate deterministic simulator
+  and Playwright player-view passes, then make the smallest additive correction
+  and rerun both layers.
+- Optimize for understandable actions, visible feedback, failure/recovery,
+  completion, and UX structure before environment detail or object density.
+- Page 01 now proves that priority in the direct player simulator; extend its
+  trace/run/Jump/recover/save spine to Page 02 before adding broader tooling.
 
 ## Still Active After Source Pass
 
@@ -36,11 +47,13 @@ Status: active
 - Confirm root, launcher, print, book, and phone paths all show the expected shared booklet/print reader surface.
 - Validate `/ar/<slug>/` landing pages on phone-sized screens and confirm they launch the full 3D AR experience.
 - Confirm the WebGL paper viewport falls back cleanly on older or constrained browsers.
-- Decide final `/book/` treatment: keep as compatibility/legacy, redirect to `/print/`, hide from public navigation/static paths, or remove.
+- Keep `/book/` as a hidden compatibility/static alias to the shared reader;
+  do not promote it as separate product navigation.
 - Polish the physical opening transition only after browser/device visual review.
 - Run route QA and QR/print readiness after dependency hygiene and route validation are complete.
 - Do not restore NexusRealtime-specific runtime structure.
-- Define DSK contracts and active-simulation budgets before scaling any experience to hundreds of objects.
+- Preserve the three proven local DSK owners and active-simulation budgets;
+  require a consuming page slice before adding another shared owner.
 
 ## Handling Rule
 

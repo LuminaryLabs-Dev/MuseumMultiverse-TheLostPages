@@ -49,6 +49,18 @@ Each experience needs:
 
 Desktop debug routes may simulate the experience. Phone AR routes should not be claimed as tested until the phone path is actually tested and recorded.
 
+The canonical development proof has two layers: deterministic NexusEngine
+simulation through semantic inputs, then direct-route Playwright player proof.
+Physical QR scanning is not the gameplay harness. See
+`SIMULATOR-PLAYER-PROOF.md`.
+
+## Control hierarchy
+
+Normal play exposes only the current hero action. `Jump` appears during
+auto-run; a page-specific action appears only at a safe stop. Reset, seed,
+metrics, tuning, scenario selection, and state inspection remain advanced or
+debug controls.
+
 ## Copy-sync contract
 
 The following must not drift:
@@ -65,4 +77,7 @@ reward slot
 
 ## Agent build rule
 
-Before changing implementation, an auto agent must read the page folder under `docs/pages/`, confirm the slug and route, then inspect only the implementation files needed for that page.
+Before changing implementation, an auto agent must read
+`FINAL-PRODUCT-GOAL.md`, the applicable goal-matrix rows, and the page folder,
+confirm the slug and route, then inspect only the implementation files needed
+for that page.
