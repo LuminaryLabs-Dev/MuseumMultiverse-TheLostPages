@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#14131c">
+  <title>Lost Pages · The Frame That Breathes</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div id="app" class="app" data-mode="intro">
+  <video id="camera" autoplay playsinline muted aria-hidden="true"></video>
+  <div class="wall-scene" id="wallScene">
+    <div class="wall-grain"></div>
+    <div class="sconce sconce-left"></div><div class="sconce sconce-right"></div>
+    <div class="museum-plaque"><div>THE LOST PAGES</div><small>MUSEUM MULTIVERSE · COLLECTION II</small></div>
+    <div class="painting-shell" id="paintingShell">
+      <div class="frame-glow"></div>
+      <div class="painting-frame"><div class="frame-inner">
+        <canvas id="game" width="1280" height="720" aria-label="The Frame That Breathes platformer"></canvas>
+        <div class="painting-glass"></div>
+      </div></div>
+      <div class="frame-bottom-inscription">THE FRAME THAT BREATHES · 02 / 08</div>
+    </div>
+  </div>
+  <canvas id="xrCanvas" aria-hidden="true"></canvas>
+  <header class="topbar">
+    <div class="brand"><span class="brand-emblem">✦</span><div><strong>LOST PAGES</strong><span>MUSEUM MULTIVERSE</span></div></div>
+    <div class="chapter">CHAPTER <b>02</b> <span>/ 08</span></div>
+    <button id="soundButton" class="subtle-btn" aria-label="Toggle sound" title="Toggle sound">♫ <span id="soundLabel">OFF</span></button>
+  </header>
+  <div class="heads-up" id="hud" hidden>
+    <div class="hud-story"><small>THE FRAME THAT BREATHES</small><b id="objective">Explore the living painting.</b></div>
+    <div class="hud-treasures"><span id="inkCount">✦ 0 / 5</span><span id="glyphCount">◈ 0 / 3</span></div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <main class="intro-panel" id="introPanel">
+    <span class="eyebrow">A STORY YOU CAN STEP INTO</span>
+    <h1>The Frame<br><em>That Breathes</em></h1>
+    <p>A forgotten painting is waking up. Follow JR into its painted world, collect scattered starlight, and open the way home.</p>
+    <div class="intro-actions">
+      <button id="beginButton" class="primary-btn">Awaken the painting <span>↗</span></button>
+      <button id="howButton" class="text-btn">How to play <span>?</span></button>
+    </div>
+    <div class="chapter-marker"><span class="marker-line"></span> AN AR PLATFORMING STORY <span class="marker-line"></span></div>
+  </main>
+  <section class="modal" id="placementPanel" hidden aria-label="Choose a surface">
+    <div class="modal-content">
+      <span class="eyebrow">THE WORLD IS YOUR GALLERY</span>
+      <h2>Give the painting<br>a place to live.</h2>
+      <p>Point your phone at a wall to try anchored AR, or enter the playable gallery on this screen.</p>
+      <button id="xrButton" class="primary-btn" hidden>Find a wall with AR <span>◎</span></button>
+      <button id="cameraButton" class="secondary-btn">Use camera preview <span>▣</span></button>
+      <button id="desktopButton" class="secondary-btn">Enter the painting <span>→</span></button>
+      <button id="backButton" class="text-btn">← Back</button>
+      <small class="note">Camera preview is screen-aligned, not tracked. Real wall anchoring requires compatible WebXR hardware and HTTPS.</small>
+    </div>
+  </section>
+  <section id="completePanel" class="modal" hidden aria-label="Chapter complete">
+    <div class="modal-content completed">
+      <span class="eyebrow">CHAPTER 02 COMPLETE</span>
+      <div class="reward-gem">✧</div>
+      <h2>Canvas Whisper<br><em>Recovered</em></h2>
+      <p>JR steps out of the painting, carrying its last spark of color. The museum remembers another story.</p>
+      <div class="reward-meta">✦ A NEW MEMORY HAS BEEN SAVED</div>
+      <button class="primary-btn" id="replayButton">Play again <span>↻</span></button>
+      <button class="text-btn" id="returnButton">Return to gallery</button>
+    </div>
+  </section>
+  <section id="helpPanel" class="modal" hidden aria-label="Controls">
+    <div class="modal-content">
+      <span class="eyebrow">HOW TO PLAY</span><h2>A tiny adventure<br>in a living frame.</h2>
+      <div class="controls-guide"><div><b>← →</b><span>Move JR</span></div><div><b>SPACE / ↑</b><span>Jump</span></div><div><b>E</b><span>Interact with glyphs & portal</span></div><div><b>R</b><span>Restart from last checkpoint</span></div></div>
+      <p>Find five ink stars, awaken the three frame glyphs, and enter the golden portal. On touchscreens, use the on-screen buttons.</p>
+      <button class="primary-btn" id="closeHelpButton">Got it <span>✓</span></button>
+    </div>
+  </section>
+  <div id="interactPrompt" class="interact-prompt" hidden>Press <b>E</b> to interact</div>
+  <div id="controls" class="touch-controls" hidden>
+    <div class="movement-controls"><button id="moveLeft" aria-label="Move left">←</button><button id="moveRight" aria-label="Move right">→</button></div>
+    <div class="action-controls"><button id="interact" class="interact-control" aria-label="Interact">✧<small>USE</small></button><button id="jump" class="jump-control" aria-label="Jump">↑<small>JUMP</small></button></div>
+  </div>
+  <div class="footer-status"><span class="status-dot"></span><span id="modeLabel">THE GALLERY IS QUIET</span><button id="restartButton" hidden>↺ RESTART</button></div>
+</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

@@ -201,6 +201,13 @@ async function render() {
   cleanupCurrentSurface();
   const route = routeFromLocation();
 
+  // Chapter 02 is the independent, joystick-controlled painting platformer.
+  // Keep the older debug and simulator routes available for comparison.
+  if (route.type === 'experience' && route.experience?.slug === 'frame-that-breathes') {
+    window.location.replace(withBasePath('/ch02/'));
+    return;
+  }
+
   if (route.type === 'invalid-page') {
     const recovery = document.createElement('main');
     recovery.style.cssText = 'min-height:100vh;background:#fff8df;color:#241d17;padding:32px;box-sizing:border-box';
